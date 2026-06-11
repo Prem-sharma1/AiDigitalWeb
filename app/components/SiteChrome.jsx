@@ -1,3 +1,5 @@
+import Image from "next/image";
+
 const footerGroups = [
   {
     title: "Contact",
@@ -21,6 +23,7 @@ const navItems = [
   { label: "Home", href: "/", key: "home" },
   { label: "Why Us", href: "/#why", key: "why" },
   { label: "Services", href: "/#services", key: "services" },
+  { label: "Prices", href: "/pricing", key: "pricing" },
   { label: "Portfolio", href: "/portfolio", key: "portfolio" },
   { label: "Blogs", href: "/#insights", key: "blogs" }
 ];
@@ -36,7 +39,7 @@ export function Icon({ name, className = "" }) {
 export function Logo() {
   return (
     <a className="logo" href="/" aria-label="AI Digital home">
-      <img src="/logo-cropped.png" alt="AI Digital" />
+      <Image src="/logo-cropped.png" alt="AI Digital Logo" width={180} height={56} priority />
     </a>
   );
 }
@@ -82,6 +85,12 @@ export function SiteHeader({ active = "home" }) {
 }
 
 export function SiteFooter() {
+  const getHref = (item) => {
+    if (item === "Pricing") return "/pricing";
+    if (item === "Our Portfolio") return "/portfolio";
+    return "/#contact";
+  };
+
   return (
     <footer className="footer">
       <div className="footer-grid">
@@ -104,7 +113,7 @@ export function SiteFooter() {
           <div className="footer-column" key={group.title}>
             <h3>{group.title}</h3>
             {group.items.map((item) => (
-              <a href="/#contact" key={item}>{item}</a>
+              <a href={getHref(item)} key={item}>{item}</a>
             ))}
           </div>
         ))}
@@ -113,3 +122,5 @@ export function SiteFooter() {
     </footer>
   );
 }
+
+

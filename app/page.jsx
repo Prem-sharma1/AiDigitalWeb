@@ -1,48 +1,43 @@
 import GoalSelector from "./components/GoalSelector";
 import { Icon, SiteFooter, SiteHeader } from "./components/SiteChrome";
+import HeroOrbit from "./components/HeroOrbit";
 
 const services = [
   {
     icon: "search_insights",
     title: "SEO",
     tone: "blue",
-    body:
-      "Dominate search rankings with AI-driven content and technical optimization."
+    body: "Dominate search rankings with AI-driven content and technical optimization."
   },
   {
     icon: "campaign",
     title: "Performance Marketing",
     tone: "orange",
-    body:
-      "Data-backed ad campaigns that maximize ROI across every channel."
+    body: "Data-backed ad campaigns that maximize ROI across every channel."
   },
   {
     icon: "share",
     title: "Social Media",
     tone: "blue",
-    body:
-      "Engaging community building and viral content strategies."
+    body: "Engaging community building and viral content strategies."
   },
   {
     icon: "web",
     title: "Website Design",
     tone: "blue",
-    body:
-      "Conversion-focused digital experiences built for speed and performance."
+    body: "Conversion-focused digital experiences built for speed and performance."
   },
   {
     icon: "branding_watermark",
     title: "Branding",
     tone: "orange",
-    body:
-      "Memorable identity design and messaging that resonates with your audience."
+    body: "Memorable identity design and messaging that resonates with your audience."
   },
   {
     icon: "memory",
     title: "AI Automation",
     tone: "blue",
-    body:
-      "Streamline your workflows and customer journeys with intelligent systems."
+    body: "Streamline your workflows and customer journeys with intelligent systems."
   }
 ];
 
@@ -50,64 +45,56 @@ const campaigns = [
   {
     icon: "query_stats",
     title: "SEO Growth Campaign",
-    body:
-      "Every organic search strategy starts with keyword mapping, audits, and AI-supported content planning.",
+    body: "Every organic search strategy starts with keyword mapping, audits, and AI-supported content planning.",
     tags: ["Technical", "Content", "Local"],
     fit: "Search visibility"
   },
   {
     icon: "ads_click",
     title: "Google Ads Campaign",
-    body:
-      "High-intent search campaigns with landing pages, tracking, and ongoing ROAS improvement.",
+    body: "High-intent search campaigns with landing pages, tracking, and ongoing ROAS improvement.",
     tags: ["Search", "Leads", "ROI"],
     fit: "Paid growth"
   },
   {
     icon: "mail",
     title: "Meta Ads Campaign",
-    body:
-      "Audience-first targeting, creative testing, and retargeting for brand and sales growth.",
+    body: "Audience-first targeting, creative testing, and retargeting for brand and sales growth.",
     tags: ["Creative", "Social", "Retargeting"],
     fit: "Social sales"
   },
   {
     icon: "webhook",
     title: "Website & Landing Page",
-    body:
-      "CRO-focused pages that guide visitors toward clear conversion actions and measurable leads.",
+    body: "CRO-focused pages that guide visitors toward clear conversion actions and measurable leads.",
     tags: ["CRO", "UX", "Speed"],
     fit: "Conversion"
   },
   {
     icon: "edit_square",
     title: "Content Marketing",
-    body:
-      "SEO-led content systems built around intent, authority, and helpful editorial calendars.",
+    body: "SEO-led content systems built around intent, authority, and helpful editorial calendars.",
     tags: ["Blogs", "SEO", "Authority"],
     fit: "Trust building"
   },
   {
     icon: "analytics",
     title: "Analytics & Reporting",
-    body:
-      "Dashboards and monthly reporting that turn campaign activity into simple decisions.",
+    body: "Dashboards and monthly reporting that turn campaign activity into simple decisions.",
     tags: ["GA4", "Looker", "KPI"],
     fit: "Performance clarity"
   },
   {
     icon: "movie",
     title: "AI Video Creation",
-    body:
-      "Short-form video concepts, scripts, and production direction for paid and organic channels.",
+    body: "Short-form video concepts, scripts, and production direction for paid and organic channels.",
     tags: ["Shorts", "Reels", "Motion"],
     fit: "Video content"
   },
   {
     icon: "post_add",
     title: "Social Media Post Creation",
-    body:
-      "Automated and manual high-engagement posts, captions, and scheduling for active brands.",
+    body: "Automated and manual high-engagement posts, captions, and scheduling for active brands.",
     tags: ["Graphics", "Captions", "Scheduling"],
     fit: "Active brands"
   }
@@ -150,81 +137,19 @@ const insights = [
   {
     label: "SEO",
     title: "The Future of AI-Driven Content Creation in 2024",
-    body:
-      "Discover how artificial intelligence is reshaping organic search strategies."
+    body: "Discover how artificial intelligence is reshaping organic search strategies."
   },
   {
     label: "Performance Marketing",
     title: "Maximizing ROAS with Predictive Analytics",
-    body:
-      "Learn how to predict campaign success before allocating ad spend."
+    body: "Learn how to predict campaign success before allocating ad spend."
   },
   {
     label: "Branding",
     title: "Building Trust in an Automated World",
-    body:
-      "Strategies for maintaining authentic connection while scaling through automation."
+    body: "Strategies for maintaining authentic connection while scaling through automation."
   }
 ];
-
-function HeroOrbit() {
-  return (
-    <div className="hero-orbit orbit-container" aria-hidden="true">
-      <div className="orbit orbit-ring orbit-lg" />
-      <div className="orbit orbit-ring orbit-md" />
-      <div className="orbit orbit-ring orbit-sm" />
-      <span className="orbit-dot-wrapper orbit-dot-lg rotate-slow">
-        <i className="orbit-dot orbit-dot-blue" />
-      </span>
-      <span className="orbit-dot-wrapper orbit-dot-md rotate-medium">
-        <i className="orbit-dot orbit-dot-orange" />
-      </span>
-      <span className="orbit-dot-wrapper orbit-dot-sm rotate-fast">
-        <i className="orbit-dot orbit-dot-light" />
-      </span>
-      <div className="metric-card metric-top">
-        <div>
-          <Icon name="monitoring" />
-          <span>SEO Traffic</span>
-        </div>
-        <strong>+142%</strong>
-        <small>Past 30 days</small>
-      </div>
-      <div className="metric-card metric-compact metric-left">
-        <div>
-          <Icon name="trending_up" />
-          <span>Conversion Rate</span>
-        </div>
-        <strong>+64%</strong>
-        <small>Landing Pages</small>
-      </div>
-      <div className="metric-card metric-compact metric-center">
-        <div>
-          <Icon name="memory" />
-          <span>AI Tasks</span>
-        </div>
-        <strong>120K</strong>
-        <small>Automated</small>
-      </div>
-      <div className="metric-card metric-compact metric-right metric-orange">
-        <div>
-          <Icon name="verified" />
-          <span>Lead Quality</span>
-        </div>
-        <strong>+78%</strong>
-        <small>Sales Ready</small>
-      </div>
-      <div className="metric-card metric-bottom">
-        <div>
-          <Icon name="ads_click" />
-          <span>Ad ROAS</span>
-        </div>
-        <strong>3.8x</strong>
-        <small>Avg Return</small>
-      </div>
-    </div>
-  );
-}
 
 export default function Home() {
   return (
@@ -246,6 +171,8 @@ export default function Home() {
             <a className="button button-ghost" href="#services">View Services</a>
           </div>
         </div>
+
+        {/* Managed cleanly entirely through DOM API layer references inside */}
         <HeroOrbit />
       </header>
 
