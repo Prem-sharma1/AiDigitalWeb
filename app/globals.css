@@ -133,7 +133,7 @@ a {
   align-items: center;
   text-align: center;
   margin-bottom: 20px;
-  /* Cut in half from 40px */
+  padding: 0 40px; /* Safe spacing from absolute close button */
 }
 
 .popup-logo-area {
@@ -473,6 +473,10 @@ a {
     border-radius: 20px;
   }
   
+  .popup-header {
+    padding: 0 32px; /* Prevent title from overlapping absolute close button */
+  }
+
   .popup-title {
     font-size: 18px !important;
   }
