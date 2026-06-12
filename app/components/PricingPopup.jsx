@@ -32,15 +32,6 @@ export default function PricingPopup({ dialogRef }) {
                         Elevate Your Digital Presence with <span>aidigitals</span>
                     </h2>
                     <p className="popup-subtitle">Join 500+ teams automating their growth today.</p>
-
-                    <div className="popup-cta-group">
-                        <a href="/pricing" className="btn-primary">
-                            See our all plans
-                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5} style={{ width: '16px', height: '16px' }}>
-                                <path strokeLinecap="round" strokeLinejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                            </svg>
-                        </a>
-                    </div>
                 </div>
 
                 <div className="pricing-grid">
@@ -154,7 +145,7 @@ export default function PricingPopup({ dialogRef }) {
                                 </li>
                             </ul>
                         </div>
-                        <a href="/pricing?service=Performance%20Marketing&plan=Meta%20Ads%20-%20Standard%20(%E2%82%B93999/mo)" className="btn-card-solid" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Get Started</a>
+                        <a href="/pricing?service=Performance%20Marketing&plan=Meta%20Ads%20-%20Standard%20(%E2%82%B93999/mo)" className="btn-card-solid" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Select Plan</a>
                     </div>
 
                     {/* Premium Plan */}

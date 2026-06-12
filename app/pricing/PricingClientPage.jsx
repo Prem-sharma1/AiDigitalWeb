@@ -2,36 +2,38 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
-import { useRazorpay } from "../hooks/useRazorpay";
 import { adsPlans, websitePlans, creativePacks, videoPlans } from "./pricingData";
+
 
 export default function PricingClientPage() {
   const [selectedService, setSelectedService] = useState("");
   const [selectedPlan, setSelectedPlan] = useState("");
   const contactFormRef = useRef(null);
-  const { triggerCheckout } = useRazorpay();
 
-  const handleCheckoutSubmit = async (e) => {
+  const handleInquirySubmit = (e) => {
     e.preventDefault();
     const formData = new FormData(e.target);
     const userName = formData.get("userName");
     const email = formData.get("email");
     const phone = formData.get("phone");
 
-    await triggerCheckout({
-      planName: selectedPlan,
-      userName,
-      email,
-      phone,
-      onSuccess: (paymentId) => {
-        alert(`Payment Success! ID: ${paymentId}`);
-        window.location.href = `/pricing?payment_id=${paymentId}&status=success`;
-      },
-      onFailure: (err) => {
-        console.error("Payment failed", err);
-      }
-    });
+    // Track submission in GTM if configured
+    if (typeof window !== "undefined") {
+      window.dataLayer = window.dataLayer || [];
+      window.dataLayer.push({
+        event: "pricing_inquiry_submit",
+        userName,
+        email,
+        phone,
+        planName: selectedPlan,
+        serviceName: selectedService,
+      });
+    }
+
+    alert(`Inquiry submitted successfully for: ${selectedPlan || "Custom Service"}. We'll contact you soon!`);
+    window.location.href = `/pricing?status=success`;
   };
+
 
   useEffect(() => {
     // Auto-select plan from URL search parameters
@@ -284,14 +286,14 @@ export default function PricingClientPage() {
       {/* Contact Section at the Bottom */}
       <section id="contact" className="section contact-section" ref={contactFormRef}>
         <div className="contact-card">
-          <span className="contact-label">Secure Checkout / Inquire</span>
+          <span className="contact-label">Service Inquiry</span>
           <h2>Ready to scale your business?</h2>
           <p>
             {selectedPlan
               ? `You have selected: ${selectedPlan}. Complete the form below to initialize details.`
               : "Tell us about your project and selected packages to receive customized execution timelines."}
           </p>
-          <form onSubmit={handleCheckoutSubmit}>
+          <form onSubmit={handleInquirySubmit}>
             <input name="userName" aria-label="Your name" placeholder="Your name" required />
             <input name="email" aria-label="Email address" placeholder="Email address" type="email" required />
             <input name="phone" aria-label="Phone number" placeholder="Phone number" required />
@@ -314,7 +316,7 @@ export default function PricingClientPage() {
               defaultValue={selectedPlan ? `I am interested in signing up for the: ${selectedPlan}` : ""}
               key={selectedPlan}
             />
-            <button type="submit">Pay and Submit Request</button>
+            <button type="submit">Submit Inquiry</button>
           </form>
         </div>
       </section>
