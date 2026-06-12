@@ -195,7 +195,6 @@ export default function Home() {
               <Icon name={service.icon} />
               <h3>{service.title}</h3>
               <p>{service.body}</p>
-              <a href="#contact">Learn More <Icon name="arrow_forward" /></a>
             </article>
           ))}
         </div>
@@ -232,7 +231,6 @@ export default function Home() {
                 {campaign.tags.map((tag) => <span key={tag}>{tag}</span>)}
               </div>
               <small>Recommended for: {campaign.fit}</small>
-              <a href="#contact">Explore</a>
             </article>
           ))}
         </div>
