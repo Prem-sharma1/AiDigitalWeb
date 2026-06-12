@@ -192,35 +192,3 @@ export const creativePacks = [
   }
 ];
 
-export const videoPlans = [
-  {
-    level: "Starter Plan",
-    qty: 5,
-    price: 4500,
-    description: "Perfect for getting started with AI videos and basic social campaigns.",
-    buttonText: "Select Plan",
-    serviceName: "AI Automation",
-    planParameter: "AI Videos - Starter Plan (5 for ₹4500)",
-    isPopular: false
-  },
-  {
-    level: "Growth Plan",
-    qty: 7,
-    price: 5950,
-    description: "Ideal for growing brands and consistent content output across platforms.",
-    buttonText: "Select Plan",
-    serviceName: "AI Automation",
-    planParameter: "AI Videos - Growth Plan (7 for ₹5950)",
-    isPopular: true
-  },
-  {
-    level: "Pro Plan",
-    qty: 10,
-    price: 8000,
-    description: "Best for maximum impact and faster growth with daily video distribution.",
-    buttonText: "Select Plan",
-    serviceName: "AI Automation",
-    planParameter: "AI Videos - Pro Plan (10 for ₹8000)",
-    isPopular: false
-  }
-];

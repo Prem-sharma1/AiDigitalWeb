@@ -37,7 +37,6 @@ export default function PricingPopup({ dialogRef }) {
                 <div className="pricing-grid">
                     {/* Basic Plan */}
                     <div className="plan-card">
-                        <div>
                             <div className="plan-header-row">
                                 <span className="plan-name">Basic</span>
                             </div>
@@ -87,13 +86,10 @@ export default function PricingPopup({ dialogRef }) {
                                     Weekly Report
                                 </li>
                             </ul>
-                        </div>
-                        <a href="/pricing?service=Performance%20Marketing&plan=Meta%20Ads%20-%20Basic%20(%E2%82%B92499/mo)" className="btn-card-outline" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Select Plan</a>
                     </div>
 
                     {/* Standard Plan */}
                     <div className="plan-card popular">
-                        <div>
                             <div className="plan-header-row">
                                 <span className="plan-name">Standard</span>
                                 <span className="popular-badge">Popular</span>
@@ -144,13 +140,10 @@ export default function PricingPopup({ dialogRef }) {
                                     Weekly Report
                                 </li>
                             </ul>
-                        </div>
-                        <a href="/pricing?service=Performance%20Marketing&plan=Meta%20Ads%20-%20Standard%20(%E2%82%B93999/mo)" className="btn-card-solid" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Select Plan</a>
                     </div>
 
                     {/* Premium Plan */}
                     <div className="plan-card">
-                        <div>
                             <div className="plan-header-row">
                                 <span className="plan-name">Premium</span>
                             </div>
@@ -200,9 +193,8 @@ export default function PricingPopup({ dialogRef }) {
                                     Weekly Report
                                 </li>
                             </ul>
-                        </div>
-                        <a href="/pricing?service=Performance%20Marketing&plan=Google%20Ads%20-%20Premium%20(%E2%82%B94999/mo)" className="btn-card-outline" style={{ display: 'block', textAlign: 'center', textDecoration: 'none' }}>Select Plan</a>
                     </div>
+
                 </div>
 
             </div>

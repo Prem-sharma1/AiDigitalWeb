@@ -19,7 +19,7 @@ const sora = Sora({
 export const metadata = {
   title: "AI Digital | Neural Growth Marketing",
   description:
-    "AI-powered digital marketing for SEO, performance campaigns, social growth, design, analytics, and automation."
+    "AI-powered digital marketing for SEO, performance campaigns, social growth, design, and analytics."
 };
 
 export default function RootLayout({ children }) {

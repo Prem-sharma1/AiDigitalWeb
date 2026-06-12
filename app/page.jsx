@@ -1,6 +1,7 @@
 import GoalSelector from "./components/GoalSelector";
 import { Icon, SiteFooter, SiteHeader } from "./components/SiteChrome";
 import HeroOrbit from "./components/HeroOrbit";
+import ContactForm from "./components/ContactForm";
 
 const services = [
   {
@@ -32,12 +33,6 @@ const services = [
     title: "Branding",
     tone: "orange",
     body: "Memorable identity design and messaging that resonates with your audience."
-  },
-  {
-    icon: "memory",
-    title: "AI Automation",
-    tone: "blue",
-    body: "Streamline your workflows and customer journeys with intelligent systems."
   }
 ];
 
@@ -146,8 +141,8 @@ const insights = [
   },
   {
     label: "Branding",
-    title: "Building Trust in an Automated World",
-    body: "Strategies for maintaining authentic connection while scaling through automation."
+    title: "Building Trust in a Digital World",
+    body: "Strategies for maintaining authentic connection while scaling your brand."
   }
 ];
 
@@ -280,25 +275,7 @@ export default function Home() {
       </section>
 
       <section id="contact" className="section contact-section">
-        <div className="contact-card">
-          <span className="contact-label">Contact Us</span>
-          <h2>Let's build something great together</h2>
-          <p>Tell us about your project and we'll respond within one business day.</p>
-          <form>
-            <input aria-label="Your name" placeholder="Your name" />
-            <input aria-label="Email address" placeholder="Email address" type="email" />
-            <input aria-label="Phone" placeholder="Phone" />
-            <select aria-label="Service of interest" defaultValue="">
-              <option value="" disabled>Service of interest</option>
-              <option>SEO Growth</option>
-              <option>Performance Marketing</option>
-              <option>Web Development</option>
-              <option>AI Automation</option>
-            </select>
-            <textarea aria-label="Project brief" placeholder="Tell us about your project" rows="5" />
-            <button type="button">Send message</button>
-          </form>
-        </div>
+        <ContactForm />
       </section>
 
       <SiteFooter />

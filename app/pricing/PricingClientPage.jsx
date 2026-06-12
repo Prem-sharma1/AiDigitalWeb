@@ -1,66 +1,8 @@
-"use client";
-
-import React, { useState, useRef, useEffect } from "react";
+import React from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
-import { adsPlans, websitePlans, creativePacks, videoPlans } from "./pricingData";
-
+import { adsPlans, websitePlans, creativePacks } from "./pricingData";
 
 export default function PricingClientPage() {
-  const [selectedService, setSelectedService] = useState("");
-  const [selectedPlan, setSelectedPlan] = useState("");
-  const contactFormRef = useRef(null);
-
-  const handleInquirySubmit = (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const userName = formData.get("userName");
-    const email = formData.get("email");
-    const phone = formData.get("phone");
-
-    // Track submission in GTM if configured
-    if (typeof window !== "undefined") {
-      window.dataLayer = window.dataLayer || [];
-      window.dataLayer.push({
-        event: "pricing_inquiry_submit",
-        userName,
-        email,
-        phone,
-        planName: selectedPlan,
-        serviceName: selectedService,
-      });
-    }
-
-    alert(`Inquiry submitted successfully for: ${selectedPlan || "Custom Service"}. We'll contact you soon!`);
-    window.location.href = `/pricing?status=success`;
-  };
-
-
-  useEffect(() => {
-    // Auto-select plan from URL search parameters
-    const params = new URLSearchParams(window.location.search);
-    const service = params.get("service");
-    const plan = params.get("plan");
-    if (service) {
-      setSelectedService(service);
-    }
-    if (plan) {
-      setSelectedPlan(plan);
-      setTimeout(() => {
-        if (contactFormRef.current) {
-          contactFormRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-      }, 500);
-    }
-  }, []);
-
-  const handleSelectPlan = (serviceName, planName) => {
-    setSelectedService(serviceName);
-    setSelectedPlan(planName);
-    if (contactFormRef.current) {
-      contactFormRef.current.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <div className="pricing-page-wrapper">
       <SiteHeader active="pricing" />
@@ -70,7 +12,6 @@ export default function PricingClientPage() {
         <a href="#ads" className="sub-nav-link">Ads</a>
         <a href="#websites" className="sub-nav-link">Websites</a>
         <a href="#creative" className="sub-nav-link">Creative</a>
-        <a href="#video" className="sub-nav-link">AI Video</a>
       </div>
 
       {/* Top Banner Section */}
@@ -117,13 +58,6 @@ export default function PricingClientPage() {
                   </li>
                 ))}
               </ul>
-
-              <button
-                className={`pricing-btn ${plan.isPopular ? "pricing-btn-solid" : "pricing-btn-outline"}`}
-                onClick={() => handleSelectPlan(plan.serviceName, plan.planParameter)}
-              >
-                {plan.buttonText}
-              </button>
             </div>
           ))}
         </div>
@@ -169,12 +103,6 @@ export default function PricingClientPage() {
                     ))}
                   </ul>
                 </div>
-                <button
-                  className="pricing-btn pricing-btn-solid orange-bg"
-                  onClick={() => handleSelectPlan(plan.serviceName, plan.planParameter)}
-                >
-                  {plan.buttonText}
-                </button>
               </div>
             ))}
           </div>
@@ -231,93 +159,10 @@ export default function PricingClientPage() {
                       ))}
                     </ul>
                   </div>
-                  <button
-                    className={`pricing-btn pricing-btn-solid ${!plan.isHighlight ? "orange-bg" : ""}`}
-                    style={buttonStyles}
-                    onClick={() => handleSelectPlan(plan.serviceName, plan.planParameter)}
-                  >
-                    {plan.buttonText}
-                  </button>
                 </div>
               );
             })}
           </div>
-        </div>
-      </section>
-
-      {/* AI Video Solutions Section */}
-      <section id="video" className="pricing-section video-solutions-section">
-        <div className="section-title-wrapper video-title-wrapper">
-          <h2 className="section-title-text">AI Video Solutions</h2>
-          <p className="section-subtitle-text">Next-gen engagement through cinematic AI videos.</p>
-        </div>
-
-        <div className="video-pricing-grid">
-          {videoPlans.map((plan, index) => (
-            <div
-              key={index}
-              className={`video-plan-card ${plan.isPopular ? "video-popular-card" : ""}`}
-            >
-              {plan.isPopular && <div className="popular-top-badge">MOST POPULAR</div>}
-              <h3 className="video-plan-title">{plan.level}</h3>
-
-              <div className="video-qty-display">
-                <span className="qty-number">{plan.qty}</span>
-                <span className="qty-label">AI VIDEOS</span>
-              </div>
-
-              <div className={`video-price-box ${plan.isPopular ? "orange-bg" : ""}`}>
-                ₹{plan.price.toLocaleString("en-IN")}
-              </div>
-
-              <p className="video-plan-desc">{plan.description}</p>
-
-              <button
-                className={`pricing-btn ${plan.isPopular ? "pricing-btn-solid orange-bg" : "pricing-btn-outline video-btn-orange"}`}
-                onClick={() => handleSelectPlan(plan.serviceName, plan.planParameter)}
-              >
-                {plan.buttonText}
-              </button>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* Contact Section at the Bottom */}
-      <section id="contact" className="section contact-section" ref={contactFormRef}>
-        <div className="contact-card">
-          <span className="contact-label">Service Inquiry</span>
-          <h2>Ready to scale your business?</h2>
-          <p>
-            {selectedPlan
-              ? `You have selected: ${selectedPlan}. Complete the form below to initialize details.`
-              : "Tell us about your project and selected packages to receive customized execution timelines."}
-          </p>
-          <form onSubmit={handleInquirySubmit}>
-            <input name="userName" aria-label="Your name" placeholder="Your name" required />
-            <input name="email" aria-label="Email address" placeholder="Email address" type="email" required />
-            <input name="phone" aria-label="Phone number" placeholder="Phone number" required />
-            <select
-              aria-label="Service of interest"
-              value={selectedService}
-              onChange={(e) => setSelectedService(e.target.value)}
-              required
-            >
-              <option value="" disabled>Service of interest</option>
-              <option value="SEO Growth">SEO Growth / Creative Design Packs</option>
-              <option value="Performance Marketing">Performance Marketing (Ads)</option>
-              <option value="Web Development">Web Development (Static/Dynamic)</option>
-              <option value="AI Automation">AI Video & Automation Solutions</option>
-            </select>
-            <textarea
-              aria-label="Project brief"
-              placeholder="Tell us about your project details or any customized requests"
-              rows="5"
-              defaultValue={selectedPlan ? `I am interested in signing up for the: ${selectedPlan}` : ""}
-              key={selectedPlan}
-            />
-            <button type="submit">Submit Inquiry</button>
-          </form>
         </div>
       </section>
 
