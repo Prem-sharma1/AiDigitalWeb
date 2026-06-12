@@ -3,6 +3,8 @@ import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
 import { adsPlans, websitePlans, creativePacks } from "./pricingData";
 
 export default function PricingClientPage() {
+  const creativeScrollRef = React.useRef(null);
+
   return (
     <div className="pricing-page-wrapper">
       <SiteHeader active="pricing" />
@@ -116,53 +118,73 @@ export default function PricingClientPage() {
           <div className="section-title-underline bg-blue" />
         </div>
 
-        <div className="creative-packs-scroll-container">
-          <div className="creative-packs-grid">
-            {creativePacks.map((plan, index) => {
-              const cardStyles = plan.isHighlight ? plan.highlightStyles.card : {};
-              const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
-              const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
-              const buttonStyles = plan.isHighlight ? plan.highlightStyles.button : {};
+        <div className="scroll-wrapper-relative">
+          {/* Scroll Left Button */}
+          <button 
+            className="scroll-arrow-btn left-arrow" 
+            onClick={() => creativeScrollRef.current?.scrollBy({ left: -260, behavior: "smooth" })}
+            aria-label="Scroll left"
+          >
+            <Icon name="chevron_left" />
+          </button>
 
-              return (
-                <div
-                  className="website-plan-card"
-                  key={index}
-                  style={cardStyles}
-                >
-                  {plan.isHighlight && (
-                    <div className="popular-diagonal-ribbon" style={buttonStyles}>
-                      Value
+          <div className="creative-packs-scroll-container" ref={creativeScrollRef}>
+            <div className="creative-packs-grid">
+              {creativePacks.map((plan, index) => {
+                const cardStyles = plan.isHighlight ? plan.highlightStyles.card : {};
+                const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
+                const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
+                const buttonStyles = plan.isHighlight ? plan.highlightStyles.button : {};
+
+                return (
+                  <div
+                    className="website-plan-card"
+                    key={index}
+                    style={cardStyles}
+                  >
+                    {plan.isHighlight && (
+                      <div className="popular-diagonal-ribbon" style={buttonStyles}>
+                        Value
+                      </div>
+                    )}
+                    <div>
+                      <div
+                        className={`web-badge-pill ${plan.tagClass}`}
+                        style={tagStyles}
+                      >
+                        {plan.level}
+                      </div>
+                      <div className="price-display-flat">
+                        <span className="currency">₹</span>
+                        <span className="value">{plan.price}</span>
+                      </div>
+                      <ul className="web-features-list">
+                        {plan.features.map((feat, i) => (
+                          <li key={i}>
+                            <Icon
+                              name={feat.icon}
+                              className="web-feat-icon"
+                              style={iconStyles}
+                            />
+                            {feat.text}
+                          </li>
+                        ))}
+                      </ul>
                     </div>
-                  )}
-                  <div>
-                    <div
-                      className={`web-badge-pill ${plan.tagClass}`}
-                      style={tagStyles}
-                    >
-                      {plan.level}
-                    </div>
-                    <div className="price-display-flat">
-                      <span className="currency">₹</span>
-                      <span className="value">{plan.price}</span>
-                    </div>
-                    <ul className="web-features-list">
-                      {plan.features.map((feat, i) => (
-                        <li key={i}>
-                          <Icon
-                            name={feat.icon}
-                            className="web-feat-icon"
-                            style={iconStyles}
-                          />
-                          {feat.text}
-                        </li>
-                      ))}
-                    </ul>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
+
+          {/* Scroll Right Button */}
+          <button 
+            className="scroll-arrow-btn right-arrow" 
+            onClick={() => creativeScrollRef.current?.scrollBy({ left: 260, behavior: "smooth" })}
+            aria-label="Scroll right"
+          >
+            <Icon name="chevron_right" />
+          </button>
         </div>
       </section>
 
