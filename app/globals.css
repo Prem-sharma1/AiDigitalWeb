@@ -295,7 +295,7 @@ a {
 .plan-card {
   background-color: var(--pm-bg-white);
   border: 1px solid var(--pm-border-light);
-  border-radius: 12px;
+  border-radius: 16px;
   padding: 16px;
   /* Reduced from 24px */
   display: flex;
@@ -304,6 +304,18 @@ a {
   gap: 16px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
   box-sizing: border-box;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
+}
+
+.plan-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 12px 24px rgba(15, 23, 42, 0.08);
+  border-color: rgba(59, 47, 201, 0.35);
+}
+
+.plan-card.popular:hover {
+  transform: translateY(-7px);
+  box-shadow: 0 16px 32px rgba(59, 47, 201, 0.15);
 }
 
 /* Highlighted Popular Middle Card */
@@ -1208,7 +1220,7 @@ p {
 .services-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 14px;
   width: 100%;
   margin-inline: auto;
 }
@@ -1220,10 +1232,10 @@ p {
   position: relative;
   overflow: hidden;
   border: 1px solid var(--card-border);
-  border-radius: 8px;
+  border-radius: 16px;
   background: var(--card-bg);
   box-shadow: var(--card-shadow);
-  transition: transform 220ms ease, box-shadow 220ms ease, border-color 220ms ease;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
 }
 
 .service-card::before,
@@ -1250,15 +1262,15 @@ p {
 .industry-section:hover,
 .featured-project-card:hover,
 .goal-card:hover {
-  border-color: rgba(38, 132, 185, 0.28);
-  transform: translateY(-4px);
+  border-color: rgba(38, 132, 185, 0.42);
+  transform: translateY(-6px) scale(1.015);
   box-shadow: var(--card-shadow-hover);
 }
 
 .service-card {
   display: grid;
-  min-height: 250px;
-  padding: 28px;
+  min-height: 240px;
+  padding: 22px;
 }
 
 .service-card>.material-symbols-outlined {
@@ -1277,7 +1289,7 @@ p {
 .campaign-card:hover>.material-symbols-outlined,
 .featured-project-card:hover .material-symbols-outlined,
 .why-item:hover>.material-symbols-outlined {
-  transform: translateY(-3px) scale(1.08);
+  transform: translateY(-4px) scale(1.1) rotate(4deg);
 }
 
 .service-card.orange>.material-symbols-outlined,
@@ -1888,15 +1900,15 @@ p {
 .campaign-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 18px;
+  gap: 14px;
   width: 100%;
   margin-inline: auto;
 }
 
 .campaign-card {
   display: grid;
-  min-height: 355px;
-  padding: 22px;
+  min-height: 340px;
+  padding: 20px;
 }
 
 .campaign-card>.material-symbols-outlined {
@@ -2052,7 +2064,7 @@ p {
   display: grid;
   width: 100%;
   grid-template-columns: repeat(3, 1fr);
-  gap: 18px;
+  gap: 14px;
   margin-inline: auto;
 }
 
@@ -2071,7 +2083,7 @@ p {
 }
 
 .insight-body {
-  padding: 22px;
+  padding: 18px;
 }
 
 .insight-body span {
@@ -2919,7 +2931,7 @@ p {
 .ads-pricing-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
+  gap: 14px;
   max-width: 1240px;
   margin: 0 auto;
 }
@@ -2928,20 +2940,21 @@ p {
   background: #ffffff;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 20px;
   box-shadow: 0 4px 20px rgba(15, 23, 42, 0.02);
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
   position: relative;
   overflow: hidden;
 }
 
 .pricing-card-ads:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 15px 35px rgba(15, 23, 42, 0.07);
+  transform: translateY(-6px) scale(1.01);
+  border-color: rgba(59, 47, 201, 0.35);
+  box-shadow: 0 16px 36px rgba(15, 23, 42, 0.08);
 }
 
 /* Diagonal popular ribbon */
@@ -3167,25 +3180,26 @@ p {
 .websites-cards-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 20px;
+  gap: 14px;
 }
 
 .website-plan-card {
   background: #ffffff;
   border: 1px solid #E2E8F0;
   border-radius: 16px;
-  padding: 24px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
   gap: 20px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.02);
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transition: transform 0.4s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.4s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.4s ease;
 }
 
 .website-plan-card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.05);
+  transform: translateY(-6px) scale(1.015);
+  border-color: rgba(59, 47, 201, 0.35);
+  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.06);
 }
 
 .web-badge-pill {
