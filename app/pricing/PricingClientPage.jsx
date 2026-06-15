@@ -1,6 +1,8 @@
+"use client";
+
 import React from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
-import { adsPlans, websitePlans, creativePacks } from "./pricingData";
+import { adsPlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
 
 export default function PricingClientPage() {
   const creativeScrollRef = React.useRef(null);
@@ -11,16 +13,17 @@ export default function PricingClientPage() {
 
       {/* Category Anchor Sub-nav */}
       <div className="pricing-sub-nav">
-        <a href="#ads" className="sub-nav-link">Ads</a>
+        <a href="#ads" className="sub-nav-link">Lead Campaigns</a>
         <a href="#websites" className="sub-nav-link">Websites</a>
         <a href="#creative" className="sub-nav-link">Creative</a>
+        <a href="#aivideo" className="sub-nav-link">AI Video</a>
       </div>
 
       {/* Top Banner Section */}
       <section className="pricing-hero">
         <div className="badge-pill">Your Success, Our Business</div>
         <h1 className="pricing-main-title">
-          Pricing <span>Plans</span>
+          AiDigital <span>Plans</span>
         </h1>
         <p className="pricing-hero-sub">
           Unlock growth with data-driven marketing and high-performance assets tailored for your business needs.
@@ -30,7 +33,7 @@ export default function PricingClientPage() {
       {/* Ads Performance Plans Section */}
       <section id="ads" className="pricing-section section-muted-light">
         <div className="section-title-wrapper">
-          <h2 className="section-title-text">Ads Performance Plans</h2>
+          <h2 className="section-title-text">Lead Campaign Plans</h2>
           <div className="section-title-underline" />
         </div>
 
@@ -131,22 +134,20 @@ export default function PricingClientPage() {
           <div className="creative-packs-scroll-container" ref={creativeScrollRef}>
             <div className="creative-packs-grid">
               {creativePacks.map((plan, index) => {
-                const cardStyles = plan.isHighlight ? plan.highlightStyles.card : {};
+                const cardStyles = plan.isHighlight 
+                  ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined } 
+                  : {};
                 const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
                 const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
                 const buttonStyles = plan.isHighlight ? plan.highlightStyles.button : {};
 
                 return (
                   <div
-                    className="website-plan-card"
+                    className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
                     key={index}
-                    style={cardStyles}
+                    style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor } : cardStyles}
                   >
-                    {plan.isHighlight && (
-                      <div className="popular-diagonal-ribbon" style={buttonStyles}>
-                        Value
-                      </div>
-                    )}
+
                     <div>
                       <div
                         className={`web-badge-pill ${plan.tagClass}`}
@@ -185,6 +186,59 @@ export default function PricingClientPage() {
           >
             <Icon name="chevron_right" />
           </button>
+        </div>
+      </section>
+
+      {/* AI Video Plans Section */}
+      <section id="aivideo" className="pricing-section aivideo-section">
+        <div className="section-title-wrapper">
+          <h2 className="section-title-text">AI Video Plans</h2>
+          <div className="section-title-underline" />
+        </div>
+
+        <div className="pricing-grid" style={{ maxWidth: "1140px", margin: "0 auto", paddingInline: "var(--page-gutter)" }}>
+          {aiVideoPlans.map((plan, index) => {
+            const cardStyles = plan.isHighlight 
+              ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined } 
+              : {};
+            const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
+            const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
+            const buttonStyles = plan.isHighlight ? plan.highlightStyles.button : {};
+
+            return (
+              <div
+                className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
+                key={index}
+                style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor } : cardStyles}
+              >
+
+                <div>
+                  <div
+                    className={`web-badge-pill ${plan.tagClass}`}
+                    style={tagStyles}
+                  >
+                    {plan.level}
+                  </div>
+                  <div className="price-display-flat">
+                    <span className="currency">₹</span>
+                    <span className="value">{plan.price}</span>
+                  </div>
+                  <ul className="web-features-list">
+                    {plan.features.map((feat, i) => (
+                      <li key={i}>
+                        <Icon
+                          name={feat.icon}
+                          className="web-feat-icon"
+                          style={iconStyles}
+                        />
+                        {feat.text}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            );
+          })}
         </div>
       </section>
 

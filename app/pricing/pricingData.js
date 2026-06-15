@@ -192,3 +192,51 @@ export const creativePacks = [
   }
 ];
 
+export const aiVideoPlans = [
+  {
+    level: "Starter Plan",
+    tagClass: "static-tag",
+    price: "4,500",
+    features: [
+      { icon: "video_library", text: "5 AI Videos" },
+      { icon: "check_circle", text: "Perfect for getting started" }
+    ],
+    buttonText: "Select Plan",
+    serviceName: "AI Video Production",
+    planParameter: "AI Video - Starter Plan (5 Videos for ₹4500)",
+    isHighlight: false
+  },
+  {
+    level: "Growth Plan",
+    tagClass: "static-tag",
+    price: "5,950",
+    features: [
+      { icon: "video_library", text: "7 AI Videos" },
+      { icon: "check_circle", text: "Ideal for growing brands" }
+    ],
+    buttonText: "Select Plan",
+    serviceName: "AI Video Production",
+    planParameter: "AI Video - Growth Plan (7 Videos for ₹5950)",
+    isHighlight: true,
+    highlightStyles: {
+      card: { borderColor: "#FD7E14", borderWidth: "2px", position: "relative", overflow: "hidden" },
+      tag: { backgroundColor: "#FFF0EA", color: "#FD7E14" },
+      icon: { color: "#FD7E14" },
+      button: { backgroundColor: "#FD7E14" }
+    }
+  },
+  {
+    level: "Pro Plan",
+    tagClass: "static-tag",
+    price: "8,000",
+    features: [
+      { icon: "video_library", text: "10 AI Videos" },
+      { icon: "check_circle", text: "Best for maximum impact" }
+    ],
+    buttonText: "Select Plan",
+    serviceName: "AI Video Production",
+    planParameter: "AI Video - Pro Plan (10 Videos for ₹8000)",
+    isHighlight: false
+  }
+];
+

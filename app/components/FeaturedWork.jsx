@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo, useState } from "react";
+import CreativeGrid from "./CreativeGrid";
 
 const filters = [
   "All",
@@ -144,62 +145,68 @@ export default function FeaturedWork() {
       )}
 
       <div className="industry-list">
-        {visibleIndustries.map((industry) => (
-          <article className="industry-section" key={industry.name}>
-            <div className="industry-copy">
-              <span className="industry-label">Industry</span>
-              <h3>{industry.name}</h3>
-              <p>{industry.description}</p>
-            </div>
-            <div className="featured-project-grid">
-              {industry.projects.map((project) => (
-                <div className="featured-project-card" key={project.title}>
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    {filterIcons[project.type] ?? "dashboard"}
-                  </span>
-                  <strong>{project.title}</strong>
-                  <small>{project.type}</small>
+        {activeFilter === "Creative Content" ? (
+          <CreativeGrid />
+        ) : (
+          <>
+            {visibleIndustries.map((industry) => (
+              <article className="industry-section" key={industry.name}>
+                <div className="industry-copy">
+                  <span className="industry-label">Industry</span>
+                  <h3>{industry.name}</h3>
+                  <p>{industry.description}</p>
                 </div>
-              ))}
-            </div>
-          </article>
-        ))}
-
-        {visibleOtherProjects.length > 0 && (
-          <div className="others-toggle-container">
-            <button
-              type="button"
-              className={`others-toggle-button ${showOthers ? "active" : ""}`}
-              onClick={() => setShowOthers(!showOthers)}
-              aria-expanded={showOthers}
-            >
-              <span>{showOthers ? "Show Fewer Projects" : "View Other Projects"}</span>
-              <span className="material-symbols-outlined">
-                {showOthers ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-              </span>
-            </button>
-          </div>
-        )}
-
-        {showOthers && visibleOtherProjects.length > 0 && (
-          <article className="industry-section others-section">
-            <div className="industry-copy">
-              <span className="industry-label">General</span>
-              <h3>Other Projects</h3>
-              <p>Additional marketing campaigns, custom integrations, branding assets, and creative videos.</p>
-            </div>
-            <div className="featured-project-grid">
-              {visibleOtherProjects.map((project) => (
-                <div className="featured-project-card" key={project.title}>
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    {filterIcons[project.type] ?? "dashboard"}
-                  </span>
-                  <strong>{project.title}</strong>
-                  <small>{project.type}</small>
+                <div className="featured-project-grid">
+                  {industry.projects.map((project) => (
+                    <div className="featured-project-card" key={project.title}>
+                      <span className="material-symbols-outlined" aria-hidden="true">
+                        {filterIcons[project.type] ?? "dashboard"}
+                      </span>
+                      <strong>{project.title}</strong>
+                      <small>{project.type}</small>
+                    </div>
+                  ))}
                 </div>
-              ))}
-            </div>
-          </article>
+              </article>
+            ))}
+
+            {visibleOtherProjects.length > 0 && (
+              <div className="others-toggle-container">
+                <button
+                  type="button"
+                  className={`others-toggle-button ${showOthers ? "active" : ""}`}
+                  onClick={() => setShowOthers(!showOthers)}
+                  aria-expanded={showOthers}
+                >
+                  <span>{showOthers ? "Show Fewer Projects" : "View Other Projects"}</span>
+                  <span className="material-symbols-outlined">
+                    {showOthers ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+                  </span>
+                </button>
+              </div>
+            )}
+
+            {showOthers && visibleOtherProjects.length > 0 && (
+              <article className="industry-section others-section">
+                <div className="industry-copy">
+                  <span className="industry-label">General</span>
+                  <h3>Other Projects</h3>
+                  <p>Additional marketing campaigns, custom integrations, branding assets, and creative videos.</p>
+                </div>
+                <div className="featured-project-grid">
+                  {visibleOtherProjects.map((project) => (
+                    <div className="featured-project-card" key={project.title}>
+                      <span className="material-symbols-outlined" aria-hidden="true">
+                        {filterIcons[project.type] ?? "dashboard"}
+                      </span>
+                      <strong>{project.title}</strong>
+                      <small>{project.type}</small>
+                    </div>
+                  ))}
+                </div>
+              </article>
+            )}
+          </>
         )}
       </div>
     </section>
