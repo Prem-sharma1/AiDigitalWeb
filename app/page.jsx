@@ -1,3 +1,6 @@
+"use client";
+
+import { useRef } from "react";
 import GoalSelector from "./components/GoalSelector";
 import { Icon, SiteFooter, SiteHeader } from "./components/SiteChrome";
 import HeroOrbit from "./components/HeroOrbit";
@@ -131,7 +134,7 @@ const whyItems = [
 const insights = [
   {
     label: "SEO",
-    title: "The Future of AI-Driven Content Creation in 2024",
+    title: "The Future of AI-Driven Content Creation in 2026",
     body: "Discover how artificial intelligence is reshaping organic search strategies."
   },
   {
@@ -143,10 +146,48 @@ const insights = [
     label: "Branding",
     title: "Building Trust in a Digital World",
     body: "Strategies for maintaining authentic connection while scaling your brand."
+  },
+  {
+    label: "Social Media",
+    title: "Viral Video Marketing Secrets for Startups",
+    body: "How to conceptualize, edit, and launch short-form content that captures views."
+  },
+  {
+    label: "PPC",
+    title: "Google Ads vs. Meta Ads: Which Channel Wins?",
+    body: "A deep dive comparison of cost-per-click, target audiences, and conversion rates."
+  },
+  {
+    label: "Web Design",
+    title: "CRO Guidelines for High-Converting Landing Pages",
+    body: "Key elements that turn casual digital marketing traffic into verified paying customers."
+  },
+  {
+    label: "Branding",
+    title: "The Science Behind Curated Color Palettes",
+    body: "How choosing modern colors, fonts, and typography directly impacts consumer trust."
+  },
+  {
+    label: "Local SEO",
+    title: "Dominating Google Map Listings in Your City",
+    body: "Actionable local SEO guidelines to place your service business in the top local 3-pack."
   }
 ];
 
 export default function Home() {
+  const blogContainerRef = useRef(null);
+
+  const handleBlogScroll = (direction) => {
+    const container = blogContainerRef.current;
+    if (container) {
+      const scrollAmount = container.clientWidth * 0.8;
+      container.scrollBy({
+        left: direction === "left" ? -scrollAmount : scrollAmount,
+        behavior: "smooth"
+      });
+    }
+  };
+
   return (
     <main id="top">
       <SiteHeader active="home" />
@@ -258,17 +299,37 @@ export default function Home() {
           <h2>Latest Insights</h2>
           <a href="#contact">View All <Icon name="arrow_forward" /></a>
         </div>
-        <div className="insight-grid">
-          {insights.map((insight) => (
-            <article className="insight-card" key={insight.title}>
-              <div className="insight-image" />
-              <div className="insight-body">
-                <span>{insight.label}</span>
-                <h3>{insight.title}</h3>
-                <p>{insight.body}</p>
-              </div>
-            </article>
-          ))}
+        <div className="creative-slider-wrapper">
+          <button
+            type="button"
+            className="slider-nav-btn prev"
+            onClick={() => handleBlogScroll("left")}
+            aria-label="Scroll left"
+          >
+            <span className="material-symbols-outlined">chevron_left</span>
+          </button>
+          
+          <div className="insight-grid" ref={blogContainerRef}>
+            {insights.map((insight) => (
+              <article className="insight-card" key={insight.title}>
+                <div className="insight-image" />
+                <div className="insight-body">
+                  <span>{insight.label}</span>
+                  <h3>{insight.title}</h3>
+                  <p>{insight.body}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+
+          <button
+            type="button"
+            className="slider-nav-btn next"
+            onClick={() => handleBlogScroll("right")}
+            aria-label="Scroll right"
+          >
+            <span className="material-symbols-outlined">chevron_right</span>
+          </button>
         </div>
       </section>
 
