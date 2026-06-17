@@ -1,5 +1,4 @@
 "use client"; // Required for DOM refs and lifecycle hooks
-
 import React, { useRef, useEffect } from "react";
 import PricingPopup from "./PricingPopup";
 import { Icon } from "./SiteChrome";
@@ -19,7 +18,17 @@ export default function HeroOrbit() {
             {/* Handled natively with no buttons or local react visibility state hooks */}
             <PricingPopup dialogRef={dialogRef} />
 
-            {/* Background Visual Elements */}
+            {/* Central Nucleus */}
+            <div className="orbit-nucleus">
+                <div className="nucleus-pulse-ring-1" />
+                <div className="nucleus-pulse-ring-2" />
+                <div className="orbit-nucleus-inner">
+                    <Icon name="hub" />
+                    <strong>Digital<br />Marketing</strong>
+                </div>
+            </div>
+
+            {/* Background Visual Concentric Rings */}
             <div className="orbit orbit-ring orbit-lg" />
             <div className="orbit orbit-ring orbit-md" />
             <div className="orbit orbit-ring orbit-sm" />
@@ -34,6 +43,7 @@ export default function HeroOrbit() {
                 <i className="orbit-dot orbit-dot-light" />
             </span>
 
+            {/* Metric Cards (positioned around the nucleus) */}
             <div className="metric-card metric-top">
                 <div>
                     <Icon name="monitoring" />
@@ -52,14 +62,7 @@ export default function HeroOrbit() {
                 <small>Landing Pages</small>
             </div>
 
-            <div className="metric-card metric-compact metric-center">
-                <div>
-                    <Icon name="memory" />
-                    <span>AI Tasks</span>
-                </div>
-                <strong>120K</strong>
-                <small>Automated</small>
-            </div>
+
 
             <div className="metric-card metric-compact metric-right metric-orange">
                 <div>

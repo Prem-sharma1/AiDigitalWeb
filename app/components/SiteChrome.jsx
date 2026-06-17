@@ -1,3 +1,5 @@
+"use client";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 
 const footerGroups = [
@@ -21,8 +23,8 @@ const footerGroups = [
 
 const navItems = [
   { label: "Home", href: "/", key: "home" },
-  { label: "Why Us", href: "/#why", key: "why" },
   { label: "Services", href: "/#services", key: "services" },
+  { label: "Why Us", href: "/#why", key: "why" },
   { label: "Prices", href: "/pricing", key: "pricing" },
   { label: "Portfolio", href: "/portfolio", key: "portfolio" },
   { label: "Blogs", href: "/#insights", key: "blogs" }
@@ -45,6 +47,56 @@ export function Logo() {
 }
 
 export function SiteHeader({ active = "home" }) {
+  const [currentActive, setCurrentActive] = useState(active);
+
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const path = window.location.pathname;
+    if (path === "/pricing") {
+      setCurrentActive("pricing");
+      return;
+    }
+    if (path === "/portfolio") {
+      setCurrentActive("portfolio");
+      return;
+    }
+
+    const sections = [
+      { id: "top", key: "home" },
+      { id: "services", key: "services" },
+      { id: "why", key: "why" },
+      { id: "insights", key: "blogs" }
+    ];
+
+    const handleScroll = () => {
+      const scrollPosition = window.scrollY + 140; // offset to trigger active state earlier
+
+      // Bottom scroll check
+      if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 60) {
+        setCurrentActive("blogs");
+        return;
+      }
+
+      let activeSection = "home";
+      for (const section of sections) {
+        const el = document.getElementById(section.id);
+        if (el) {
+          const top = el.offsetTop;
+          if (scrollPosition >= top) {
+            activeSection = section.key;
+          }
+        }
+      }
+      setCurrentActive(activeSection);
+    };
+
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [active]);
+
   return (
     <nav className="top-nav">
       <Logo />
@@ -53,8 +105,8 @@ export function SiteHeader({ active = "home" }) {
           <a
             href={item.href}
             key={item.key}
-            className={active === item.key ? "active" : ""}
-            aria-current={active === item.key ? "page" : undefined}
+            className={currentActive === item.key ? "active" : ""}
+            aria-current={currentActive === item.key ? "page" : undefined}
           >
             {item.label}
           </a>
@@ -71,8 +123,8 @@ export function SiteHeader({ active = "home" }) {
             <a
               href={item.href}
               key={item.key}
-              className={active === item.key ? "active" : ""}
-              aria-current={active === item.key ? "page" : undefined}
+              className={currentActive === item.key ? "active" : ""}
+              aria-current={currentActive === item.key ? "page" : undefined}
             >
               {item.label}
             </a>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef } from "react";
+import Image from "next/image";
 import GoalSelector from "./components/GoalSelector";
 import { Icon, SiteFooter, SiteHeader } from "./components/SiteChrome";
 import HeroOrbit from "./components/HeroOrbit";
@@ -45,56 +46,72 @@ const campaigns = [
     title: "SEO Growth Campaign",
     body: "Every organic search strategy starts with keyword mapping, audits, and AI-supported content planning.",
     tags: ["Technical", "Content", "Local"],
-    fit: "Search visibility"
+    fit: "Search visibility",
+    price: "Starts at ₹599",
+    link: "/pricing#creative"
   },
   {
     icon: "ads_click",
     title: "Google Ads Campaign",
     body: "High-intent search campaigns with landing pages, tracking, and ongoing ROAS improvement.",
     tags: ["Search", "Leads", "ROI"],
-    fit: "Paid growth"
+    fit: "Paid growth",
+    price: "Starts at ₹4,999/mo",
+    link: "/pricing#ads"
   },
   {
     icon: "mail",
     title: "Meta Ads Campaign",
     body: "Audience-first targeting, creative testing, and retargeting for brand and sales growth.",
     tags: ["Creative", "Social", "Retargeting"],
-    fit: "Social sales"
+    fit: "Social sales",
+    price: "Starts at ₹2,499/mo",
+    link: "/pricing#ads"
   },
   {
     icon: "webhook",
     title: "Website & Landing Page",
     body: "CRO-focused pages that guide visitors toward clear conversion actions and measurable leads.",
     tags: ["CRO", "UX", "Speed"],
-    fit: "Conversion"
+    fit: "Conversion",
+    price: "Starts at ₹7,499",
+    link: "/pricing#websites"
   },
   {
     icon: "edit_square",
     title: "Content Marketing",
     body: "SEO-led content systems built around intent, authority, and helpful editorial calendars.",
     tags: ["Blogs", "SEO", "Authority"],
-    fit: "Trust building"
+    fit: "Trust building",
+    price: "Starts at ₹599",
+    link: "/pricing#creative"
   },
   {
     icon: "analytics",
     title: "Analytics & Reporting",
     body: "Dashboards and monthly reporting that turn campaign activity into simple decisions.",
     tags: ["GA4", "Looker", "KPI"],
-    fit: "Performance clarity"
+    fit: "Performance clarity",
+    price: "Starts at ₹2,499/mo",
+    link: "/pricing#ads"
   },
   {
     icon: "movie",
     title: "AI Video Creation",
     body: "Short-form video concepts, scripts, and production direction for paid and organic channels.",
     tags: ["Shorts", "Reels", "Motion"],
-    fit: "Video content"
+    fit: "Video content",
+    price: "Starts at ₹4,500",
+    link: "/pricing#aivideo"
   },
   {
     icon: "post_add",
     title: "Social Media Post Creation",
     body: "Automated and manual high-engagement posts, captions, and scheduling for active brands.",
     tags: ["Graphics", "Captions", "Scheduling"],
-    fit: "Active brands"
+    fit: "Active brands",
+    price: "Starts at ₹599",
+    link: "/pricing#creative"
   }
 ];
 
@@ -135,42 +152,50 @@ const insights = [
   {
     label: "SEO",
     title: "The Future of AI-Driven Content Creation in 2026",
-    body: "Discover how artificial intelligence is reshaping organic search strategies."
+    body: "Discover how artificial intelligence is reshaping organic search strategies.",
+    image: "/blog_seo.png"
   },
   {
     label: "Performance Marketing",
     title: "Maximizing ROAS with Predictive Analytics",
-    body: "Learn how to predict campaign success before allocating ad spend."
+    body: "Learn how to predict campaign success before allocating ad spend.",
+    image: "/blog_ads.png"
   },
   {
     label: "Branding",
     title: "Building Trust in a Digital World",
-    body: "Strategies for maintaining authentic connection while scaling your brand."
+    body: "Strategies for maintaining authentic connection while scaling your brand.",
+    image: "/blog_branding.png"
   },
   {
     label: "Social Media",
     title: "Viral Video Marketing Secrets for Startups",
-    body: "How to conceptualize, edit, and launch short-form content that captures views."
+    body: "How to conceptualize, edit, and launch short-form content that captures views.",
+    image: "/blog_social.png"
   },
   {
     label: "PPC",
     title: "Google Ads vs. Meta Ads: Which Channel Wins?",
-    body: "A deep dive comparison of cost-per-click, target audiences, and conversion rates."
+    body: "A deep dive comparison of cost-per-click, target audiences, and conversion rates.",
+    image: "/blog_ads.png"
   },
   {
     label: "Web Design",
     title: "CRO Guidelines for High-Converting Landing Pages",
-    body: "Key elements that turn casual digital marketing traffic into verified paying customers."
+    body: "Key elements that turn casual digital marketing traffic into verified paying customers.",
+    image: "/blog_seo.png"
   },
   {
     label: "Branding",
     title: "The Science Behind Curated Color Palettes",
-    body: "How choosing modern colors, fonts, and typography directly impacts consumer trust."
+    body: "How choosing modern colors, fonts, and typography directly impacts consumer trust.",
+    image: "/blog_branding.png"
   },
   {
     label: "Local SEO",
     title: "Dominating Google Map Listings in Your City",
-    body: "Actionable local SEO guidelines to place your service business in the top local 3-pack."
+    body: "Actionable local SEO guidelines to place your service business in the top local 3-pack.",
+    image: "/blog_seo.png"
   }
 ];
 
@@ -195,8 +220,7 @@ export default function Home() {
       <header className="hero section">
         <div className="hero-copy">
           <h1>
-            AI-Powered Digital Marketing That Connects Brands With{" "}
-            <span>Measurable Growth</span>
+            Your Business <span>Our Success</span>
           </h1>
           <p>
             AI Digital helps businesses grow through SEO, ads, social, design,
@@ -236,17 +260,9 @@ export default function Home() {
               <Icon name={service.icon} />
               <h3>{service.title}</h3>
               <p>{service.body}</p>
+              <a className="service-card-btn" href="/pricing">Check Our Pricing</a>
             </article>
           ))}
-        </div>
-      </section>
-
-      <section className="section framework">
-        <h2>Innovate. Connect. Grow.</h2>
-        <div className="framework-steps">
-          <div><Icon name="lightbulb" /><span>Innovate</span></div>
-          <div><Icon name="hub" /><span>Connect</span></div>
-          <div><Icon name="trending_up" /><span>Grow</span></div>
         </div>
       </section>
 
@@ -272,6 +288,7 @@ export default function Home() {
                 {campaign.tags.map((tag) => <span key={tag}>{tag}</span>)}
               </div>
               <small>Recommended for: {campaign.fit}</small>
+              <a href={campaign.link} className="campaign-pricing-btn">Check Pricing</a>
             </article>
           ))}
         </div>
@@ -308,11 +325,19 @@ export default function Home() {
           >
             <span className="material-symbols-outlined">chevron_left</span>
           </button>
-          
+
           <div className="insight-grid" ref={blogContainerRef}>
             {insights.map((insight) => (
               <article className="insight-card" key={insight.title}>
-                <div className="insight-image" />
+                <div className="insight-image" style={{ position: "relative" }}>
+                  <Image
+                    src={insight.image}
+                    alt={insight.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    style={{ objectFit: "cover" }}
+                  />
+                </div>
                 <div className="insight-body">
                   <span>{insight.label}</span>
                   <h3>{insight.title}</h3>
