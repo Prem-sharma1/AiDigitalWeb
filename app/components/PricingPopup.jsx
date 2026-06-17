@@ -1,11 +1,89 @@
 "use client"; // Required for native browser event click listeners
 
-import React from 'react';
+import React, { useRef, useEffect } from 'react';
 
 export default function PricingPopup({ dialogRef }) {
     const handleClose = () => {
         if (dialogRef.current) {
             dialogRef.current.close();
+        }
+    };
+
+    const loadRazorpayScript = () => {
+        return new Promise((resolve) => {
+            const script = document.createElement("script");
+            script.src = "https://checkout.razorpay.com/v1/checkout.js";
+            script.onload = () => resolve(true);
+            script.onerror = () => resolve(false);
+            document.body.appendChild(script);
+        });
+    };
+
+    const handleBuyNow = async (planName, price) => {
+        const loaded = await loadRazorpayScript();
+        if (!loaded) {
+            alert("Failed to load Razorpay SDK. Please check your internet connection.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/razorpay/order", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ amount: price, planName }),
+            });
+            const data = await response.json();
+
+            if (!data.success) {
+                alert("Unable to initiate order. Please try again.");
+                return;
+            }
+
+            const options = {
+                key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_7fK8bF9H1k6Y3a",
+                amount: data.amount,
+                currency: "INR",
+                name: "AI Digital",
+                description: `${planName} Plan Purchase`,
+                image: "/logo-cropped.png",
+                order_id: data.orderId,
+                handler: async function (paymentResponse) {
+                    try {
+                        const verifyResponse = await fetch("/api/razorpay/verify", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({
+                                razorpay_order_id: paymentResponse.razorpay_order_id,
+                                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                                razorpay_signature: paymentResponse.razorpay_signature,
+                            }),
+                        });
+                        const verifyData = await verifyResponse.json();
+                        if (verifyData.success) {
+                            alert(`Payment Successful!\nPayment ID: ${paymentResponse.razorpay_payment_id}`);
+                        } else {
+                            alert("Payment verification failed.");
+                        }
+                    } catch (err) {
+                        console.error("Verification call error:", err);
+                        alert("Verification connection error.");
+                    }
+                },
+                prefill: {
+                    name: "",
+                    email: "",
+                    contact: ""
+                },
+                theme: {
+                    color: "#e56030"
+                }
+            };
+
+            const paymentObject = new window.Razorpay(options);
+            paymentObject.open();
+        } catch (error) {
+            console.error("Order creation call failed:", error);
+            alert("Failed to initiate payment. Please try again.");
         }
     };
 
@@ -27,7 +105,6 @@ export default function PricingPopup({ dialogRef }) {
                 </button>
 
                 <div className="popup-header">
-
                     <h2 className="popup-title">
                         Elevate Your Digital Presence with <span>aidigitals</span>
                     </h2>
@@ -86,6 +163,13 @@ export default function PricingPopup({ dialogRef }) {
                                     Weekly Report
                                 </li>
                             </ul>
+                            <button
+                                onClick={() => handleBuyNow("Basic", 2499)}
+                                className="btn-card-outline"
+                                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
+                            >
+                                Buy Now
+                            </button>
                     </div>
 
                     {/* Standard Plan */}
@@ -140,6 +224,13 @@ export default function PricingPopup({ dialogRef }) {
                                     Weekly Report
                                 </li>
                             </ul>
+                            <button
+                                onClick={() => handleBuyNow("Standard", 3999)}
+                                className="btn-card-solid"
+                                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
+                            >
+                                Buy Now
+                            </button>
                     </div>
 
                     {/* Premium Plan */}
@@ -193,6 +284,13 @@ export default function PricingPopup({ dialogRef }) {
                                     Weekly Report
                                 </li>
                             </ul>
+                            <button
+                                onClick={() => handleBuyNow("Premium", 4999)}
+                                className="btn-card-outline"
+                                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
+                            >
+                                Buy Now
+                            </button>
                     </div>
 
                 </div>

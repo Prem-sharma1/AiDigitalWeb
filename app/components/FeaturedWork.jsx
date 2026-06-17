@@ -45,7 +45,8 @@ const industries = [
       { title: "Hospital Website", type: "Website & SEO" },
       { title: "Healthcare Campaign", type: "Campaigns" },
       { title: "AI Medical Promo", type: "AI Videos" },
-      { title: "Healthcare Branding Creative", type: "Creative Content" }
+      { title: "Healthcare Branding Creative", type: "Creative Content" },
+      { title: "Dr. Ritesh Gupta Promo", type: "AI Videos" }
     ]
   },
   {
@@ -56,7 +57,9 @@ const industries = [
       { title: "Finance Dashboard", type: "Website & SEO" },
       { title: "Investment Campaign", type: "Campaigns" },
       { title: "Finance Social Creative", type: "Creative Content" },
-      { title: "Finance Awareness Reel", type: "Reels" }
+      { title: "Finance Awareness Reel", type: "Reels" },
+      { title: "RR Capital Promo", type: "AI Videos" },
+      { title: "TaxClair AI Promo", type: "AI Videos" }
     ]
   },
   {
@@ -68,6 +71,26 @@ const industries = [
       { title: "Restaurant Campaign", type: "Campaigns" },
       { title: "AI Hotel Promo", type: "AI Videos" },
       { title: "Hospitality Reel", type: "Reels" }
+    ]
+  },
+  {
+    name: "Solar",
+    description:
+      "Solar websites, green energy campaigns, AI solar videos, and promotional clean energy reels.",
+    projects: [
+      { title: "Solar Landing Page", type: "Website & SEO" },
+      { title: "Green Energy Campaign", type: "Campaigns" },
+      { title: "KwikM Solar Promo", type: "AI Videos" }
+    ]
+  },
+  {
+    name: "Agriculture",
+    description:
+      "Agricultural websites, farming campaigns, AI agro videos, and promotional sustainable agriculture reels.",
+    projects: [
+      { title: "Agricultural Landing Page", type: "Website & SEO" },
+      { title: "Sustainable Farm Campaign", type: "Campaigns" },
+      { title: "Mack Agro Promo", type: "AI Videos" }
     ]
   }
 ];
@@ -145,8 +168,8 @@ export default function FeaturedWork() {
       )}
 
       <div className="industry-list">
-        {activeFilter === "Creative Content" ? (
-          <CreativeGrid />
+        {activeFilter === "Creative Content" || activeFilter === "AI Videos" || activeFilter === "Reels" || activeFilter === "All" ? (
+          <CreativeGrid activeFilter={activeFilter} />
         ) : (
           <>
             {visibleIndustries.map((industry) => (

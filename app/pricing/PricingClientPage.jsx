@@ -4,8 +4,105 @@ import React from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
 import { adsPlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
 
+const getWhatsAppLink = (planName, price, period = "") => {
+  const message = `Hi! I would like to buy the ${planName} plan priced at ₹${price}${period} from AI Digital.`;
+  return `https://wa.me/919096090701?text=${encodeURIComponent(message)}`;
+};
+
 export default function PricingClientPage() {
   const creativeScrollRef = React.useRef(null);
+
+  const loadRazorpayScript = () => {
+    return new Promise((resolve) => {
+      if (window.Razorpay) {
+        resolve(true);
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = "https://checkout.razorpay.com/v1/checkout.js";
+      script.onload = () => resolve(true);
+      script.onerror = () => resolve(false);
+      document.body.appendChild(script);
+    });
+  };
+
+  const cleanPrice = (price) => {
+    if (typeof price === "number") return price;
+    if (typeof price === "string") {
+      return parseInt(price.replace(/,/g, ""), 10);
+    }
+    return 0;
+  };
+
+  const handleBuyNow = async (planName, price) => {
+    const loaded = await loadRazorpayScript();
+    if (!loaded) {
+      alert("Failed to load Razorpay SDK. Please check your internet connection.");
+      return;
+    }
+
+    const sanitizedPrice = cleanPrice(price);
+
+    try {
+      const response = await fetch("/api/razorpay/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: sanitizedPrice, planName }),
+      });
+      const data = await response.json();
+
+      if (!data.success) {
+        alert("Unable to initiate order. Please try again.");
+        return;
+      }
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_7fK8bF9H1k6Y3a",
+        amount: data.amount,
+        currency: "INR",
+        name: "AI Digital",
+        description: `${planName} Plan Purchase`,
+        image: "/logo-cropped.png",
+        order_id: data.orderId,
+        handler: async function (paymentResponse) {
+          try {
+            const verifyResponse = await fetch("/api/razorpay/verify", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify({
+                razorpay_order_id: paymentResponse.razorpay_order_id,
+                razorpay_payment_id: paymentResponse.razorpay_payment_id,
+                razorpay_signature: paymentResponse.razorpay_signature,
+              }),
+            });
+            const verifyData = await verifyResponse.json();
+            if (verifyData.success) {
+              alert(`Payment Successful!\nPayment ID: ${paymentResponse.razorpay_payment_id}`);
+            } else {
+              alert("Payment verification failed.");
+            }
+          } catch (err) {
+            console.error("Verification call error:", err);
+            alert("Verification connection error.");
+          }
+        },
+        prefill: {
+          name: "",
+          email: "",
+          contact: ""
+        },
+        theme: {
+          color: "#e56030"
+        }
+      };
+
+      const paymentObject = new window.Razorpay(options);
+      paymentObject.open();
+    } catch (error) {
+      console.error("Order creation call failed:", error);
+      alert("Failed to initiate payment. Please try again.");
+    }
+  };
 
   return (
     <div className="pricing-page-wrapper">
@@ -42,27 +139,37 @@ export default function PricingClientPage() {
             <div
               key={index}
               className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
+              style={{ display: "flex", flexDirection: "column", justifyContent: "between" }}
             >
-              <div className="card-top-info">
-                <div className={`ad-platform-badge ${plan.badgeClass}`}>
-                  <span className="platform-icon">{plan.platform}</span>
+              <div>
+                <div className={`card-top-info`}>
+                  <div className={`ad-platform-badge ${plan.badgeClass}`}>
+                    <span className="platform-icon">{plan.platform}</span>
+                  </div>
+                  <div className={`card-label-badge ${plan.pillClass}`}>{plan.level}</div>
+                  <div className="price-display">
+                    <span className="currency">₹</span>
+                    <span className="value">{plan.price}</span>
+                    <span className="period">{plan.period}</span>
+                  </div>
                 </div>
-                <div className={`card-label-badge ${plan.pillClass}`}>{plan.level}</div>
-                <div className="price-display">
-                  <span className="currency">₹</span>
-                  <span className="value">{plan.price}</span>
-                  <span className="period">{plan.period}</span>
-                </div>
-              </div>
 
-              <ul className="card-features-list">
-                {plan.features.map((feat, i) => (
-                  <li key={i}>
-                    <span className="check-icon-wrapper">✓</span>
-                    {feat}
-                  </li>
-                ))}
-              </ul>
+                <ul className="card-features-list">
+                  {plan.features.map((feat, i) => (
+                    <li key={i}>
+                      <span className="check-icon-wrapper">✓</span>
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price)}
+                className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
+                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", border: "none", cursor: "pointer" }}
+              >
+                Buy Now
+              </button>
             </div>
           ))}
         </div>
@@ -92,7 +199,7 @@ export default function PricingClientPage() {
           {/* Right Column Pricing Cards */}
           <div className="websites-cards-grid">
             {websitePlans.map((plan, index) => (
-              <div className="website-plan-card" key={index}>
+              <div className="website-plan-card" key={index} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
                   <div className={`web-badge-pill ${plan.tagClass}`}>{plan.level}</div>
                   <div className="price-display-flat">
@@ -108,6 +215,13 @@ export default function PricingClientPage() {
                     ))}
                   </ul>
                 </div>
+                <button
+                  onClick={() => handleBuyNow(plan.level + " Website", plan.price)}
+                  className="btn-card-outline"
+                  style={{ display: "block", width: "100%", textAlign: "center", marginTop: "24px", cursor: "pointer" }}
+                >
+                  Buy Now
+                </button>
               </div>
             ))}
           </div>
@@ -139,15 +253,13 @@ export default function PricingClientPage() {
                   : {};
                 const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
                 const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
-                const buttonStyles = plan.isHighlight ? plan.highlightStyles.button : {};
 
                 return (
                   <div
                     className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
                     key={index}
-                    style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor } : cardStyles}
+                    style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor, display: "flex", flexDirection: "column", justifyContent: "space-between" } : { ...cardStyles, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
                   >
-
                     <div>
                       <div
                         className={`web-badge-pill ${plan.tagClass}`}
@@ -172,6 +284,28 @@ export default function PricingClientPage() {
                         ))}
                       </ul>
                     </div>
+                    <button
+                      onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price)}
+                      className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
+                      style={plan.isHighlight ? { 
+                        display: "block", 
+                        width: "100%",
+                        textAlign: "center", 
+                        marginTop: "24px",
+                        backgroundColor: plan.highlightStyles.button.backgroundColor,
+                        color: "#ffffff",
+                        border: "none",
+                        cursor: "pointer"
+                      } : { 
+                        display: "block", 
+                        width: "100%",
+                        textAlign: "center", 
+                        marginTop: "24px",
+                        cursor: "pointer" 
+                      }}
+                    >
+                      Buy Now
+                    </button>
                   </div>
                 );
               })}
@@ -203,15 +337,13 @@ export default function PricingClientPage() {
               : {};
             const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
             const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
-            const buttonStyles = plan.isHighlight ? plan.highlightStyles.button : {};
 
             return (
               <div
                 className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
                 key={index}
-                style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor } : cardStyles}
+                style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor, display: "flex", flexDirection: "column", justifyContent: "space-between" } : { ...cardStyles, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
               >
-
                 <div>
                   <div
                     className={`web-badge-pill ${plan.tagClass}`}
@@ -236,6 +368,28 @@ export default function PricingClientPage() {
                     ))}
                   </ul>
                 </div>
+                <button
+                  onClick={() => handleBuyNow("AI Video - " + plan.level, plan.price)}
+                  className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
+                  style={plan.isHighlight ? { 
+                    display: "block", 
+                    width: "100%",
+                    textAlign: "center", 
+                    marginTop: "24px",
+                    backgroundColor: plan.highlightStyles.button.backgroundColor,
+                    color: "#ffffff",
+                    border: "none",
+                    cursor: "pointer"
+                  } : { 
+                    display: "block", 
+                    width: "100%",
+                    textAlign: "center", 
+                    marginTop: "24px",
+                    cursor: "pointer" 
+                  }}
+                >
+                  Buy Now
+                </button>
               </div>
             );
           })}

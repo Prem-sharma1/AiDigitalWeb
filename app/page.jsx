@@ -42,15 +42,6 @@ const services = [
 
 const campaigns = [
   {
-    icon: "query_stats",
-    title: "SEO Growth Campaign",
-    body: "Every organic search strategy starts with keyword mapping, audits, and AI-supported content planning.",
-    tags: ["Technical", "Content", "Local"],
-    fit: "Search visibility",
-    price: "Starts at ₹599",
-    link: "/pricing#creative"
-  },
-  {
     icon: "ads_click",
     title: "Google Ads Campaign",
     body: "High-intent search campaigns with landing pages, tracking, and ongoing ROAS improvement.",
@@ -76,24 +67,6 @@ const campaigns = [
     fit: "Conversion",
     price: "Starts at ₹7,499",
     link: "/pricing#websites"
-  },
-  {
-    icon: "edit_square",
-    title: "Content Marketing",
-    body: "SEO-led content systems built around intent, authority, and helpful editorial calendars.",
-    tags: ["Blogs", "SEO", "Authority"],
-    fit: "Trust building",
-    price: "Starts at ₹599",
-    link: "/pricing#creative"
-  },
-  {
-    icon: "analytics",
-    title: "Analytics & Reporting",
-    body: "Dashboards and monthly reporting that turn campaign activity into simple decisions.",
-    tags: ["GA4", "Looker", "KPI"],
-    fit: "Performance clarity",
-    price: "Starts at ₹2,499/mo",
-    link: "/pricing#ads"
   },
   {
     icon: "movie",
@@ -217,14 +190,14 @@ export default function Home() {
     <main id="top">
       <SiteHeader active="home" />
 
+      {/* 1. Introduction */}
       <header className="hero section">
         <div className="hero-copy">
           <h1>
             Your Business <span>Our Success</span>
           </h1>
           <p>
-            AI Digital helps businesses grow through SEO, ads, social, design,
-            and analytics powered by AI.
+            AI Digital helps businesses grow By adopting 360 Degress approach through SMO,Google Ads,SEO,Website and analytics powered by AI
           </p>
           <div className="hero-actions">
             <a className="button button-primary" href="#contact">Get Free Growth Audit</a>
@@ -246,32 +219,11 @@ export default function Home() {
         </div>
       </section>
 
-      <section id="services" className="section section-muted">
-        <div className="section-heading">
-          <h2>Digital Marketing Services Built for Growth</h2>
-          <p>
-            From visibility to conversion, AI Digital brings strategy, execution
-            and analytics under one growth system.
-          </p>
-        </div>
-        <div className="services-grid">
-          {services.map((service) => (
-            <article className={`service-card ${service.tone}`} key={service.title}>
-              <Icon name={service.icon} />
-              <h3>{service.title}</h3>
-              <p>{service.body}</p>
-              <a className="service-card-btn" href="/pricing">Check Our Pricing</a>
-            </article>
-          ))}
-        </div>
-      </section>
-
-      <GoalSelector />
-
+      {/* 2. Choose the Right Services for Your Growth Goal */}
       <section id="campaigns" className="section section-muted campaigns">
         <div className="section-heading">
           <span className="eyebrow">AI-powered marketing services</span>
-          <h2>Choose the Right Campaign for Your Growth Goal</h2>
+          <h2>Choose the Right Services for Your Growth Goal</h2>
           <p>
             From search visibility to lead generation, AI Digital creates
             strategy, execution and analytics to help businesses grow with
@@ -294,6 +246,7 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 3. Advantages */}
       <section id="why" className="section why">
         <div className="section-heading compact">
           <h2>Why Choose AI Digital</h2>
@@ -311,6 +264,10 @@ export default function Home() {
         </div>
       </section>
 
+      {/* 4. Client Goal */}
+      <GoalSelector />
+
+      {/* Other (Insights & Contact) */}
       <section id="insights" className="section section-muted insights">
         <div className="split-heading">
           <h2>Latest Insights</h2>

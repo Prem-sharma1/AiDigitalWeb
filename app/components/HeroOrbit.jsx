@@ -29,58 +29,30 @@ export default function HeroOrbit() {
             </div>
 
             {/* Background Visual Concentric Rings */}
+            <div className="orbit orbit-ring orbit-xl" />
             <div className="orbit orbit-ring orbit-lg" />
             <div className="orbit orbit-ring orbit-md" />
             <div className="orbit orbit-ring orbit-sm" />
 
+            {/* SMO on XL Orbit Ring */}
+            <span className="orbit-dot-wrapper orbit-dot-xl rotate-extra-slow">
+                <span className="orbit-dot orbit-dot-yellow counter-rotate-extra-slow">SMO</span>
+            </span>
+
+            {/* SEO on LG Orbit Ring */}
             <span className="orbit-dot-wrapper orbit-dot-lg rotate-slow">
-                <i className="orbit-dot orbit-dot-blue" />
+                <span className="orbit-dot orbit-dot-orange counter-rotate-slow">SEO</span>
             </span>
+
+            {/* Google Ads on MD Orbit Ring */}
             <span className="orbit-dot-wrapper orbit-dot-md rotate-medium">
-                <i className="orbit-dot orbit-dot-orange" />
+                <span className="orbit-dot orbit-dot-blue counter-rotate-medium">Google ads</span>
             </span>
+
+            {/* Website on SM Orbit Ring */}
             <span className="orbit-dot-wrapper orbit-dot-sm rotate-fast">
-                <i className="orbit-dot orbit-dot-light" />
+                <span className="orbit-dot orbit-dot-light counter-rotate-fast">Website</span>
             </span>
-
-            {/* Metric Cards (positioned around the nucleus) */}
-            <div className="metric-card metric-top">
-                <div>
-                    <Icon name="monitoring" />
-                    <span>SEO Traffic</span>
-                </div>
-                <strong>+142%</strong>
-                <small>Past 30 days</small>
-            </div>
-
-            <div className="metric-card metric-compact metric-left">
-                <div>
-                    <Icon name="trending_up" />
-                    <span>Conversion Rate</span>
-                </div>
-                <strong>+64%</strong>
-                <small>Landing Pages</small>
-            </div>
-
-
-
-            <div className="metric-card metric-compact metric-right metric-orange">
-                <div>
-                    <Icon name="verified" />
-                    <span>Lead Quality</span>
-                </div>
-                <strong>+78%</strong>
-                <small>Sales Ready</small>
-            </div>
-
-            <div className="metric-card metric-bottom">
-                <div>
-                    <Icon name="ads_click" />
-                    <span>Ad ROAS</span>
-                </div>
-                <strong>3.8x</strong>
-                <small>Avg Return</small>
-            </div>
         </div>
     );
 }
