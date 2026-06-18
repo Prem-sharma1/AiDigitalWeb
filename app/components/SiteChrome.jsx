@@ -9,11 +9,11 @@ const footerGroups = [
   },
   {
     title: "Services",
-    items: ["Digital Marketing", "Web Development", "SMM Services", "SEO Services", "PPC Services"]
+    items: ["Google Ads", "Meta Ads", "Website Development", "AI Video Production", "SEO Growth"]
   },
   {
     title: "Graphic Design",
-    items: ["Letterhead Designing", "Logo Designing", "Brochure Designing", "Pamphlet Designing"]
+    items: ["Social Media Graphics", "Ad Banner Designing", "Logo & Branding", "Custom Illustrations"]
   },
   {
     title: "About Us",
@@ -27,7 +27,7 @@ const navItems = [
   { label: "Why Us", href: "/#why", key: "why" },
   { label: "Prices", href: "/pricing", key: "pricing" },
   { label: "Portfolio", href: "/portfolio", key: "portfolio" },
-  { label: "Blogs", href: "/#insights", key: "blogs" }
+  { label: "Blogs", href: "/blog", key: "blogs" }
 ];
 
 export function Icon({ name, className = "" }) {
@@ -140,6 +140,11 @@ export function SiteFooter() {
   const getHref = (item) => {
     if (item === "Pricing") return "/pricing";
     if (item === "Our Portfolio") return "/portfolio";
+    if (item === "Articles") return "/blog";
+    if (item === "Google Ads" || item === "Meta Ads") return "/pricing#ads";
+    if (item === "Website Development") return "/pricing#websites";
+    if (item === "AI Video Production") return "/pricing#aivideo";
+    if (item === "SEO Growth" || item === "Social Media Graphics" || item === "Ad Banner Designing" || item === "Logo & Branding" || item === "Custom Illustrations") return "/pricing#creative";
     return "/#contact";
   };
 

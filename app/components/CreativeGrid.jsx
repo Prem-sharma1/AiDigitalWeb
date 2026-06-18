@@ -274,10 +274,25 @@ const creativeGroups = [
 export default function CreativeGrid({ activeFilter = "All" }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
+  const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
+
+  useEffect(() => {
+    fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to load portfolio");
+      })
+      .then((data) => {
+        if (data.creativeGroups) {
+          setCreativeGroupsState(data.creativeGroups);
+        }
+      })
+      .catch((err) => console.warn("Using static fallback creative groups:", err));
+  }, []);
 
   // Filter groups and their media items dynamically based on the active tab/filter
   const filteredGroups = useMemo(() => {
-    return creativeGroups.map(group => {
+    return creativeGroupsState.map(group => {
       const filteredImages = group.images.filter(img => {
         if (activeFilter === "All") return true;
         if (activeFilter === "Creative Content") return img.type === "image";
@@ -290,7 +305,7 @@ export default function CreativeGrid({ activeFilter = "All" }) {
         images: filteredImages
       };
     }).filter(group => group.images.length > 0);
-  }, [activeFilter]);
+  }, [activeFilter, creativeGroupsState]);
 
   // Flat array of visible items for lightbox navigation
   const visibleItems = useMemo(() => {

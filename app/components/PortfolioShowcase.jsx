@@ -43,28 +43,46 @@ const showcaseProjects = [
 ];
 
 export default function PortfolioShowcase() {
+  const [showcaseProjectsState, setShowcaseProjectsState] = useState(showcaseProjects);
   const [activeIndex, setActiveIndex] = useState(0);
-  const activeProject = showcaseProjects[activeIndex];
 
   useEffect(() => {
+    fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to load portfolio");
+      })
+      .then((data) => {
+        if (data.showcaseProjects) {
+          setShowcaseProjectsState(data.showcaseProjects);
+        }
+      })
+      .catch((err) => console.warn("Using static fallback showcase projects:", err));
+  }, []);
+
+  const activeProject = showcaseProjectsState[activeIndex] || showcaseProjectsState[0] || { tags: [] };
+
+  useEffect(() => {
+    if (showcaseProjectsState.length === 0) return;
     const timer = window.setInterval(() => {
-      setActiveIndex((current) => (current + 1) % showcaseProjects.length);
+      setActiveIndex((current) => (current + 1) % showcaseProjectsState.length);
     }, 5500);
 
     return () => window.clearInterval(timer);
-  }, []);
+  }, [showcaseProjectsState.length]);
 
   const previewBars = useMemo(() => [78, 58, 88, 48, 70], []);
 
   function moveSlide(direction) {
+    if (showcaseProjectsState.length === 0) return;
     setActiveIndex((current) => {
       const next = current + direction;
 
       if (next < 0) {
-        return showcaseProjects.length - 1;
+        return showcaseProjectsState.length - 1;
       }
 
-      return next % showcaseProjects.length;
+      return next % showcaseProjectsState.length;
     });
   }
 
@@ -126,7 +144,7 @@ export default function PortfolioShowcase() {
         </div>
 
         <div className="portfolio-slider-dots" aria-label="Choose featured project">
-          {showcaseProjects.map((project, index) => (
+          {showcaseProjectsState.map((project, index) => (
             <button
               type="button"
               key={project.title}

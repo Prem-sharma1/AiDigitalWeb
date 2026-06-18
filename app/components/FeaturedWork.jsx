@@ -112,29 +112,46 @@ const otherProjects = [
   { title: "Custom Dashboard Integration", type: "Website & SEO" }
 ];
 
+import { useEffect } from "react";
+
 export default function FeaturedWork() {
   const [activeFilter, setActiveFilter] = useState("All");
   const [showOthers, setShowOthers] = useState(false);
+  const [industriesState, setIndustriesState] = useState(industries);
+  const [otherProjectsState, setOtherProjectsState] = useState(otherProjects);
+
+  useEffect(() => {
+    fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to load portfolio data");
+      })
+      .then((data) => {
+        if (data.industries) setIndustriesState(data.industries);
+        if (data.otherProjects) setOtherProjectsState(data.otherProjects);
+      })
+      .catch((err) => console.warn("Using fallback static industries/other projects:", err));
+  }, []);
 
   const visibleIndustries = useMemo(() => {
     if (activeFilter === "All") {
-      return industries;
+      return industriesState;
     }
 
-    return industries
+    return industriesState
       .map((industry) => ({
         ...industry,
         projects: industry.projects.filter((project) => project.type === activeFilter)
       }))
       .filter((industry) => industry.projects.length > 0);
-  }, [activeFilter]);
+  }, [activeFilter, industriesState]);
 
   const visibleOtherProjects = useMemo(() => {
     if (activeFilter === "All") {
-      return otherProjects;
+      return otherProjectsState;
     }
-    return otherProjects.filter((project) => project.type === activeFilter);
-  }, [activeFilter]);
+    return otherProjectsState.filter((project) => project.type === activeFilter);
+  }, [activeFilter, otherProjectsState]);
 
   return (
     <section id="portfolio" className="section featured-work">
@@ -192,44 +209,44 @@ export default function FeaturedWork() {
                 </div>
               </article>
             ))}
-
-            {visibleOtherProjects.length > 0 && (
-              <div className="others-toggle-container">
-                <button
-                  type="button"
-                  className={`others-toggle-button ${showOthers ? "active" : ""}`}
-                  onClick={() => setShowOthers(!showOthers)}
-                  aria-expanded={showOthers}
-                >
-                  <span>{showOthers ? "Show Fewer Projects" : "View Other Projects"}</span>
-                  <span className="material-symbols-outlined">
-                    {showOthers ? "keyboard_arrow_up" : "keyboard_arrow_down"}
-                  </span>
-                </button>
-              </div>
-            )}
-
-            {showOthers && visibleOtherProjects.length > 0 && (
-              <article className="industry-section others-section">
-                <div className="industry-copy">
-                  <span className="industry-label">General</span>
-                  <h3>Other Projects</h3>
-                  <p>Additional marketing campaigns, custom integrations, branding assets, and creative videos.</p>
-                </div>
-                <div className="featured-project-grid">
-                  {visibleOtherProjects.map((project) => (
-                    <div className="featured-project-card" key={project.title}>
-                      <span className="material-symbols-outlined" aria-hidden="true">
-                        {filterIcons[project.type] ?? "dashboard"}
-                      </span>
-                      <strong>{project.title}</strong>
-                      <small>{project.type}</small>
-                    </div>
-                  ))}
-                </div>
-              </article>
-            )}
           </>
+        )}
+
+        {visibleOtherProjects.length > 0 && (
+          <div className="others-toggle-container">
+            <button
+              type="button"
+              className={`others-toggle-button ${showOthers ? "active" : ""}`}
+              onClick={() => setShowOthers(!showOthers)}
+              aria-expanded={showOthers}
+            >
+              <span>{showOthers ? "Show Fewer Projects" : "View Other Projects"}</span>
+              <span className="material-symbols-outlined">
+                {showOthers ? "keyboard_arrow_up" : "keyboard_arrow_down"}
+              </span>
+            </button>
+          </div>
+        )}
+
+        {showOthers && visibleOtherProjects.length > 0 && (
+          <article className="industry-section others-section">
+            <div className="industry-copy">
+              <span className="industry-label">General</span>
+              <h3>Other Projects</h3>
+              <p>Additional marketing campaigns, custom integrations, branding assets, and creative videos.</p>
+            </div>
+            <div className="featured-project-grid">
+              {visibleOtherProjects.map((project) => (
+                <div className="featured-project-card" key={project.title}>
+                  <span className="material-symbols-outlined" aria-hidden="true">
+                    {filterIcons[project.type] ?? "dashboard"}
+                  </span>
+                  <strong>{project.title}</strong>
+                  <small>{project.type}</small>
+                </div>
+              ))}
+            </div>
+          </article>
         )}
       </div>
     </section>

@@ -10,6 +10,36 @@ const getWhatsAppLink = (planName, price, period = "") => {
 };
 
 export default function PricingClientPage() {
+  const [adsPlansState, setAdsPlansState] = React.useState(adsPlans);
+  const [websitePlansState, setWebsitePlansState] = React.useState(websitePlans);
+  const [creativePacksState, setCreativePacksState] = React.useState(creativePacks);
+  const [aiVideoPlansState, setAiVideoPlansState] = React.useState(aiVideoPlans);
+
+  const [activeCreativeIndex, setActiveCreativeIndex] = React.useState(0);
+
+  const nextCreative = () => {
+    setActiveCreativeIndex((prev) => (prev + 1) % creativePacksState.length);
+  };
+
+  const prevCreative = () => {
+    setActiveCreativeIndex((prev) => (prev - 1 + creativePacksState.length) % creativePacksState.length);
+  };
+
+  React.useEffect(() => {
+    fetch("/api/admin/pricing?t=" + Date.now(), { cache: "no-store" })
+      .then((res) => {
+        if (res.ok) return res.json();
+        throw new Error("Failed to load pricing configurations");
+      })
+      .then((data) => {
+        if (data.adsPlans) setAdsPlansState(data.adsPlans);
+        if (data.websitePlans) setWebsitePlansState(data.websitePlans);
+        if (data.creativePacks) setCreativePacksState(data.creativePacks);
+        if (data.aiVideoPlans) setAiVideoPlansState(data.aiVideoPlans);
+      })
+      .catch((err) => console.warn("Using fallback static pricing plans:", err));
+  }, []);
+
   const creativeScrollRef = React.useRef(null);
 
   const loadRazorpayScript = () => {
@@ -135,7 +165,7 @@ export default function PricingClientPage() {
         </div>
 
         <div className="ads-pricing-grid">
-          {adsPlans.map((plan, index) => (
+          {adsPlansState.map((plan, index) => (
             <div
               key={index}
               className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
@@ -198,7 +228,7 @@ export default function PricingClientPage() {
 
           {/* Right Column Pricing Cards */}
           <div className="websites-cards-grid">
-            {websitePlans.map((plan, index) => (
+            {websitePlansState.map((plan, index) => (
               <div className="website-plan-card" key={index} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
                   <div className={`web-badge-pill ${plan.tagClass}`}>{plan.level}</div>
@@ -235,10 +265,10 @@ export default function PricingClientPage() {
           <div className="section-title-underline bg-blue" />
         </div>
 
-        <div className="scroll-wrapper-relative">
+        <div className="scroll-wrapper-relative desktop-creative-packs">
           {/* Scroll Left Button */}
-          <button 
-            className="scroll-arrow-btn left-arrow" 
+          <button
+            className="scroll-arrow-btn left-arrow"
             onClick={() => creativeScrollRef.current?.scrollBy({ left: -260, behavior: "smooth" })}
             aria-label="Scroll left"
           >
@@ -247,9 +277,9 @@ export default function PricingClientPage() {
 
           <div className="creative-packs-scroll-container" ref={creativeScrollRef}>
             <div className="creative-packs-grid">
-              {creativePacks.map((plan, index) => {
-                const cardStyles = plan.isHighlight 
-                  ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined } 
+              {creativePacksState.map((plan, index) => {
+                const cardStyles = plan.isHighlight
+                  ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined }
                   : {};
                 const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
                 const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
@@ -287,21 +317,21 @@ export default function PricingClientPage() {
                     <button
                       onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price)}
                       className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
-                      style={plan.isHighlight ? { 
-                        display: "block", 
+                      style={plan.isHighlight ? {
+                        display: "block",
                         width: "100%",
-                        textAlign: "center", 
+                        textAlign: "center",
                         marginTop: "24px",
                         backgroundColor: plan.highlightStyles.button.backgroundColor,
                         color: "#ffffff",
                         border: "none",
                         cursor: "pointer"
-                      } : { 
-                        display: "block", 
+                      } : {
+                        display: "block",
                         width: "100%",
-                        textAlign: "center", 
+                        textAlign: "center",
                         marginTop: "24px",
-                        cursor: "pointer" 
+                        cursor: "pointer"
                       }}
                     >
                       Buy Now
@@ -313,13 +343,113 @@ export default function PricingClientPage() {
           </div>
 
           {/* Scroll Right Button */}
-          <button 
-            className="scroll-arrow-btn right-arrow" 
+          <button
+            className="scroll-arrow-btn right-arrow"
             onClick={() => creativeScrollRef.current?.scrollBy({ left: 260, behavior: "smooth" })}
             aria-label="Scroll right"
           >
             <Icon name="chevron_right" />
           </button>
+        </div>
+
+        {/* Mobile Slider (Visible only on mobile) */}
+        <div className="mobile-creative-packs-slider">
+          <div className="mobile-slider-wrapper">
+            <button 
+              className="mobile-slider-arrow-btn left" 
+              onClick={prevCreative}
+              aria-label="Previous pack"
+            >
+              <Icon name="chevron_left" />
+            </button>
+
+            <div className="mobile-slider-card-container">
+              {creativePacksState.map((plan, index) => {
+                if (index !== activeCreativeIndex) return null;
+
+                const cardStyles = plan.isHighlight
+                  ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined }
+                  : {};
+                const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
+                const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
+
+                return (
+                  <div
+                    className={`website-plan-card mobile-slider-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
+                    key={index}
+                    style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor, display: "flex", flexDirection: "column", justifyContent: "space-between" } : { ...cardStyles, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+                  >
+                    <div>
+                      <div
+                        className={`web-badge-pill ${plan.tagClass}`}
+                        style={tagStyles}
+                      >
+                        {plan.level}
+                      </div>
+                      <div className="price-display-flat">
+                        <span className="currency">₹</span>
+                        <span className="value">{plan.price}</span>
+                      </div>
+                      <ul className="web-features-list">
+                        {plan.features.map((feat, i) => (
+                          <li key={i}>
+                            <Icon
+                              name={feat.icon}
+                              className="web-feat-icon"
+                              style={iconStyles}
+                            />
+                            {feat.text}
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                    <button
+                      onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price)}
+                      className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
+                      style={plan.isHighlight ? {
+                        display: "block",
+                        width: "100%",
+                        textAlign: "center",
+                        marginTop: "24px",
+                        backgroundColor: plan.highlightStyles.button.backgroundColor,
+                        color: "#ffffff",
+                        border: "none",
+                        cursor: "pointer"
+                      } : {
+                        display: "block",
+                        width: "100%",
+                        textAlign: "center",
+                        marginTop: "24px",
+                        cursor: "pointer"
+                      }}
+                    >
+                      Buy Now
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+
+            <button 
+              className="mobile-slider-arrow-btn right" 
+              onClick={nextCreative}
+              aria-label="Next pack"
+            >
+              <Icon name="chevron_right" />
+            </button>
+          </div>
+
+          {/* Page/dot indicators */}
+          <div className="mobile-slider-dots">
+            {creativePacksState.map((_, index) => (
+              <button
+                key={index}
+                className={`slider-dot ${index === activeCreativeIndex ? "active" : ""}`}
+                onClick={() => setActiveCreativeIndex(index)}
+                aria-label={`Go to pack ${index + 1}`}
+              />
+            ))}
+          </div>
         </div>
       </section>
 
@@ -331,9 +461,9 @@ export default function PricingClientPage() {
         </div>
 
         <div className="pricing-grid" style={{ maxWidth: "1140px", margin: "0 auto", paddingInline: "var(--page-gutter)" }}>
-          {aiVideoPlans.map((plan, index) => {
-            const cardStyles = plan.isHighlight 
-              ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined } 
+          {aiVideoPlansState.map((plan, index) => {
+            const cardStyles = plan.isHighlight
+              ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined }
               : {};
             const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
             const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
@@ -371,21 +501,21 @@ export default function PricingClientPage() {
                 <button
                   onClick={() => handleBuyNow("AI Video - " + plan.level, plan.price)}
                   className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
-                  style={plan.isHighlight ? { 
-                    display: "block", 
+                  style={plan.isHighlight ? {
+                    display: "block",
                     width: "100%",
-                    textAlign: "center", 
+                    textAlign: "center",
                     marginTop: "24px",
                     backgroundColor: plan.highlightStyles.button.backgroundColor,
                     color: "#ffffff",
                     border: "none",
                     cursor: "pointer"
-                  } : { 
-                    display: "block", 
+                  } : {
+                    display: "block",
                     width: "100%",
-                    textAlign: "center", 
+                    textAlign: "center",
                     marginTop: "24px",
-                    cursor: "pointer" 
+                    cursor: "pointer"
                   }}
                 >
                   Buy Now

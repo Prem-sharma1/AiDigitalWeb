@@ -117,7 +117,7 @@ export const creativePacks = [
       { icon: "image", text: "5 Creatives" },
       { icon: "brush", text: "Social Media Sizes" },
       { icon: "folder_zip", text: "PNG & JPG Formats" },
-      { icon: "schedule", text: "3-5 Days Delivery" }
+      { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
@@ -132,7 +132,7 @@ export const creativePacks = [
       { icon: "image", text: "10 Creatives" },
       { icon: "brush", text: "Ad Banner Formats" },
       { icon: "folder_zip", text: "PNG & JPG Formats" },
-      { icon: "schedule", text: "4-6 Days Delivery" }
+      { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
@@ -147,7 +147,7 @@ export const creativePacks = [
       { icon: "image", text: "15 Creatives" },
       { icon: "brush", text: "Brand Style Match" },
       { icon: "folder_zip", text: "Source Files Included" },
-      { icon: "schedule", text: "5-7 Days Delivery" }
+      { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
@@ -168,7 +168,7 @@ export const creativePacks = [
       { icon: "image", text: "20 Creatives" },
       { icon: "brush", text: "Multi-Platform Sizes" },
       { icon: "folder_zip", text: "Source Files Included" },
-      { icon: "schedule", text: "5-7 Days Delivery" }
+      { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
@@ -183,7 +183,7 @@ export const creativePacks = [
       { icon: "image", text: "30 Creatives" },
       { icon: "brush", text: "Complete Ad Sets" },
       { icon: "folder_zip", text: "Source Files Included" },
-      { icon: "schedule", text: "7-10 Days Delivery" }
+      { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
