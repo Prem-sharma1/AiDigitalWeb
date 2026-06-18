@@ -89,7 +89,7 @@ export async function POST(req) {
 
     if (sourceType === "devto") {
       // 1. Fetch articles list from Dev.to
-      const listRes = await fetch(`https://dev.to/api/articles?username=${encodeURIComponent(username)}`, {
+      const listRes = await fetch(`https://www.youngurbanproject.com/blog/?username=${encodeURIComponent(username)}`, {
         headers: { "User-Agent": "Mozilla/5.0 (AI Digital Blog Importer)" },
       });
       if (!listRes.ok) {
@@ -101,7 +101,7 @@ export async function POST(req) {
       const limitList = list.slice(0, 10);
       for (const item of limitList) {
         try {
-          const detailRes = await fetch(`https://dev.to/api/articles/${item.id}`, {
+          const detailRes = await fetch(`https://www.youngurbanproject.com/blog/${item.id}`, {
             headers: { "User-Agent": "Mozilla/5.0 (AI Digital Blog Importer)" },
           });
           if (detailRes.ok) {
@@ -142,7 +142,7 @@ export async function POST(req) {
         const title = extractTagContent(itemXml, "title");
         const link = extractTagContent(itemXml, "link");
         const rawContent = extractTagContent(itemXml, "content:encoded") || extractTagContent(itemXml, "description");
-        
+
         // Extract plain text excerpt from HTML content
         const cleanTextOnly = rawContent.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
         const excerpt = cleanTextOnly.substring(0, 150) + (cleanTextOnly.length > 150 ? "..." : "");

@@ -297,7 +297,7 @@ export default function CreativeGrid({ activeFilter = "All" }) {
         if (activeFilter === "All") return true;
         if (activeFilter === "Creative Content") return img.type === "image";
         if (activeFilter === "AI Videos") return img.type === "video";
-        if (activeFilter === "Reels") return img.type === "video" || img.type === "reel";
+        if (activeFilter === "Reels") return img.type === "reel";
         return true;
       });
       return {
