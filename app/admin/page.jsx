@@ -1322,12 +1322,12 @@ export default function AdminPage() {
                     </div>
 
                     <div style={styles.inputGroup}>
-                      <label style={styles.label}>Content Markdown Body</label>
+                      <label style={styles.label}>Content Markdown Body (or paste External Redirect URL e.g. https://medium.com/...)</label>
                       <textarea
                         rows={12}
                         value={blogForm.content}
                         onChange={(e) => setBlogForm({ ...blogForm, content: e.target.value })}
-                        placeholder="## Markdown supported body..."
+                        placeholder="Paste the redirect URL (e.g. https://medium.com/@username/title) or type the Markdown body..."
                         style={styles.textarea}
                         required
                       />

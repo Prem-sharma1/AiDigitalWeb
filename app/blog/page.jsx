@@ -30,6 +30,30 @@ export default function BlogListingPage() {
     ? blogs
     : blogs.filter((b) => b.category === selectedCategory);
 
+  const getBlogLink = (post) => {
+    const contentTrimmed = post.content ? post.content.trim() : "";
+    const slugTrimmed = post.slug ? post.slug.trim() : "";
+    
+    if (contentTrimmed.startsWith("http://") || contentTrimmed.startsWith("https://")) {
+      return contentTrimmed;
+    }
+    if (slugTrimmed.startsWith("http://") || slugTrimmed.startsWith("https://")) {
+      return slugTrimmed;
+    }
+    
+    // Check if the content is just a markdown link or single URL
+    const mdLinkMatch = contentTrimmed.match(/^\[.*?\]\((https?:\/\/.*?)\)$/);
+    if (mdLinkMatch) {
+      return mdLinkMatch[1];
+    }
+    
+    if (/^https?:\/\/[^\s]+$/.test(contentTrimmed)) {
+      return contentTrimmed;
+    }
+    
+    return `/blog/${post.slug}`;
+  };
+
   return (
     <div style={styles.pageWrapper}>
       <SiteHeader active="blog" />
@@ -71,30 +95,44 @@ export default function BlogListingPage() {
           <div style={styles.empty}>No blog posts found. Check back later!</div>
         ) : (
           <div style={styles.blogsGrid}>
-            {filteredBlogs.map((post) => (
-              <article key={post.id} style={styles.blogCard}>
-                <div style={styles.cardMedia}>
-                  <img
-                    src={post.coverImage || "/creative_content/Creative1.jpeg"}
-                    alt={post.title}
-                    style={styles.cardImage}
-                  />
-                  <span style={styles.cardCategory}>{post.category}</span>
-                </div>
-                <div style={styles.cardBody}>
-                  <div style={styles.cardMeta}>
-                    <span>{new Date(post.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
-                    <span>•</span>
-                    <span>5 min read</span>
+            {filteredBlogs.map((post) => {
+              const url = getBlogLink(post);
+              const isExternal = url.startsWith("http://") || url.startsWith("https://");
+              
+              const CardTag = isExternal ? "a" : Link;
+              const cardProps = isExternal 
+                ? { href: url, target: "_blank", rel: "noopener noreferrer" } 
+                : { href: url };
+
+              return (
+                <CardTag 
+                  key={post.id} 
+                  {...cardProps} 
+                  style={{ ...styles.blogCard, textDecoration: "none", color: "inherit" }}
+                >
+                  <div style={styles.cardMedia}>
+                    <img
+                      src={post.coverImage || "/creative_content/Creative1.jpeg"}
+                      alt={post.title}
+                      style={styles.cardImage}
+                    />
+                    <span style={styles.cardCategory}>{post.category}</span>
                   </div>
-                  <h2 style={styles.cardTitle}>{post.title}</h2>
-                  <p style={styles.cardExcerpt}>{post.excerpt}</p>
-                  <Link href={`/blog/${post.slug}`} style={styles.readMoreLink}>
-                    Read Post <Icon name="arrow_forward" style={styles.arrowIcon} />
-                  </Link>
-                </div>
-              </article>
-            ))}
+                  <div style={styles.cardBody}>
+                    <div style={styles.cardMeta}>
+                      <span>{new Date(post.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                      <span>•</span>
+                      <span>5 min read</span>
+                    </div>
+                    <h2 style={styles.cardTitle}>{post.title}</h2>
+                    <p style={styles.cardExcerpt}>{post.excerpt}</p>
+                    <span style={styles.readMoreLink}>
+                      Read Post <Icon name="arrow_forward" style={styles.arrowIcon} />
+                    </span>
+                  </div>
+                </CardTag>
+              );
+            })}
           </div>
         )}
       </section>

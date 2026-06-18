@@ -110,7 +110,7 @@ export async function POST(req) {
               title: detail.title,
               slug: detail.slug || generateSlug(detail.title),
               excerpt: detail.description || item.description || "A blog post imported from Dev.to.",
-              content: detail.body_markdown || detail.description || "",
+              content: detail.url || detail.body_markdown || "",
               coverImage: detail.cover_image || detail.social_image || "",
               category: defaultCategory || "Marketing",
               published: true,
@@ -142,7 +142,6 @@ export async function POST(req) {
         const title = extractTagContent(itemXml, "title");
         const link = extractTagContent(itemXml, "link");
         const rawContent = extractTagContent(itemXml, "content:encoded") || extractTagContent(itemXml, "description");
-        const cleanContent = htmlToMarkdown(rawContent);
         
         // Extract plain text excerpt from HTML content
         const cleanTextOnly = rawContent.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
@@ -160,7 +159,7 @@ export async function POST(req) {
             title,
             slug: generateSlug(title),
             excerpt: excerpt || "A blog post imported from external RSS feed.",
-            content: cleanContent || `Read the full article at [here](${link})`,
+            content: link || htmlToMarkdown(rawContent) || "",
             coverImage,
             category: defaultCategory || "Marketing",
             published: true,
