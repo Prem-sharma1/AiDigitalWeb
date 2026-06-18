@@ -772,6 +772,11 @@ export default function AdminPage() {
                 </div>
               </div>
 
+              <div style={styles.infoBanner}>
+                <Icon name="info" />
+                <span>Any edits, additions, or deletions will only be permanently saved when you click the <strong>Save Changes</strong> button at the top right.</span>
+              </div>
+
               {/* Selector tabs for price categories */}
               <div style={styles.tabRow}>
                 <button
@@ -881,6 +886,11 @@ export default function AdminPage() {
                 </button>
               </div>
 
+              <div style={styles.infoBanner}>
+                <Icon name="info" />
+                <span>Any edits, additions, or deletions will only be permanently saved when you click the <strong>Save Changes</strong> button at the top right.</span>
+              </div>
+
               {/* 1. SHOWCASE CAROUSEL ITEMS */}
               <div style={styles.portfolioSectionHeader}>
                 <h3>Header Showcase Carousel</h3>
@@ -987,27 +997,40 @@ export default function AdminPage() {
                   </div>
                   <div style={styles.projectListGrid}>
                     {ind.projects.map((proj, projIdx) => (
-                      <div key={projIdx} style={styles.projectItemCard}>
-                        <input
-                          type="text"
-                          value={proj.title}
-                          onChange={(e) => updateFeaturedProject(indIdx, projIdx, "title", e.target.value)}
-                          style={styles.inputSmall}
-                        />
-                        <select
-                          value={proj.type}
-                          onChange={(e) => updateFeaturedProject(indIdx, projIdx, "type", e.target.value)}
-                          style={styles.selectSmall}
-                        >
-                          <option value="Website & SEO">Website & SEO</option>
-                          <option value="Campaigns">Campaigns</option>
-                          <option value="AI Videos">AI Videos</option>
-                          <option value="Creative Content">Creative Content</option>
-                          <option value="Reels">Reels</option>
-                        </select>
-                        <button onClick={() => deleteFeaturedProject(indIdx, projIdx)} style={styles.deleteBtnIcon}>
-                          <Icon name="close" />
-                        </button>
+                      <div key={projIdx} style={{ ...styles.projectItemCard, flexDirection: "column", alignItems: "stretch", gap: "10px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                          <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>PROJECT TITLE</label>
+                          <input
+                            type="text"
+                            value={proj.title}
+                            onChange={(e) => updateFeaturedProject(indIdx, projIdx, "title", e.target.value)}
+                            style={styles.inputSmall}
+                            placeholder="Enter project name..."
+                          />
+                        </div>
+                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                            <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>CATEGORY</label>
+                            <select
+                              value={proj.type}
+                              onChange={(e) => updateFeaturedProject(indIdx, projIdx, "type", e.target.value)}
+                              style={styles.selectSmall}
+                            >
+                              <option value="Website & SEO">Website & SEO</option>
+                              <option value="Campaigns">Campaigns</option>
+                              <option value="AI Videos">AI Videos</option>
+                              <option value="Creative Content">Creative Content</option>
+                              <option value="Reels">Reels</option>
+                            </select>
+                          </div>
+                          <button 
+                            onClick={() => deleteFeaturedProject(indIdx, projIdx)} 
+                            style={{ ...styles.deleteBtnIcon, marginTop: "14px", padding: "6px", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px" }}
+                            title="Delete project"
+                          >
+                            <Icon name="delete" />
+                          </button>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -1024,27 +1047,40 @@ export default function AdminPage() {
 
               <div style={styles.projectListGrid}>
                 {portfolioData.otherProjects.map((proj, idx) => (
-                  <div key={idx} style={styles.projectItemCard}>
-                    <input
-                      type="text"
-                      value={proj.title}
-                      onChange={(e) => updateOtherProject(idx, "title", e.target.value)}
-                      style={styles.inputSmall}
-                    />
-                    <select
-                      value={proj.type}
-                      onChange={(e) => updateOtherProject(idx, "type", e.target.value)}
-                      style={styles.selectSmall}
-                    >
-                      <option value="Website & SEO">Website & SEO</option>
-                      <option value="Campaigns">Campaigns</option>
-                      <option value="AI Videos">AI Videos</option>
-                      <option value="Creative Content">Creative Content</option>
-                      <option value="Reels">Reels</option>
-                    </select>
-                    <button onClick={() => deleteOtherProject(idx)} style={styles.deleteBtnIcon}>
-                      <Icon name="close" />
-                    </button>
+                  <div key={idx} style={{ ...styles.projectItemCard, flexDirection: "column", alignItems: "stretch", gap: "10px" }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                      <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>PROJECT TITLE</label>
+                      <input
+                        type="text"
+                        value={proj.title}
+                        onChange={(e) => updateOtherProject(idx, "title", e.target.value)}
+                        style={styles.inputSmall}
+                        placeholder="Enter project name..."
+                      />
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                        <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>CATEGORY</label>
+                        <select
+                          value={proj.type}
+                          onChange={(e) => updateOtherProject(idx, "type", e.target.value)}
+                          style={styles.selectSmall}
+                        >
+                          <option value="Website & SEO">Website & SEO</option>
+                          <option value="Campaigns">Campaigns</option>
+                          <option value="AI Videos">AI Videos</option>
+                          <option value="Creative Content">Creative Content</option>
+                          <option value="Reels">Reels</option>
+                        </select>
+                      </div>
+                      <button 
+                        onClick={() => deleteOtherProject(idx)} 
+                        style={{ ...styles.deleteBtnIcon, marginTop: "14px", padding: "6px", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px" }}
+                        title="Delete project"
+                      >
+                        <Icon name="delete" />
+                      </button>
+                    </div>
                   </div>
                 ))}
               </div>
@@ -1609,6 +1645,18 @@ const styles = {
     gridTemplateColumns: "1fr",
     gap: "24px",
     marginBottom: "32px"
+  },
+  infoBanner: {
+    display: "flex",
+    alignItems: "center",
+    gap: "10px",
+    backgroundColor: "rgba(253, 126, 20, 0.08)",
+    border: "1px solid rgba(253, 126, 20, 0.25)",
+    borderRadius: "8px",
+    padding: "12px 16px",
+    marginBottom: "24px",
+    fontSize: "13px",
+    color: "#e2e8f0"
   },
   card: {
     backgroundColor: "rgba(255, 255, 255, 0.02)",
