@@ -60,6 +60,17 @@ export async function GET() {
       }
     });
 
+    const levelOrder = {
+      "basic": 1, "static": 1, "starter": 1, "starter plan": 1,
+      "standard": 2, "dynamic": 2, "growth": 2, "value": 2, "growth plan": 2,
+      "premium": 3, "premium plan": 3, "pro": 3, "pro plan": 3
+    };
+    const getWeight = (lvl) => levelOrder[String(lvl).toLowerCase().trim()] || 99;
+
+    Object.keys(formattedData).forEach((cat) => {
+      formattedData[cat].sort((a, b) => getWeight(a.level) - getWeight(b.level));
+    });
+
     return NextResponse.json(formattedData, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
@@ -70,6 +81,18 @@ export async function GET() {
   } catch (error) {
     console.warn("MySQL database connection failed. Falling back to local pricing JSON backup. Error:", error.message);
     const fallback = getJsonFallback();
+
+    const levelOrder = {
+      "basic": 1, "static": 1, "starter": 1, "starter plan": 1,
+      "standard": 2, "dynamic": 2, "growth": 2, "value": 2, "growth plan": 2,
+      "premium": 3, "premium plan": 3, "pro": 3, "pro plan": 3
+    };
+    const getWeight = (lvl) => levelOrder[String(lvl).toLowerCase().trim()] || 99;
+
+    Object.keys(fallback).forEach((cat) => {
+      fallback[cat].sort((a, b) => getWeight(a.level) - getWeight(b.level));
+    });
+
     return NextResponse.json(fallback, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
