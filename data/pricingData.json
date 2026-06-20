@@ -1,12 +1,12 @@
 {
   "adsPlans": [
     {
-      "id": "ekjcolrbl8",
+      "id": "r7ebbotdpir",
       "platform": "Google ads",
       "badgeClass": "gg-badge",
       "level": "Basic",
       "pillClass": "premium-pill",
-      "price": "4999",
+      "price": 4999,
       "period": "/month",
       "features": [
         "Google Ads",
@@ -23,15 +23,15 @@
       "isHighlight": false
     },
     {
-      "id": "z6lb04kbjdb",
-      "platform": "Google Ads/3 months",
+      "id": "s30wo8jny3s",
+      "platform": "Google Ads",
       "badgeClass": "multi-badge",
       "level": "Standard",
       "pillClass": "platinum-pill",
       "price": "13,499",
-      "period": "/month",
+      "period": "/3 month",
       "features": [
-        "Ads Multi-Channel",
+        "Google Ads",
         "Creative -9",
         "AI Video -3",
         "Reels/Shorts -3",
@@ -45,13 +45,15 @@
       "isHighlight": false
     },
     {
-      "platform": "Google Ads/ 6 months",
+      "id": "3sqppb2s40w",
+      "platform": "Google Ads",
       "badgeClass": "fb-badge",
       "level": "Premium Plan",
       "pillClass": "basic-pill",
       "price": "23,999",
-      "period": "/month",
+      "period": "/6 month",
       "features": [
+        "Google Ads",
         "Creative-18",
         "Ai Video-6",
         "Reels/Shorts-6",
@@ -60,12 +62,14 @@
       "buttonText": "Select Plan",
       "isPopular": true,
       "serviceName": "Performance Marketing",
-      "planParameter": "Meta Ads - New Level (₹2999/mo)"
+      "planParameter": "Meta Ads - New Level (₹2999/mo)",
+      "tagClass": null,
+      "isHighlight": false
     }
   ],
   "websitePlans": [
     {
-      "id": "1f61im0i998",
+      "id": "wlif025b38",
       "platform": null,
       "badgeClass": null,
       "level": "Static",
@@ -98,7 +102,7 @@
       "isHighlight": false
     },
     {
-      "id": "25wm9yy4br1",
+      "id": "upvnq4eclhl",
       "platform": null,
       "badgeClass": null,
       "level": "Dynamic",
@@ -133,7 +137,7 @@
   ],
   "creativePacks": [
     {
-      "id": "06hfa4ewvz3v",
+      "id": "70hropyn13u",
       "platform": null,
       "badgeClass": null,
       "level": "Starter",
@@ -166,40 +170,7 @@
       "isHighlight": false
     },
     {
-      "id": "5oq5pkilan2",
-      "platform": null,
-      "badgeClass": null,
-      "level": "Pro",
-      "pillClass": null,
-      "price": 2699,
-      "period": null,
-      "features": [
-        {
-          "icon": "image",
-          "text": "30 Creatives"
-        },
-        {
-          "icon": "brush",
-          "text": "Complete Ad Sets"
-        },
-        {
-          "icon": "folder_zip",
-          "text": "Source Files Included"
-        },
-        {
-          "icon": "check_circle",
-          "text": "Standard delivery time"
-        }
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "SEO Growth",
-      "planParameter": "Creative Packs - Pro (30 for ₹2699)",
-      "tagClass": "static-tag",
-      "isHighlight": false
-    },
-    {
-      "id": "fhrkz73n7r",
+      "id": "1h0r6fthwlqh",
       "platform": null,
       "badgeClass": null,
       "level": "Growth",
@@ -232,7 +203,7 @@
       "isHighlight": false
     },
     {
-      "id": "r0r204oxxx",
+      "id": "4fup4cqc4q5",
       "platform": null,
       "badgeClass": null,
       "level": "Standard",
@@ -265,7 +236,7 @@
       "isHighlight": false
     },
     {
-      "id": "rmx9xzncxhp",
+      "id": "iis9djdpfvs",
       "platform": null,
       "badgeClass": null,
       "level": "Value",
@@ -314,11 +285,69 @@
           "backgroundColor": "#2563EB"
         }
       }
+    },
+    {
+      "id": "cla9x3gfvw",
+      "platform": null,
+      "badgeClass": null,
+      "level": "Pro",
+      "pillClass": null,
+      "price": 2699,
+      "period": null,
+      "features": [
+        {
+          "icon": "image",
+          "text": "30 Creatives"
+        },
+        {
+          "icon": "brush",
+          "text": "Complete Ad Sets"
+        },
+        {
+          "icon": "folder_zip",
+          "text": "Source Files Included"
+        },
+        {
+          "icon": "check_circle",
+          "text": "Standard delivery time"
+        }
+      ],
+      "buttonText": "Select Plan",
+      "isPopular": false,
+      "serviceName": "SEO Growth",
+      "planParameter": "Creative Packs - Pro (30 for ₹2699)",
+      "tagClass": "static-tag",
+      "isHighlight": false
     }
   ],
   "aiVideoPlans": [
     {
-      "id": "2ytpka5kf13",
+      "id": "0skxtis9sk7",
+      "platform": null,
+      "badgeClass": null,
+      "level": "Starter Plan",
+      "pillClass": null,
+      "price": "4,500",
+      "period": null,
+      "features": [
+        {
+          "icon": "video_library",
+          "text": "5 AI Videos"
+        },
+        {
+          "icon": "check_circle",
+          "text": "Perfect for getting started"
+        }
+      ],
+      "buttonText": "Select Plan",
+      "isPopular": false,
+      "serviceName": "AI Video Production",
+      "planParameter": "AI Video - Starter Plan (5 Videos for ₹4500)",
+      "tagClass": "static-tag",
+      "isHighlight": false
+    },
+    {
+      "id": "p6pk00m966",
       "platform": null,
       "badgeClass": null,
       "level": "Growth Plan",
@@ -361,32 +390,7 @@
       }
     },
     {
-      "id": "9fojbw0yc49",
-      "platform": null,
-      "badgeClass": null,
-      "level": "Starter Plan",
-      "pillClass": null,
-      "price": "4,500",
-      "period": null,
-      "features": [
-        {
-          "icon": "video_library",
-          "text": "5 AI Videos"
-        },
-        {
-          "icon": "check_circle",
-          "text": "Perfect for getting started"
-        }
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "AI Video Production",
-      "planParameter": "AI Video - Starter Plan (5 Videos for ₹4500)",
-      "tagClass": "static-tag",
-      "isHighlight": false
-    },
-    {
-      "id": "x6sualsu99m",
+      "id": "22w0etoexmy",
       "platform": null,
       "badgeClass": null,
       "level": "Pro Plan",
