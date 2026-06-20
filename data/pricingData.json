@@ -1,7 +1,7 @@
 {
   "adsPlans": [
     {
-      "id": "54i9wraw3cg",
+      "id": "ekjcolrbl8",
       "platform": "Meta ads",
       "badgeClass": "gg-badge",
       "level": "Basic",
@@ -23,26 +23,7 @@
       "isHighlight": false
     },
     {
-      "id": "hxxdio0hqee",
-      "platform": "Meta Ads",
-      "badgeClass": "fb-badge",
-      "level": "New Level",
-      "pillClass": "basic-pill",
-      "price": 2999,
-      "period": "/month",
-      "features": [
-        "Feature 1",
-        "Feature 2"
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "Performance Marketing",
-      "planParameter": "Meta Ads - New Level (₹2999/mo)",
-      "tagClass": null,
-      "isHighlight": false
-    },
-    {
-      "id": "wb56un6u7a",
+      "id": "z6lb04kbjdb",
       "platform": "Meta + Google Ads",
       "badgeClass": "multi-badge",
       "level": "Platinum",
@@ -66,7 +47,7 @@
   ],
   "websitePlans": [
     {
-      "id": "c3em0665gxn",
+      "id": "1f61im0i998",
       "platform": null,
       "badgeClass": null,
       "level": "Static",
@@ -99,7 +80,7 @@
       "isHighlight": false
     },
     {
-      "id": "mk7wyajrur",
+      "id": "25wm9yy4br1",
       "platform": null,
       "badgeClass": null,
       "level": "Dynamic",
@@ -134,7 +115,7 @@
   ],
   "creativePacks": [
     {
-      "id": "7xx9i8w49pw",
+      "id": "06hfa4ewvz3v",
       "platform": null,
       "badgeClass": null,
       "level": "Starter",
@@ -167,40 +148,7 @@
       "isHighlight": false
     },
     {
-      "id": "dv3n9lu9u3c",
-      "platform": null,
-      "badgeClass": null,
-      "level": "Growth",
-      "pillClass": null,
-      "price": 1099,
-      "period": null,
-      "features": [
-        {
-          "icon": "image",
-          "text": "10 Creatives"
-        },
-        {
-          "icon": "brush",
-          "text": "Ad Banner Formats"
-        },
-        {
-          "icon": "folder_zip",
-          "text": "PNG & JPG Formats"
-        },
-        {
-          "icon": "check_circle",
-          "text": "Standard delivery time"
-        }
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "SEO Growth",
-      "planParameter": "Creative Packs - Growth (10 for ₹1099)",
-      "tagClass": "static-tag",
-      "isHighlight": false
-    },
-    {
-      "id": "jmszex6r8yf",
+      "id": "5oq5pkilan2",
       "platform": null,
       "badgeClass": null,
       "level": "Pro",
@@ -233,7 +181,40 @@
       "isHighlight": false
     },
     {
-      "id": "weogu2zmxu",
+      "id": "fhrkz73n7r",
+      "platform": null,
+      "badgeClass": null,
+      "level": "Growth",
+      "pillClass": null,
+      "price": 1099,
+      "period": null,
+      "features": [
+        {
+          "icon": "image",
+          "text": "10 Creatives"
+        },
+        {
+          "icon": "brush",
+          "text": "Ad Banner Formats"
+        },
+        {
+          "icon": "folder_zip",
+          "text": "PNG & JPG Formats"
+        },
+        {
+          "icon": "check_circle",
+          "text": "Standard delivery time"
+        }
+      ],
+      "buttonText": "Select Plan",
+      "isPopular": false,
+      "serviceName": "SEO Growth",
+      "planParameter": "Creative Packs - Growth (10 for ₹1099)",
+      "tagClass": "static-tag",
+      "isHighlight": false
+    },
+    {
+      "id": "r0r204oxxx",
       "platform": null,
       "badgeClass": null,
       "level": "Standard",
@@ -266,7 +247,7 @@
       "isHighlight": false
     },
     {
-      "id": "xnadeuxmlqa",
+      "id": "rmx9xzncxhp",
       "platform": null,
       "badgeClass": null,
       "level": "Value",
@@ -319,7 +300,7 @@
   ],
   "aiVideoPlans": [
     {
-      "id": "n1knjmbn61o",
+      "id": "2ytpka5kf13",
       "platform": null,
       "badgeClass": null,
       "level": "Growth Plan",
@@ -362,7 +343,7 @@
       }
     },
     {
-      "id": "r1xv58yqjfj",
+      "id": "9fojbw0yc49",
       "platform": null,
       "badgeClass": null,
       "level": "Starter Plan",
@@ -387,7 +368,7 @@
       "isHighlight": false
     },
     {
-      "id": "wngpc5plr5f",
+      "id": "x6sualsu99m",
       "platform": null,
       "badgeClass": null,
       "level": "Pro Plan",

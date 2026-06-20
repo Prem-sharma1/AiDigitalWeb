@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
+import { sendWhatsAppMessage } from "../../../lib/whatsapp";
 
 export async function POST(req) {
   try {
@@ -62,6 +63,30 @@ export async function POST(req) {
         values: [rowValues]
       }
     });
+
+    // 5. Trigger Automated WhatsApp Notifications
+    try {
+      const adminNumber = process.env.WHATSAPP_ADMIN_NUMBER || "919096090701";
+      const adminMsg = `🔔 *New Lead Inquiry Alert!*\n\n*Name:* ${name}\n*Phone:* ${phone}\n*Email:* ${email}\n*Service:* ${service}\n*Message:* ${message}`;
+      
+      await sendWhatsAppMessage({
+        to: adminNumber,
+        message: adminMsg
+      });
+    } catch (waErr) {
+      console.error("WhatsApp admin alert failed:", waErr);
+    }
+
+    try {
+      const clientMsg = `Hi ${name},\n\nThank you for reaching out to *AI Digital*! We have received your inquiry regarding *${service}* services. Our team will review your requirements and get back to you shortly.\n\nBest regards,\nAI Digital Team`;
+      
+      await sendWhatsAppMessage({
+        to: phone,
+        message: clientMsg
+      });
+    } catch (waErr) {
+      console.error("WhatsApp client confirmation failed:", waErr);
+    }
 
     return NextResponse.json({ success: true, message: "Inquiry saved successfully." });
   } catch (error) {

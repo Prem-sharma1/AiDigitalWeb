@@ -15,7 +15,8 @@ export async function GET(req) {
   let counts = {
     pricing_plans: 0,
     portfolio_items: 0,
-    blogs: 0
+    blogs: 0,
+    whatsapp_logs: 0
   };
 
   try {
@@ -27,6 +28,13 @@ export async function GET(req) {
 
     const [blogRows] = await pool.query("SELECT COUNT(*) as count FROM blogs");
     counts.blogs = blogRows[0].count;
+
+    try {
+      const [waRows] = await pool.query("SELECT COUNT(*) as count FROM whatsapp_logs");
+      counts.whatsapp_logs = waRows[0].count;
+    } catch (e) {
+      console.warn("Could not fetch whatsapp_logs count:", e.message);
+    }
   } catch (error) {
     console.error("Database status check error:", error);
     dbStatus = "offline";

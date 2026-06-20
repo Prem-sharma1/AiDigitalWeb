@@ -3,6 +3,7 @@ import Script from "next/script";
 import "./globals.css";
 import ChatWidget from "./components/ChatWidget";
 import WhatsAppFloating from "./components/WhatsAppFloating";
+import BackToTop from "./components/BackToTop";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -64,6 +65,7 @@ export default function RootLayout({ children }) {
         {children}
         <ChatWidget />
         <WhatsAppFloating />
+        <BackToTop />
       </body>
     </html>
   );

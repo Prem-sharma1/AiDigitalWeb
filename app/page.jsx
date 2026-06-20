@@ -220,7 +220,7 @@ export default function Home() {
       </section>
 
       {/* 2. Choose the Right Services for Your Growth Goal */}
-      <section id="campaigns" className="section section-muted campaigns">
+      <section id="services" className="section section-muted campaigns">
         <div className="section-heading">
           <span className="eyebrow">AI-powered marketing services</span>
           <h2>Choose the Right Services for Your Growth Goal</h2>

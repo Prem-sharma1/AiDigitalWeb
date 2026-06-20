@@ -1,6 +1,8 @@
 "use client"; // Required for native browser event click listeners
 
 import React, { useRef, useEffect } from 'react';
+import Image from 'next/image';
+
 
 export default function PricingPopup({ dialogRef }) {
     const handleClose = () => {
@@ -104,11 +106,23 @@ export default function PricingPopup({ dialogRef }) {
                     </svg>
                 </button>
 
-                <div className="popup-header">
-                    <h2 className="popup-title">
-                        Elevate Your Digital Presence with <span>aidigitals</span>
-                    </h2>
-                    <p className="popup-subtitle">Join 500+ teams automating their growth today.</p>
+                <div className="popup-header-container">
+                    <div className="popup-logo-wrapper">
+                        <Image
+                            src="/logo-cropped.png"
+                            alt="AI Digital Logo"
+                            width={48}
+                            height={48}
+                            className="popup-header-logo"
+                            priority
+                        />
+                    </div>
+                    <div className="popup-header">
+                        <h2 className="popup-title">
+                            Elevate Your Digital Presence with <span>aidigitals</span>
+                        </h2>
+                        <p className="popup-subtitle">Join 500+ teams automating their growth today.</p>
+                    </div>
                 </div>
 
                 <div className="pricing-grid">

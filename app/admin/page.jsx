@@ -21,7 +21,13 @@ export default function AdminPage() {
   const [blogsData, setBlogsData] = useState([]);
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("success");
-  const [stats, setStats] = useState({ dbStatus: "checking", counts: { pricing_plans: 0, portfolio_items: 0, blogs: 0 } });
+  const [stats, setStats] = useState({ dbStatus: "checking", counts: { pricing_plans: 0, portfolio_items: 0, blogs: 0, whatsapp_logs: 0 } });
+
+  // WhatsApp Automation States
+  const [whatsappData, setWhatsappData] = useState({ config: {}, logs: [], dbConnected: false });
+  const [isTestSending, setIsTestSending] = useState(false);
+  const [testRecipient, setTestRecipient] = useState("");
+  const [testMessage, setTestMessage] = useState("");
 
   // Blog Editor State
   const [editingBlog, setEditingBlog] = useState(null); // null if not editing/creating
@@ -45,17 +51,22 @@ export default function AdminPage() {
   // Pricing edit helpers
   const [selectedPriceCategory, setSelectedPriceCategory] = useState("adsPlans");
 
-  // Auth checking on mount
+  // Auth checking on mount disabled to force manual login
   useEffect(() => {
-    fetch("/api/admin/auth")
-      .then((res) => {
-        if (res.ok) {
-          setIsAuthenticated(true);
-          loadAllData();
-        }
-      })
-      .catch((err) => console.error(err));
+    // Explicit email/password input is required to access the admin panel.
   }, []);
+
+  const loadWhatsAppInfo = async () => {
+    try {
+      const res = await fetch("/api/admin/whatsapp?t=" + Date.now(), { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setWhatsappData(data);
+      }
+    } catch (err) {
+      console.warn("Failed to load WhatsApp data:", err);
+    }
+  };
 
   const loadAllData = async () => {
     try {
@@ -73,6 +84,7 @@ export default function AdminPage() {
       }
 
       loadBlogs();
+      loadWhatsAppInfo();
     } catch (err) {
       showToast("Failed to load configuration data", "error");
     }
@@ -677,6 +689,12 @@ export default function AdminPage() {
           >
             <Icon name="article" /> Blogs Editor
           </button>
+          <button
+            onClick={() => { setActiveTab("whatsapp"); setEditingBlog(null); loadWhatsAppInfo(); }}
+            style={{ ...styles.sidebarBtn, ...(activeTab === "whatsapp" ? styles.sidebarBtnActive : {}) }}
+          >
+            <Icon name="forum" /> WhatsApp Alerts
+          </button>
         </aside>
 
         {/* Workspace Content */}
@@ -753,6 +771,15 @@ export default function AdminPage() {
                     </div>
                     <p style={styles.statNumber}>{stats.counts.blogs}</p>
                     <span style={styles.statLabel}>Published posts</span>
+                  </div>
+
+                  <div style={styles.miniCard}>
+                    <div style={styles.miniCardHeader}>
+                      <Icon name="forum" style={{ color: "#ec4899" }} />
+                      <h4 style={{ margin: 0 }}>WhatsApp Logs</h4>
+                    </div>
+                    <p style={styles.statNumber}>{stats.counts.whatsapp_logs || 0}</p>
+                    <span style={styles.statLabel}>Dispatched alerts</span>
                   </div>
                 </div>
               </div>
@@ -1386,6 +1413,202 @@ export default function AdminPage() {
                   </form>
                 </div>
               )}
+            </div>
+          )}
+
+          {activeTab === "whatsapp" && (
+            <div>
+              <div style={styles.contentHeader}>
+                <div>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", margin: 0 }}>WhatsApp Automation Panel</h2>
+                  <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>Configure provider keys, test delivery, and review notification logs</p>
+                </div>
+                <button onClick={loadWhatsAppInfo} style={styles.refreshBtn}>
+                  <Icon name="refresh" /> Refresh Logs & Status
+                </button>
+              </div>
+
+              {/* Status & Test Form Grid */}
+              <div style={styles.overviewGrid}>
+                
+                {/* Configuration details */}
+                <div style={styles.statusCard}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={{ margin: 0, fontSize: "18px" }}>Active Connection</h3>
+                    <span style={{
+                      ...styles.statusBadge,
+                      backgroundColor: whatsappData.config?.provider !== "none" ? "rgba(16, 185, 129, 0.15)" : "rgba(253, 126, 20, 0.15)",
+                      color: whatsappData.config?.provider !== "none" ? "#10B981" : "#FD7E14",
+                      border: `1px solid ${whatsappData.config?.provider !== "none" ? "rgba(16, 185, 129, 0.3)" : "rgba(253, 126, 20, 0.3)"}`
+                    }}>
+                      {whatsappData.config?.provider ? whatsappData.config.provider.toUpperCase() : "NONE (SANDBOX)"}
+                    </span>
+                  </div>
+                  <p style={styles.cardDesc}>
+                    Dynamic routing configuration based on server-side `.env` variables. Fallback is set to sandbox console logging if no API keys are provided.
+                  </p>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "15px" }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                      <span style={{ color: "#94a3b8" }}>Admin Recipient Phone Number:</span>
+                      <span style={{ fontWeight: "600" }}>+{whatsappData.config?.adminNumber || "N/A"}</span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                      <span style={{ color: "#94a3b8" }}>Meta Cloud API status:</span>
+                      <span style={{ fontWeight: "600", color: whatsappData.config?.meta?.configured ? "#10B981" : "#ef4444" }}>
+                        {whatsappData.config?.meta?.configured ? "Configured" : "Not Set"}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                      <span style={{ color: "#94a3b8" }}>Twilio WhatsApp status:</span>
+                      <span style={{ fontWeight: "600", color: whatsappData.config?.twilio?.configured ? "#10B981" : "#ef4444" }}>
+                        {whatsappData.config?.twilio?.configured ? `Configured (From: ${whatsappData.config.twilio.from})` : "Not Set"}
+                      </span>
+                    </div>
+                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+                      <span style={{ color: "#94a3b8" }}>UltraMsg HTTP status:</span>
+                      <span style={{ fontWeight: "600", color: whatsappData.config?.ultramsg?.configured ? "#10B981" : "#ef4444" }}>
+                        {whatsappData.config?.ultramsg?.configured ? "Configured" : "Not Set"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Direct Message Sender Form */}
+                <div style={styles.statusCard}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={{ margin: 0, fontSize: "18px" }}>Dispatch Test WhatsApp</h3>
+                  </div>
+                  <p style={styles.cardDesc}>Send manual notification test to verify webhook routing and network credentials.</p>
+                  
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "10px" }}>
+                    <div style={styles.inputGroupSmall}>
+                      <label style={styles.labelSmall}>Recipient Number (e.g. 919096090701)</label>
+                      <input
+                        type="text"
+                        value={testRecipient}
+                        onChange={(e) => setTestRecipient(e.target.value)}
+                        placeholder="Country code + phone"
+                        style={styles.inputSmall}
+                      />
+                    </div>
+                    <div style={styles.inputGroupSmall}>
+                      <label style={styles.labelSmall}>Message Body</label>
+                      <textarea
+                        rows={2}
+                        value={testMessage}
+                        onChange={(e) => setTestMessage(e.target.value)}
+                        placeholder="Type test message body..."
+                        style={styles.textareaSmall}
+                      />
+                    </div>
+                    <button
+                      onClick={async () => {
+                        if (!testRecipient || !testMessage) {
+                          showToast("Please fill in all manual test fields.", "error");
+                          return;
+                        }
+                        setIsTestSending(true);
+                        try {
+                          const res = await fetch("/api/admin/whatsapp", {
+                            method: "POST",
+                            headers: { "Content-Type": "application/json" },
+                            body: JSON.stringify({ recipient: testRecipient, message: testMessage })
+                          });
+                          const resData = await res.json();
+                          if (resData.success) {
+                            showToast(resData.message || "Message dispatched successfully!");
+                            setTestMessage("");
+                            loadWhatsAppInfo();
+                          } else {
+                            showToast(resData.error || "Failed to dispatch message.", "error");
+                          }
+                        } catch (err) {
+                          showToast("Network dispatch error.", "error");
+                        } finally {
+                          setIsTestSending(false);
+                        }
+                      }}
+                      disabled={isTestSending}
+                      style={{
+                        ...styles.actionBtn,
+                        backgroundColor: "#FD7E14",
+                        color: "#fff",
+                        border: "none",
+                        marginTop: "4px"
+                      }}
+                    >
+                      <Icon name="send" /> {isTestSending ? "Dispatching..." : "Send Message"}
+                    </button>
+                  </div>
+                </div>
+
+              </div>
+
+              {/* Delivery logs list */}
+              <div style={{ ...styles.portfolioSectionHeader, marginTop: "40px" }}>
+                <h3>Recent Delivery Notification Logs</h3>
+                <span style={{ fontSize: "12px", color: whatsappData.dbConnected ? "#10B981" : "#ef4444" }}>
+                  {whatsappData.dbConnected ? "Database Storage Online" : "Database Offline (No logs history saved)"}
+                </span>
+              </div>
+
+              <div style={{ overflowX: "auto", marginTop: "16px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "13px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "2px solid rgba(255,255,255,0.1)", color: "#cbd5e1" }}>
+                      <th style={{ padding: "12px 8px" }}>ID</th>
+                      <th style={{ padding: "12px 8px" }}>Recipient</th>
+                      <th style={{ padding: "12px 8px" }}>Message</th>
+                      <th style={{ padding: "12px 8px" }}>Provider</th>
+                      <th style={{ padding: "12px 8px" }}>Status</th>
+                      <th style={{ padding: "12px 8px" }}>Error Info</th>
+                      <th style={{ padding: "12px 8px" }}>Timestamp</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {whatsappData.logs && whatsappData.logs.length > 0 ? (
+                      whatsappData.logs.map((log) => (
+                        <tr key={log.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                          <td style={{ padding: "10px 8px", fontFamily: "monospace", color: "#94a3b8" }}>{log.id}</td>
+                          <td style={{ padding: "10px 8px", fontWeight: "600" }}>+{log.recipient}</td>
+                          <td style={{ padding: "10px 8px", maxWidth: "250px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={log.message}>
+                            {log.message}
+                          </td>
+                          <td style={{ padding: "10px 8px" }}>
+                            <span style={{ fontSize: "11px", textTransform: "uppercase", color: "#94a3b8" }}>{log.provider}</span>
+                          </td>
+                          <td style={{ padding: "10px 8px" }}>
+                            <span style={{
+                              padding: "2px 8px",
+                              borderRadius: "4px",
+                              fontSize: "11px",
+                              fontWeight: "600",
+                              backgroundColor: log.status === "success" ? "rgba(16,185,129,0.15)" : "rgba(239,68,68,0.15)",
+                              color: log.status === "success" ? "#10B981" : "#ef4444"
+                            }}>
+                              {log.status}
+                            </span>
+                          </td>
+                          <td style={{ padding: "10px 8px", color: "#f87171", maxWidth: "150px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }} title={log.error || ""}>
+                            {log.error || "-"}
+                          </td>
+                          <td style={{ padding: "10px 8px", color: "#94a3b8" }}>
+                            {new Date(log.created_at).toLocaleString("en-IN")}
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={7} style={{ padding: "20px 8px", textAlign: "center", color: "#94a3b8" }}>
+                          No notification dispatch logs recorded yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
             </div>
           )}
         </section>

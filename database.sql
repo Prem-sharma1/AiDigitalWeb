@@ -164,3 +164,19 @@ CREATE TABLE `blogs` (
 -- Dumping data for table `blogs`
 INSERT INTO `blogs` VALUES 
 ('b1', 'Welcome to AI Digital Blogs', 'welcome-to-ai-digital-blogs', '## Exploring AI Powered Digital Marketing\n\nWelcome to our blog! We specialize in generating high-performing leads, developing optimized web applications, and building AI videos.\n\n### Why Choose AI Marketing?\n- **Efficiency**: AI algorithms analyze audience insights rapidly.\n- **Conversion**: Dynamically targeted landing pages convert higher.\n- **Speed**: Automating workflow saves precious time.', 'An overview of how AI digital neural tech is transforming digital marketing paradigms.', '/creative_content/Creative1.jpeg', 'Marketing', 1, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP);
+
+-- --------------------------------------------------------
+-- Table structure for table `whatsapp_logs`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `whatsapp_logs`;
+CREATE TABLE `whatsapp_logs` (
+  `id` VARCHAR(36) NOT NULL,
+  `recipient` VARCHAR(50) NOT NULL,
+  `message` TEXT NOT NULL,
+  `provider` VARCHAR(50) NOT NULL,
+  `status` VARCHAR(20) NOT NULL,
+  `error` TEXT DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

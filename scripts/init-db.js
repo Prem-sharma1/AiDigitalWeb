@@ -100,6 +100,20 @@ async function main() {
   `);
   console.log('Table "blogs" verified.');
 
+  // Create whatsapp_logs
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS whatsapp_logs (
+      id VARCHAR(36) PRIMARY KEY,
+      recipient VARCHAR(50) NOT NULL,
+      message TEXT NOT NULL,
+      provider VARCHAR(50) NOT NULL,
+      status VARCHAR(20) NOT NULL,
+      error TEXT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `);
+  console.log('Table "whatsapp_logs" verified.');
+
   // 4. Seed pricing_plans
   const pricingPath = path.join(process.cwd(), "data", "pricingData.json");
   if (fs.existsSync(pricingPath)) {

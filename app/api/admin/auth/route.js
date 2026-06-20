@@ -8,11 +8,10 @@ export async function POST(req) {
 
     if (email === expectedEmail && password === expectedPassword) {
       const response = NextResponse.json({ success: true });
-      // Set a cookie (admin_session) valid for 1 day
+      // Set a session cookie (admin_session)
       response.cookies.set("admin_session", "authenticated", {
         path: "/",
         httpOnly: true,
-        maxAge: 60 * 60 * 24, // 24 hours
         sameSite: "strict",
         secure: process.env.NODE_ENV === "production",
       });
