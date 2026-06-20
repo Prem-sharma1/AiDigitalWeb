@@ -235,6 +235,7 @@ export default function PricingClientPage() {
                   <div className="price-display-flat">
                     <span className="currency">₹</span>
                     <span className="value">{plan.price}</span>
+                    {plan.period && <span className="period">{plan.period}</span>}
                   </div>
                   <ul className="web-features-list">
                     {plan.features.map((feat, i) => (
@@ -300,6 +301,7 @@ export default function PricingClientPage() {
                       <div className="price-display-flat">
                         <span className="currency">₹</span>
                         <span className="value">{plan.price}</span>
+                        {plan.period && <span className="period">{plan.period}</span>}
                       </div>
                       <ul className="web-features-list">
                         {plan.features.map((feat, i) => (
@@ -389,6 +391,7 @@ export default function PricingClientPage() {
                       <div className="price-display-flat">
                         <span className="currency">₹</span>
                         <span className="value">{plan.price}</span>
+                        {plan.period && <span className="period">{plan.period}</span>}
                       </div>
                       <ul className="web-features-list">
                         {plan.features.map((feat, i) => (
@@ -484,6 +487,7 @@ export default function PricingClientPage() {
                   <div className="price-display-flat">
                     <span className="currency">₹</span>
                     <span className="value">{plan.price}</span>
+                    {plan.period && <span className="period">{plan.period}</span>}
                   </div>
                   <ul className="web-features-list">
                     {plan.features.map((feat, i) => (

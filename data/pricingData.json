@@ -52,7 +52,9 @@
       "price": "23,999",
       "period": "/month",
       "features": [
-        "Creative-18 Ai Video-6 Reels/Shorts-6",
+        "Creative-18",
+        "Ai Video-6",
+        "Reels/Shorts-6",
         "Weekly Report"
       ],
       "buttonText": "Select Plan",
@@ -164,6 +166,39 @@
       "isHighlight": false
     },
     {
+      "id": "5oq5pkilan2",
+      "platform": null,
+      "badgeClass": null,
+      "level": "Pro",
+      "pillClass": null,
+      "price": 2699,
+      "period": null,
+      "features": [
+        {
+          "icon": "image",
+          "text": "30 Creatives"
+        },
+        {
+          "icon": "brush",
+          "text": "Complete Ad Sets"
+        },
+        {
+          "icon": "folder_zip",
+          "text": "Source Files Included"
+        },
+        {
+          "icon": "check_circle",
+          "text": "Standard delivery time"
+        }
+      ],
+      "buttonText": "Select Plan",
+      "isPopular": false,
+      "serviceName": "SEO Growth",
+      "planParameter": "Creative Packs - Pro (30 for ₹2699)",
+      "tagClass": "static-tag",
+      "isHighlight": false
+    },
+    {
       "id": "fhrkz73n7r",
       "platform": null,
       "badgeClass": null,
@@ -193,6 +228,39 @@
       "isPopular": false,
       "serviceName": "SEO Growth",
       "planParameter": "Creative Packs - Growth (10 for ₹1099)",
+      "tagClass": "static-tag",
+      "isHighlight": false
+    },
+    {
+      "id": "r0r204oxxx",
+      "platform": null,
+      "badgeClass": null,
+      "level": "Standard",
+      "pillClass": null,
+      "price": 1899,
+      "period": null,
+      "features": [
+        {
+          "icon": "image",
+          "text": "20 Creatives"
+        },
+        {
+          "icon": "brush",
+          "text": "Multi-Platform Sizes"
+        },
+        {
+          "icon": "folder_zip",
+          "text": "Source Files Included"
+        },
+        {
+          "icon": "check_circle",
+          "text": "Standard delivery time"
+        }
+      ],
+      "buttonText": "Select Plan",
+      "isPopular": false,
+      "serviceName": "SEO Growth",
+      "planParameter": "Creative Packs - Standard (20 for ₹1899)",
       "tagClass": "static-tag",
       "isHighlight": false
     },
@@ -246,100 +314,9 @@
           "backgroundColor": "#2563EB"
         }
       }
-    },
-    {
-      "id": "r0r204oxxx",
-      "platform": null,
-      "badgeClass": null,
-      "level": "Standard",
-      "pillClass": null,
-      "price": 1899,
-      "period": null,
-      "features": [
-        {
-          "icon": "image",
-          "text": "20 Creatives"
-        },
-        {
-          "icon": "brush",
-          "text": "Multi-Platform Sizes"
-        },
-        {
-          "icon": "folder_zip",
-          "text": "Source Files Included"
-        },
-        {
-          "icon": "check_circle",
-          "text": "Standard delivery time"
-        }
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "SEO Growth",
-      "planParameter": "Creative Packs - Standard (20 for ₹1899)",
-      "tagClass": "static-tag",
-      "isHighlight": false
-    },
-    {
-      "id": "5oq5pkilan2",
-      "platform": null,
-      "badgeClass": null,
-      "level": "Pro",
-      "pillClass": null,
-      "price": 2699,
-      "period": null,
-      "features": [
-        {
-          "icon": "image",
-          "text": "30 Creatives"
-        },
-        {
-          "icon": "brush",
-          "text": "Complete Ad Sets"
-        },
-        {
-          "icon": "folder_zip",
-          "text": "Source Files Included"
-        },
-        {
-          "icon": "check_circle",
-          "text": "Standard delivery time"
-        }
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "SEO Growth",
-      "planParameter": "Creative Packs - Pro (30 for ₹2699)",
-      "tagClass": "static-tag",
-      "isHighlight": false
     }
   ],
   "aiVideoPlans": [
-    {
-      "id": "9fojbw0yc49",
-      "platform": null,
-      "badgeClass": null,
-      "level": "Starter Plan",
-      "pillClass": null,
-      "price": "4,500",
-      "period": null,
-      "features": [
-        {
-          "icon": "video_library",
-          "text": "5 AI Videos"
-        },
-        {
-          "icon": "check_circle",
-          "text": "Perfect for getting started"
-        }
-      ],
-      "buttonText": "Select Plan",
-      "isPopular": false,
-      "serviceName": "AI Video Production",
-      "planParameter": "AI Video - Starter Plan (5 Videos for ₹4500)",
-      "tagClass": "static-tag",
-      "isHighlight": false
-    },
     {
       "id": "2ytpka5kf13",
       "platform": null,
@@ -382,6 +359,31 @@
           "backgroundColor": "#FD7E14"
         }
       }
+    },
+    {
+      "id": "9fojbw0yc49",
+      "platform": null,
+      "badgeClass": null,
+      "level": "Starter Plan",
+      "pillClass": null,
+      "price": "4,500",
+      "period": null,
+      "features": [
+        {
+          "icon": "video_library",
+          "text": "5 AI Videos"
+        },
+        {
+          "icon": "check_circle",
+          "text": "Perfect for getting started"
+        }
+      ],
+      "buttonText": "Select Plan",
+      "isPopular": false,
+      "serviceName": "AI Video Production",
+      "planParameter": "AI Video - Starter Plan (5 Videos for ₹4500)",
+      "tagClass": "static-tag",
+      "isHighlight": false
     },
     {
       "id": "x6sualsu99m",

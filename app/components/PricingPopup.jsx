@@ -1,10 +1,49 @@
 "use client"; // Required for native browser event click listeners
 
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Image from 'next/image';
 
-
 export default function PricingPopup({ dialogRef }) {
+    const [popupPlans, setPopupPlans] = useState({
+        Basic: { price: 2499, period: "/mo", features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
+        Standard: { price: 3999, period: "/mo", features: ["Meta Ads", "Creative - 5", "AI Video - 2", "Reels/Shorts - 3", "Weekly Report"] },
+        Premium: { price: 4999, period: "/mo", features: ["Google Ads", "Creative - 5", "AI Video - 1", "Reels/Shorts - 3", "Weekly Report"] }
+    });
+
+    useEffect(() => {
+        fetch("/api/admin/pricing?t=" + Date.now(), { cache: "no-store" })
+            .then(res => {
+                if (res.ok) return res.json();
+                throw new Error("Offline");
+            })
+            .then(data => {
+                if (data.adsPlans) {
+                    const basic = data.adsPlans.find(p => p.level === "Basic") || popupPlans.Basic;
+                    const standard = data.adsPlans.find(p => p.level === "Standard") || popupPlans.Standard;
+                    const premium = data.adsPlans.find(p => p.level === "Premium" || p.level === "Premium Plan") || popupPlans.Premium;
+
+                    setPopupPlans({
+                        Basic: {
+                            price: basic.price,
+                            period: basic.period || "/mo",
+                            features: basic.features
+                        },
+                        Standard: {
+                            price: standard.price,
+                            period: standard.period || "/mo",
+                            features: standard.features
+                        },
+                        Premium: {
+                            price: premium.price,
+                            period: premium.period || "/mo",
+                            features: premium.features
+                        }
+                    });
+                }
+            })
+            .catch(err => console.warn("Using default static popup plans:", err));
+    }, []);
+
     const handleClose = () => {
         if (dialogRef.current) {
             dialogRef.current.close();
@@ -132,53 +171,23 @@ export default function PricingPopup({ dialogRef }) {
                                 <span className="plan-name">Basic</span>
                             </div>
                             <div className="plan-price-area">
-                                <span className="price-amount">₹2499</span>
-                                <span className="price-period">/mo</span>
+                                <span className="price-amount">₹{popupPlans.Basic.price}</span>
+                                <span className="price-period">{popupPlans.Basic.period}</span>
                             </div>
                             <ul className="plan-features">
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Meta Ads
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Creative - 3
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    AI Video - 1
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Reels/Shorts - 1
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Weekly Report
-                                </li>
+                                {popupPlans.Basic.features.map((feat, i) => (
+                                    <li className="feature-item" key={i}>
+                                        <div className="feature-icon-wrapper icon-check">
+                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        {feat}
+                                    </li>
+                                ))}
                             </ul>
                             <button
-                                onClick={() => handleBuyNow("Basic", 2499)}
+                                onClick={() => handleBuyNow("Basic", popupPlans.Basic.price)}
                                 className="btn-card-outline"
                                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
                             >
@@ -193,53 +202,29 @@ export default function PricingPopup({ dialogRef }) {
                                 <span className="popular-badge">Popular</span>
                             </div>
                             <div className="plan-price-area">
-                                <span className="price-amount">₹3999</span>
-                                <span className="price-period">/mo</span>
+                                <span className="price-amount">₹{popupPlans.Standard.price}</span>
+                                <span className="price-period">{popupPlans.Standard.period}</span>
                             </div>
                             <ul className="plan-features">
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-star">
-                                        <svg fill="currentColor" viewBox="0 0 24 24">
-                                            <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
-                                        </svg>
-                                    </div>
-                                    Meta Ads
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Creative - 5
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    AI Video - 2
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Reels/Shorts - 3
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Weekly Report
-                                </li>
+                                {popupPlans.Standard.features.map((feat, i) => (
+                                    <li className="feature-item" key={i}>
+                                        <div className={`feature-icon-wrapper ${i === 0 ? "icon-star" : "icon-check"}`}>
+                                            {i === 0 ? (
+                                                <svg fill="currentColor" viewBox="0 0 24 24">
+                                                    <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
+                                                </svg>
+                                            ) : (
+                                                <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                                                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                                </svg>
+                                            )}
+                                        </div>
+                                        {feat}
+                                    </li>
+                                ))}
                             </ul>
                             <button
-                                onClick={() => handleBuyNow("Standard", 3999)}
+                                onClick={() => handleBuyNow("Standard", popupPlans.Standard.price)}
                                 className="btn-card-solid"
                                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
                             >
@@ -253,53 +238,23 @@ export default function PricingPopup({ dialogRef }) {
                                 <span className="plan-name">Premium</span>
                             </div>
                             <div className="plan-price-area">
-                                <span className="price-amount">₹4999</span>
-                                <span className="price-period">/mo</span>
+                                <span className="price-amount">₹{popupPlans.Premium.price}</span>
+                                <span className="price-period">{popupPlans.Premium.period}</span>
                             </div>
                             <ul className="plan-features">
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Google Ads
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Creative - 5
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    AI Video - 1
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Reels/Shorts - 3
-                                </li>
-                                <li className="feature-item">
-                                    <div className="feature-icon-wrapper icon-check">
-                                        <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
-                                            <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-                                        </svg>
-                                    </div>
-                                    Weekly Report
-                                </li>
+                                {popupPlans.Premium.features.map((feat, i) => (
+                                    <li className="feature-item" key={i}>
+                                        <div className="feature-icon-wrapper icon-check">
+                                            <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
+                                                <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
+                                            </svg>
+                                        </div>
+                                        {feat}
+                                    </li>
+                                ))}
                             </ul>
                             <button
-                                onClick={() => handleBuyNow("Premium", 4999)}
+                                onClick={() => handleBuyNow("Premium", popupPlans.Premium.price)}
                                 className="btn-card-outline"
                                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
                             >
