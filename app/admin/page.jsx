@@ -267,6 +267,7 @@ export default function AdminPage() {
         level: "New Website Plan",
         tagClass: "static-tag",
         price: 9999,
+        period: "",
         features: [
           { icon: "language", text: "Domain Name" },
           { icon: "cloud_queue", text: "Hosting" }
@@ -280,6 +281,7 @@ export default function AdminPage() {
         level: "New Pack",
         tagClass: "static-tag",
         price: 999,
+        period: "",
         features: [
           { icon: "image", text: "5 Creatives" }
         ],
@@ -293,6 +295,7 @@ export default function AdminPage() {
         level: "New Plan",
         tagClass: "static-tag",
         price: "3,000",
+        period: "",
         features: [
           { icon: "video_library", text: "3 AI Videos" }
         ],
@@ -881,6 +884,17 @@ export default function AdminPage() {
                         type="text"
                         value={plan.price}
                         onChange={(e) => updatePricingField(selectedPriceCategory, index, "price", e.target.value)}
+                        style={styles.input}
+                      />
+                    </div>
+
+                    <div style={styles.inputGroup}>
+                      <label style={styles.label}>Billing Period / Cycle (e.g. /month, /3 months, /6 months)</label>
+                      <input
+                        type="text"
+                        value={plan.period || ""}
+                        onChange={(e) => updatePricingField(selectedPriceCategory, index, "period", e.target.value)}
+                        placeholder="Leave blank for one-time payments"
                         style={styles.input}
                       />
                     </div>
