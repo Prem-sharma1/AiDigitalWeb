@@ -2674,6 +2674,17 @@ p {
     bottom: 54px;
   }
 
+  .top-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .nav-actions-wrapper {
+    margin-left: auto;
+    margin-right: 16px;
+  }
+
   .nav-links {
     display: none;
   }
@@ -2684,7 +2695,6 @@ p {
 
   .mobile-menu {
     display: block;
-    justify-self: end;
   }
 
   .trust-grid {
@@ -2707,9 +2717,6 @@ p {
 }
 
 @media (max-width: 720px) {
-  .top-nav {
-    grid-template-columns: 1fr auto;
-  }
 
   .logo img {
     height: 48px;
@@ -2771,6 +2778,11 @@ p {
     min-height: 420px;
   }
 
+  .orbit-xl {
+    width: clamp(340px, 94vw, 390px);
+    height: clamp(340px, 94vw, 390px);
+  }
+
   .orbit-lg {
     width: clamp(280px, 82vw, 330px);
     height: clamp(280px, 82vw, 330px);
@@ -2784,6 +2796,10 @@ p {
   .orbit-sm {
     width: clamp(160px, 48vw, 190px);
     height: clamp(160px, 48vw, 190px);
+  }
+
+  .orbit-dot-xl {
+    --orbit-size: clamp(340px, 94vw, 390px);
   }
 
   .orbit-dot-lg {
@@ -4901,5 +4917,166 @@ p {
     right: 22px;
     width: 40px;
     height: 40px;
+  }
+}
+
+/* ==========================================
+   Shopping Cart UI Styles
+   ========================================== */
+
+.nav-actions-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.nav-cart-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  color: var(--muted);
+  background: transparent;
+  transition: all 0.2s ease;
+  border: 1px solid var(--line-soft);
+}
+
+.nav-cart-btn:hover {
+  color: var(--orange);
+  background: var(--orange-soft);
+  border-color: var(--orange);
+  transform: translateY(-2px);
+}
+
+.cart-badge {
+  position: absolute;
+  top: -4px;
+  right: -4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background-color: var(--orange);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 5px rgba(229, 96, 48, 0.4);
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.mobile-cart-link {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 13px 14px;
+  color: var(--muted);
+  font-weight: 800;
+  border-radius: 8px;
+  text-decoration: none;
+}
+
+.mobile-cart-link:hover {
+  color: var(--blue);
+  background: #f6fbff;
+}
+
+.mobile-cart-badge {
+  margin-left: auto;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background-color: var(--orange);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+/* ==========================================================================
+   Responsiveness Adjustments
+   ========================================================================== */
+
+@media (max-width: 768px) {
+  .admin-main-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .admin-sidebar {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    padding: 12px 16px !important;
+    border-right: none !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06) !important;
+    width: 100% !important;
+    white-space: nowrap !important;
+    scrollbar-width: none !important;
+  }
+  
+  .admin-sidebar::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  .admin-sidebar button {
+    flex-shrink: 0 !important;
+    width: auto !important;
+    display: inline-flex !important;
+  }
+  
+  .admin-content {
+    padding: 16px !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+  
+  .admin-overview-grid {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+@media (max-width: 580px) {
+  .trust-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .pricing-sub-nav {
+    justify-content: flex-start !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    gap: 16px !important;
+    padding: 12px 16px !important;
+    scrollbar-width: none !important;
+  }
+  
+  .pricing-sub-nav::-webkit-scrollbar {
+    display: none !important;
+  }
+  
+  .sub-nav-link {
+    display: inline-block !important;
+    flex-shrink: 0 !important;
+  }
+
+  .admin-input-row {
+    flex-direction: column !important;
+    gap: 12px !important;
   }
 }

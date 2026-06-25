@@ -51,10 +51,60 @@ export default function AdminPage() {
   // Pricing edit helpers
   const [selectedPriceCategory, setSelectedPriceCategory] = useState("adsPlans");
 
+  // Onboarding Clients State
+  const [onboardingData, setOnboardingData] = useState([]);
+
   // Auth checking on mount disabled to force manual login
   useEffect(() => {
     // Explicit email/password input is required to access the admin panel.
   }, []);
+
+  const loadOnboardingData = async () => {
+    try {
+      const res = await fetch("/api/admin/onboarding?t=" + Date.now(), { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setOnboardingData(data);
+      }
+    } catch (err) {
+      console.warn("Failed to load onboarding data:", err);
+    }
+  };
+
+  const handleUpdateOnboardingStatus = async (id, newStatus) => {
+    try {
+      const res = await fetch("/api/admin/onboarding", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: newStatus })
+      });
+      if (res.ok) {
+        showToast("Onboarding status updated!");
+        loadOnboardingData();
+      } else {
+        showToast("Failed to update status", "error");
+      }
+    } catch (err) {
+      showToast("Network error updating status", "error");
+    }
+  };
+
+  const handleDeleteOnboarding = async (id) => {
+    if (!confirm("Are you sure you want to delete this onboarding record?")) return;
+    try {
+      const res = await fetch(`/api/admin/onboarding?id=${id}`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        showToast("Onboarding record deleted successfully!");
+        loadOnboardingData();
+      } else {
+        showToast("Failed to delete onboarding record", "error");
+      }
+    } catch (err) {
+      showToast("Network error deleting onboarding record", "error");
+    }
+  };
 
   const loadWhatsAppInfo = async () => {
     try {
@@ -85,6 +135,7 @@ export default function AdminPage() {
 
       loadBlogs();
       loadWhatsAppInfo();
+      loadOnboardingData();
     } catch (err) {
       showToast("Failed to load configuration data", "error");
     }
@@ -665,9 +716,9 @@ export default function AdminPage() {
       </header>
 
       {/* Main Container */}
-      <main style={styles.mainGrid}>
+      <main className="admin-main-grid" style={styles.mainGrid}>
         {/* Navigation Sidebar */}
-        <aside style={styles.sidebar}>
+        <aside className="admin-sidebar" style={styles.sidebar}>
           <button
             onClick={() => { setActiveTab("overview"); setEditingBlog(null); }}
             style={{ ...styles.sidebarBtn, ...(activeTab === "overview" ? styles.sidebarBtnActive : {}) }}
@@ -698,10 +749,16 @@ export default function AdminPage() {
           >
             <Icon name="forum" /> WhatsApp Alerts
           </button>
+          <button
+            onClick={() => { setActiveTab("onboarding"); setEditingBlog(null); loadOnboardingData(); }}
+            style={{ ...styles.sidebarBtn, ...(activeTab === "onboarding" ? styles.sidebarBtnActive : {}) }}
+          >
+            <Icon name="assignment_ind" /> Onboarding Clients
+          </button>
         </aside>
 
         {/* Workspace Content */}
-        <section style={styles.content}>
+        <section className="admin-content" style={styles.content}>
           {activeTab === "overview" && (
             <div>
               <div style={styles.contentHeader}>
@@ -715,7 +772,7 @@ export default function AdminPage() {
               </div>
 
               {/* Status Section */}
-              <div style={styles.overviewGrid}>
+              <div className="admin-overview-grid" style={styles.overviewGrid}>
                 {/* Database Status Card */}
                 <div style={styles.statusCard}>
                   <div style={styles.cardHeader}>
@@ -950,7 +1007,7 @@ export default function AdminPage() {
                       </button>
                     </div>
 
-                    <div style={styles.inputRow}>
+                    <div className="admin-input-row" style={styles.inputRow}>
                       <div style={styles.inputGroupFluid}>
                         <label style={styles.label}>Project Title</label>
                         <input
@@ -971,7 +1028,7 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    <div style={styles.inputRow}>
+                    <div className="admin-input-row" style={styles.inputRow}>
                       <div style={styles.inputGroupFluid}>
                         <label style={styles.label}>Industry</label>
                         <input
@@ -1219,7 +1276,7 @@ export default function AdminPage() {
                       </h3>
                     </div>
                     <form onSubmit={handleImportBlogs} style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "8px" }}>
-                      <div style={styles.inputRow}>
+                      <div className="admin-input-row" style={styles.inputRow}>
                         <div style={styles.inputGroupFluid}>
                           <label style={styles.label}>Source Platform</label>
                           <select
@@ -1332,7 +1389,7 @@ export default function AdminPage() {
                   </div>
 
                   <form onSubmit={handleSaveBlog} style={styles.blogFormContainer}>
-                    <div style={styles.inputRow}>
+                    <div className="admin-input-row" style={styles.inputRow}>
                       <div style={styles.inputGroupFluid}>
                         <label style={styles.label}>Title</label>
                         <input
@@ -1358,7 +1415,7 @@ export default function AdminPage() {
                       </div>
                     </div>
 
-                    <div style={styles.inputRow}>
+                    <div className="admin-input-row" style={styles.inputRow}>
                       <div style={styles.inputGroupFluid}>
                         <label style={styles.label}>Category</label>
                         <select
@@ -1443,7 +1500,7 @@ export default function AdminPage() {
               </div>
 
               {/* Status & Test Form Grid */}
-              <div style={styles.overviewGrid}>
+              <div className="admin-overview-grid" style={styles.overviewGrid}>
                 
                 {/* Configuration details */}
                 <div style={styles.statusCard}>
@@ -1623,6 +1680,150 @@ export default function AdminPage() {
                 </table>
               </div>
 
+            </div>
+          )}
+
+          {activeTab === "onboarding" && (
+            <div>
+              <div style={styles.contentHeader}>
+                <div>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", margin: 0 }}>Client Onboarding Details</h2>
+                  <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>View billing profile records, callbacks, scheduled strategy calls, and manage campaign status</p>
+                </div>
+                <button onClick={loadOnboardingData} style={styles.refreshBtn}>
+                  <Icon name="refresh" /> Refresh List
+                </button>
+              </div>
+
+              <div style={{ overflowX: "auto", marginTop: "24px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "13px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "2px solid rgba(255,255,255,0.1)", color: "#cbd5e1" }}>
+                      <th style={{ padding: "12px 8px" }}>Client Info</th>
+                      <th style={{ padding: "12px 8px" }}>Plans Purchased</th>
+                      <th style={{ padding: "12px 8px" }}>Billing Address</th>
+                      <th style={{ padding: "12px 8px" }}>Callback / Meeting</th>
+                      <th style={{ padding: "12px 8px" }}>Status</th>
+                      <th style={{ padding: "12px 8px" }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {onboardingData && onboardingData.length > 0 ? (
+                      onboardingData.map((client) => (
+                        <tr key={client.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", verticalAlign: "top" }}>
+                          {/* Client Info */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ fontWeight: "700", color: "#f8fafc" }}>{client.contact_name || "N/A"}</div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>Alt: {client.alt_phone || "None"}</div>
+                            <div style={{ fontSize: "11px", color: "#64748b", marginTop: "2px" }}>Pay ID: {client.payment_id}</div>
+                          </td>
+                          {/* Plans Purchased */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ fontWeight: "600", color: "#f1f5f9" }}>{client.plans}</div>
+                            <span style={{
+                              display: "inline-block",
+                              marginTop: "4px",
+                              padding: "2px 6px",
+                              borderRadius: "4px",
+                              fontSize: "10px",
+                              fontWeight: "700",
+                              backgroundColor: "rgba(253, 126, 20, 0.1)",
+                              color: "#FD7E14"
+                            }}>
+                              {client.business_type || "Individual"}
+                            </span>
+                            {client.gstin && (
+                              <div style={{ fontSize: "11px", color: "#94a3b8", marginTop: "4px", fontFamily: "monospace" }}>
+                                GSTIN: {client.gstin}
+                              </div>
+                            )}
+                          </td>
+                          {/* Address */}
+                          <td style={{ padding: "14px 8px", maxWidth: "220px" }}>
+                            <div style={{ color: "#e2e8f0", lineHeight: "1.3" }}>
+                              {client.address_line1}
+                              {client.address_line2 ? `, ${client.address_line2}` : ""}
+                            </div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>
+                              {client.city}, {client.state_name} - {client.pin_code}
+                            </div>
+                          </td>
+                          {/* Callback / Meeting */}
+                          <td style={{ padding: "14px 8px" }}>
+                            {client.request_callback === 1 ? (
+                              <div style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "2px 8px",
+                                borderRadius: "6px",
+                                fontSize: "11px",
+                                fontWeight: "700",
+                                backgroundColor: "rgba(239, 68, 68, 0.15)",
+                                color: "#f87171",
+                                marginBottom: "6px"
+                              }}>
+                                <Icon name="phone_callback" style={{ fontSize: "14px" }} />
+                                Callback Req
+                              </div>
+                            ) : (
+                              <div style={{ fontSize: "11px", color: "#64748b", marginBottom: "6px" }}>No callback req</div>
+                            )}
+                            {client.scheduled_date ? (
+                              <div style={{ fontSize: "12px", color: "#e2e8f0" }}>
+                                <div style={{ fontWeight: "700" }}>🗓️ Strategy Call:</div>
+                                <div style={{ color: "#94a3b8", marginTop: "2px" }}>{client.scheduled_date}</div>
+                                <div style={{ color: "#94a3b8" }}>{client.scheduled_time}</div>
+                              </div>
+                            ) : (
+                              <div style={{ fontSize: "11px", color: "#64748b", fontStyle: "italic" }}>Not scheduled yet</div>
+                            )}
+                          </td>
+                          {/* Status */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <select
+                              value={client.status || "Pending"}
+                              onChange={(e) => handleUpdateOnboardingStatus(client.id, e.target.value)}
+                              style={{
+                                padding: "6px 8px",
+                                borderRadius: "6px",
+                                border: "1px solid rgba(255,255,255,0.15)",
+                                background: "#1e293b",
+                                color: "#fff",
+                                fontSize: "12px",
+                                outline: "none",
+                                cursor: "pointer",
+                                fontWeight: "600"
+                              }}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Contacted">Contacted</option>
+                              <option value="Active">Active</option>
+                              <option value="Completed">Completed</option>
+                            </select>
+                          </td>
+                          {/* Actions */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <button
+                              onClick={() => handleDeleteOnboarding(client.id)}
+                              style={styles.deleteBtnIconOnly}
+                              title="Delete Record"
+                            >
+                              <Icon name="delete" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={6} style={{ padding: "30px 8px", textAlign: "center", color: "#94a3b8" }}>
+                          No client onboarding details recorded in database yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
             </div>
           )}
         </section>

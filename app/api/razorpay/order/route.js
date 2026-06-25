@@ -8,7 +8,7 @@ const razorpay = new Razorpay({
 
 export async function POST(req) {
   try {
-    const { amount, planName } = await req.json();
+    const { amount, planName, referralCode } = await req.json();
 
     const options = {
       amount: amount * 100, 
@@ -16,6 +16,7 @@ export async function POST(req) {
       receipt: `receipt_${Date.now()}`,
       notes: {
         planName,
+        referralCode: referralCode || "None",
       },
     };
 

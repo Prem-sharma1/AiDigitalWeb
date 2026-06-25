@@ -3,6 +3,8 @@
 import React from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
 import { adsPlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
+import { useCart } from "../hooks/useCart";
+import { useRouter } from "next/navigation";
 
 const getWhatsAppLink = (planName, price, period = "") => {
   const message = `Hi! I would like to buy the ${planName} plan priced at ₹${price}${period} from AI Digital.`;
@@ -10,6 +12,9 @@ const getWhatsAppLink = (planName, price, period = "") => {
 };
 
 export default function PricingClientPage() {
+  const { addToCart, clearCart } = useCart();
+  const router = useRouter();
+
   const [adsPlansState, setAdsPlansState] = React.useState(adsPlans);
   const [websitePlansState, setWebsitePlansState] = React.useState(websitePlans);
   const [creativePacksState, setCreativePacksState] = React.useState(creativePacks);
@@ -42,96 +47,14 @@ export default function PricingClientPage() {
 
   const creativeScrollRef = React.useRef(null);
 
-  const loadRazorpayScript = () => {
-    return new Promise((resolve) => {
-      if (window.Razorpay) {
-        resolve(true);
-        return;
-      }
-      const script = document.createElement("script");
-      script.src = "https://checkout.razorpay.com/v1/checkout.js";
-      script.onload = () => resolve(true);
-      script.onerror = () => resolve(false);
-      document.body.appendChild(script);
+  const handleBuyNow = (planName, price, features = []) => {
+    clearCart();
+    addToCart({
+      name: planName,
+      price: price,
+      features: features
     });
-  };
-
-  const cleanPrice = (price) => {
-    if (typeof price === "number") return price;
-    if (typeof price === "string") {
-      return parseInt(price.replace(/,/g, ""), 10);
-    }
-    return 0;
-  };
-
-  const handleBuyNow = async (planName, price) => {
-    const loaded = await loadRazorpayScript();
-    if (!loaded) {
-      alert("Failed to load Razorpay SDK. Please check your internet connection.");
-      return;
-    }
-
-    const sanitizedPrice = cleanPrice(price);
-
-    try {
-      const response = await fetch("/api/razorpay/order", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ amount: sanitizedPrice, planName }),
-      });
-      const data = await response.json();
-
-      if (!data.success) {
-        alert("Unable to initiate order. Please try again.");
-        return;
-      }
-
-      const options = {
-        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID || "rzp_test_7fK8bF9H1k6Y3a",
-        amount: data.amount,
-        currency: "INR",
-        name: "AI Digital",
-        description: `${planName} Plan Purchase`,
-        image: "/logo-cropped.png",
-        order_id: data.orderId,
-        handler: async function (paymentResponse) {
-          try {
-            const verifyResponse = await fetch("/api/razorpay/verify", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify({
-                razorpay_order_id: paymentResponse.razorpay_order_id,
-                razorpay_payment_id: paymentResponse.razorpay_payment_id,
-                razorpay_signature: paymentResponse.razorpay_signature,
-              }),
-            });
-            const verifyData = await verifyResponse.json();
-            if (verifyData.success) {
-              alert(`Payment Successful!\nPayment ID: ${paymentResponse.razorpay_payment_id}`);
-            } else {
-              alert("Payment verification failed.");
-            }
-          } catch (err) {
-            console.error("Verification call error:", err);
-            alert("Verification connection error.");
-          }
-        },
-        prefill: {
-          name: "",
-          email: "",
-          contact: ""
-        },
-        theme: {
-          color: "#e56030"
-        }
-      };
-
-      const paymentObject = new window.Razorpay(options);
-      paymentObject.open();
-    } catch (error) {
-      console.error("Order creation call failed:", error);
-      alert("Failed to initiate payment. Please try again.");
-    }
+    router.push("/checkout");
   };
 
   return (
@@ -194,7 +117,7 @@ export default function PricingClientPage() {
                 </ul>
               </div>
               <button
-                onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price)}
+                onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
                 className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", border: "none", cursor: "pointer" }}
               >
@@ -247,7 +170,7 @@ export default function PricingClientPage() {
                   </ul>
                 </div>
                 <button
-                  onClick={() => handleBuyNow(plan.level + " Website", plan.price)}
+                  onClick={() => handleBuyNow(plan.level + " Website", plan.price, plan.features.map(f => f.text))}
                   className="btn-card-outline"
                   style={{ display: "block", width: "100%", textAlign: "center", marginTop: "24px", cursor: "pointer" }}
                 >
@@ -317,7 +240,7 @@ export default function PricingClientPage() {
                       </ul>
                     </div>
                     <button
-                      onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price)}
+                      onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price, plan.features.map(f => f.text))}
                       className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
                       style={plan.isHighlight ? {
                         display: "block",
@@ -407,7 +330,7 @@ export default function PricingClientPage() {
                       </ul>
                     </div>
                     <button
-                      onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price)}
+                      onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price, plan.features.map(f => f.text))}
                       className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
                       style={plan.isHighlight ? {
                         display: "block",
@@ -503,7 +426,7 @@ export default function PricingClientPage() {
                   </ul>
                 </div>
                 <button
-                  onClick={() => handleBuyNow("AI Video - " + plan.level, plan.price)}
+                  onClick={() => handleBuyNow("AI Video - " + plan.level, plan.price, plan.features.map(f => f.text))}
                   className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
                   style={plan.isHighlight ? {
                     display: "block",

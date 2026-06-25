@@ -180,3 +180,31 @@ CREATE TABLE `whatsapp_logs` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `onboarding_details`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `onboarding_details`;
+CREATE TABLE `onboarding_details` (
+  `id` VARCHAR(36) NOT NULL,
+  `payment_id` VARCHAR(100) NOT NULL,
+  `plans` VARCHAR(255) NOT NULL,
+  `contact_name` VARCHAR(100) DEFAULT NULL,
+  `alt_phone` VARCHAR(50) DEFAULT NULL,
+  `business_type` VARCHAR(100) DEFAULT NULL,
+  `gstin` VARCHAR(50) DEFAULT NULL,
+  `address_line1` TEXT DEFAULT NULL,
+  `address_line2` TEXT DEFAULT NULL,
+  `city` VARCHAR(100) DEFAULT NULL,
+  `state_name` VARCHAR(100) DEFAULT NULL,
+  `pin_code` VARCHAR(20) DEFAULT NULL,
+  `request_callback` TINYINT(1) DEFAULT '0',
+  `scheduled_date` VARCHAR(100) DEFAULT NULL,
+  `scheduled_time` VARCHAR(50) DEFAULT NULL,
+  `status` VARCHAR(50) DEFAULT 'Pending',
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `payment_id` (`payment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

@@ -21,7 +21,7 @@ if (fs.existsSync(envPath)) {
 
 async function main() {
   console.log("Connecting to XAMPP MySQL...");
-  
+
   const host = process.env.DB_HOST || "localhost";
   const user = process.env.DB_USER || "root";
   const password = process.env.DB_PASSWORD || "";

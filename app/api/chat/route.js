@@ -1,6 +1,11 @@
-import { NextResponse } from "next/server";
+export const dynamic = "force-dynamic";
 
-const SYSTEM_PROMPT = `
+import { NextResponse } from "next/server";
+import pool from "../../../lib/db";
+import fs from "fs";
+import path from "path";
+
+const BASE_SYSTEM_PROMPT = `
 You are "AiDigital Bot", the helpful AI assistant for "aidigitals" (AI Digital), a premium digital marketing and tech agency.
 Your goal is to answer visitor questions, give information about our services and pricing, and guide them to make a purchase or submit an inquiry.
 
@@ -11,33 +16,93 @@ Core Tone and Style:
 
 About aidigitals (AI Digital):
 - We specialize in AI-powered digital growth, high-performance web development, SEO, and paid ad campaigns.
-- We have a secure Razorpay checkout integrated directly into the website. Clicking "Buy Now" on any plan launches the payment popup instantly.
+- We have a shopping cart integrated into the website. Clicking "Buy Now" on any plan adds it to their cart and redirects them to the checkout page (/cart) where they can pay securely via Razorpay.
 
 Services & Packages:
-1. Lead Campaign Plans (Paid Ads):
-   - Basic Meta Ads: ₹2,499/mo (3 Creatives, 1 AI Video, 1 Reel/Short, Weekly Report)
-   - Standard Meta Ads: ₹3,999/mo (5 Creatives, 2 AI Videos, 3 Reels/Shorts, Weekly Report) [Most Popular]
-   - Premium Google Ads: ₹4,999/mo (5 Creatives, 1 AI Video, 3 Reels/Shorts, Weekly Report)
-   - Platinum Multi-Channel (Meta + Google): ₹6,999/mo (7 Creatives, 2 AI Videos, 5 Reels/Shorts, Weekly Report)
-2. Websites (Design & Development):
-   - Static Website: ₹7,499 (Domain name, Hosting, 1 page design, Maintenance included)
-   - Dynamic Website: ₹14,999 (Domain name, Hosting, 10 pages design, Maintenance included)
-3. Creative Design Packs (Social Media Graphics):
-   - Starter: ₹599 (5 Creatives, 3-5 days delivery)
-   - Growth: ₹1,099 (10 Creatives, 4-6 days delivery)
-   - Value: ₹1,499 (15 Creatives, source files, 5-7 days delivery) [Highlighted]
-   - Standard: ₹1,899 (20 Creatives, source files)
-   - Pro: ₹2,699 (30 Creatives, source files)
-4. AI Video Production:
-   - Starter: ₹4,500 (5 AI Videos)
-   - Growth: ₹5,950 (7 AI Videos) [Highlighted]
-   - Pro: ₹8,000 (10 AI Videos)
+[SERVICES_AND_PACKAGES_PLACEHOLDER]
 
 Action Directives:
-- If a client wants to buy a plan: Tell them to click the "Buy Now" button on that plan inside our "Pricing" page to activate the integrated Razorpay checkout.
+- If a client wants to buy a plan: Tell them to click the "Buy Now" button on that plan inside our "Pricing" page to add it to their cart and proceed to payment.
 - If a client has custom needs or wants to contact us: Guide them to fill out the contact form at the bottom of the Home page, or send an inquiry.
 - Keep answers accurate to this pricing context. Do not invent plans or prices outside of these.
 `;
+
+function getJsonFallback() {
+  try {
+    const filePath = path.join(process.cwd(), "data", "pricingData.json");
+    if (fs.existsSync(filePath)) {
+      const raw = fs.readFileSync(filePath, "utf-8");
+      return JSON.parse(raw);
+    }
+  } catch (err) {
+    console.error("Failed to read fallback pricing JSON:", err);
+  }
+  return { adsPlans: [], websitePlans: [], creativePacks: [], aiVideoPlans: [] };
+}
+
+async function getActivePricingContext() {
+  let plansData = { adsPlans: [], websitePlans: [], creativePacks: [], aiVideoPlans: [] };
+
+  try {
+    const [rows] = await pool.query("SELECT * FROM pricing_plans");
+    if (rows && rows.length > 0) {
+      rows.forEach((plan) => {
+        const parsedPlan = {
+          platform: plan.platform,
+          level: plan.level,
+          price: plan.price,
+          period: plan.period,
+          features: JSON.parse(plan.features),
+        };
+        if (plansData[plan.category]) {
+          plansData[plan.category].push(parsedPlan);
+        }
+      });
+    } else {
+      plansData = getJsonFallback();
+    }
+  } catch (err) {
+    console.warn("Chat API DB query failed, using fallback JSON pricing backup. Error:", err.message);
+    plansData = getJsonFallback();
+  }
+
+  // Format the pricing context string for Gemini
+  let context = "\nActive Services & Pricing Packages (Live from database):\n";
+  
+  if (plansData.adsPlans && plansData.adsPlans.length > 0) {
+    context += "1. Lead Campaign Plans (Paid Ads):\n";
+    plansData.adsPlans.forEach(p => {
+      const plat = p.platform ? `${p.platform} ` : "";
+      context += `   - ${plat}${p.level}: ₹${p.price}${p.period || ""} (Inclusions: ${p.features.join(", ")})\n`;
+    });
+  }
+  
+  if (plansData.websitePlans && plansData.websitePlans.length > 0) {
+    context += "2. Websites (Design & Development):\n";
+    plansData.websitePlans.forEach(p => {
+      const feats = p.features.map(f => typeof f === "string" ? f : f.text).join(", ");
+      context += `   - ${p.level} Website: ₹${p.price}${p.period || ""} (Inclusions: ${feats})\n`;
+    });
+  }
+
+  if (plansData.creativePacks && plansData.creativePacks.length > 0) {
+    context += "3. Creative Design Packs (Social Media Graphics):\n";
+    plansData.creativePacks.forEach(p => {
+      const feats = p.features.map(f => typeof f === "string" ? f : f.text).join(", ");
+      context += `   - ${p.level}: ₹${p.price}${p.period || ""} (Inclusions: ${feats})\n`;
+    });
+  }
+
+  if (plansData.aiVideoPlans && plansData.aiVideoPlans.length > 0) {
+    context += "4. AI Video Production:\n";
+    plansData.aiVideoPlans.forEach(p => {
+      const feats = p.features.map(f => typeof f === "string" ? f : f.text).join(", ");
+      context += `   - ${p.level}: ₹${p.price}${p.period || ""} (Inclusions: ${feats})\n`;
+    });
+  }
+
+  return context;
+}
 
 export async function POST(req) {
   try {
@@ -45,18 +110,21 @@ export async function POST(req) {
 
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-      // Return mock response for easy configuration and preview when API key is not yet set
       return NextResponse.json({
         role: "model",
         text: "Hi there! I am the AiDigital Bot. (API Key not configured yet, showing demo mode). How can I help you with SEO, performance campaigns, or website packages today?"
       });
     }
 
+    // Retrieve active live pricing context dynamically
+    const pricingContext = await getActivePricingContext();
+    const dynamicPrompt = BASE_SYSTEM_PROMPT.replace("[SERVICES_AND_PACKAGES_PLACEHOLDER]", pricingContext);
+
     // Structure contents array with prepended system grounding instructions
     const contents = [
       {
         role: "user",
-        parts: [{ text: `System Instructions: ${SYSTEM_PROMPT}` }]
+        parts: [{ text: `System Instructions: ${dynamicPrompt}` }]
       },
       {
         role: "model",

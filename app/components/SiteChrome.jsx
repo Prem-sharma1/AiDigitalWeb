@@ -48,6 +48,12 @@ export function Logo() {
 
 export function SiteHeader({ active = "home" }) {
   const [currentActive, setCurrentActive] = useState(active);
+  const [mounted, setMounted] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -112,8 +118,10 @@ export function SiteHeader({ active = "home" }) {
           </a>
         ))}
       </div>
-      <a className="nav-button" href="/#contact">Contact Us</a>
-      <details className="mobile-menu">
+      <div className="nav-actions-wrapper">
+        <a className="nav-button" href="/#contact">Contact Us</a>
+      </div>
+      <details className="mobile-menu" open={menuOpen} onToggle={(e) => setMenuOpen(e.target.open)}>
         <summary className="mobile-menu-button" aria-label="Open navigation menu">
           <span className="material-symbols-outlined menu-icon" aria-hidden="true">menu</span>
           <span className="material-symbols-outlined close-icon" aria-hidden="true">close</span>
@@ -125,11 +133,12 @@ export function SiteHeader({ active = "home" }) {
               key={item.key}
               className={currentActive === item.key ? "active" : ""}
               aria-current={currentActive === item.key ? "page" : undefined}
+              onClick={() => setMenuOpen(false)}
             >
               {item.label}
             </a>
           ))}
-          <a className="mobile-menu-cta" href="/#contact">Contact Us</a>
+          <a className="mobile-menu-cta" href="/#contact" onClick={() => setMenuOpen(false)}>Contact Us</a>
         </div>
       </details>
     </nav>
