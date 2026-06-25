@@ -8,6 +8,7 @@ export default function PaymentSuccessPage() {
   const [paymentId, setPaymentId] = useState("");
   const [amount, setAmount] = useState("");
   const [plans, setPlans] = useState("");
+  const [phone, setPhone] = useState("");
   
   // Tab control: "form" | "scheduler" | "whatsapp"
   const [activeTab, setActiveTab] = useState("form");
@@ -39,6 +40,7 @@ export default function PaymentSuccessPage() {
       setPaymentId(params.get("payment_id") || "pay_mock123456");
       setAmount(params.get("amount") || "0");
       setPlans(params.get("plans") || "AI Digital Plan");
+      setPhone(params.get("phone") || "");
     }
   }, []);
 
@@ -123,29 +125,8 @@ export default function PaymentSuccessPage() {
   };
 
   const getWhatsAppOnboardingMessage = () => {
-    let msg = `Hi! I completed payment (ID: ${paymentId}) for the plan: ${plans}.\n\n`;
-    msg += `I would like to complete my onboarding setup via chat! Here are my details:\n\n`;
-    msg += `👤 CONTACT DETAILS:\n`;
-    msg += `- Contact Name: ${contactName || "(Not filled yet)"}\n`;
-    msg += `- Alt WhatsApp/Phone: ${altPhone || "(Not filled yet)"}\n`;
-    msg += `- Business Entity: ${businessType || "Sole Proprietorship"}\n`;
-    msg += `- GSTIN: ${gstin || "(Not provided)"}\n\n`;
-    msg += `📍 BILLING ADDRESS:\n`;
-    msg += `- Address Line 1: ${addressLine1 || "(Not filled yet)"}\n`;
-    if (addressLine2) msg += `- Address Line 2: ${addressLine2}\n`;
-    msg += `- City: ${city || "(Not filled yet)"}\n`;
-    msg += `- State: ${stateName || "(Not filled yet)"}\n`;
-    msg += `- ZIP/Pin Code: ${pinCode || "(Not filled yet)"}\n\n`;
-    msg += `📞 CALLBACK PREFERENCE:\n`;
-    msg += `- Request Callback: ${requestCallBack ? "Yes, please call me back" : "No, chat is fine"}\n\n`;
-    if (selectedDate && selectedTimeSlot) {
-      msg += `🗓️ STRATEGY CALL BOOKED:\n`;
-      msg += `- Date: ${selectedDate}\n`;
-      msg += `- Time: ${selectedTimeSlot}\n\n`;
-    }
-    msg += `Status: Ready for Onboarding\n`;
-    msg += `Please verify and confirm my campaign.`;
-    return msg;
+    const finalNumber = altPhone || phone || "";
+    return `Hello, I completed payment of ₹${amount} for the ${plans} plan. My contact number is ${finalNumber}. Payment ID: ${paymentId}.`;
   };
 
   const getWhatsAppOnboardingLink = () => {
@@ -244,95 +225,17 @@ export default function PaymentSuccessPage() {
 
         {/* Action Choice Section */}
         <div style={{ marginBottom: "32px" }}>
-          <h2 style={{ fontSize: "1.5rem", fontWeight: "700", textAlign: "center", marginBottom: "8px" }}>
-            Initialize Onboarding Campaign
+          <h2 style={{ fontSize: "1.65rem", fontWeight: "800", textAlign: "center", marginBottom: "8px", color: "var(--text)" }}>
+            {activeTab === "form" ? "Step 1: Onboarding Details Form" : activeTab === "scheduler" ? "Step 2: Book Strategy Call" : "Step 3: Connect on WhatsApp"}
           </h2>
-          <p style={{ color: "var(--muted)", textAlign: "center", fontSize: "0.95rem", marginBottom: "24px" }}>
-            Select how you would like to complete your onboarding checklist:
+          <p style={{ color: "var(--muted)", textAlign: "center", fontSize: "0.95rem", marginBottom: "24px", maxWidth: "600px", margin: "0 auto 24px auto" }}>
+            {activeTab === "form" 
+              ? "Please fill out your business profile and address details below to initialize your campaign." 
+              : activeTab === "scheduler" 
+                ? "Select a convenient time slot below for a strategy onboarding session with our project manager." 
+                : "Complete your onboarding campaign setup instantly. Click below to launch a chat with our staff."
+            }
           </p>
-
-          {/* Tabs Navigation */}
-          <div style={{
-            display: "flex",
-            background: "var(--surface-muted)",
-            padding: "6px",
-            borderRadius: "12px",
-            gap: "8px",
-            maxWidth: "600px",
-            margin: "0 auto 32px auto"
-          }} className="tabs-wrapper">
-            <button
-              onClick={() => setActiveTab("form")}
-              style={{
-                flex: 1,
-                padding: "12px 16px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "0.9rem",
-                fontWeight: "700",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                background: activeTab === "form" ? "var(--surface)" : "transparent",
-                color: activeTab === "form" ? "var(--orange)" : "var(--muted)",
-                boxShadow: activeTab === "form" ? "0 2px 8px rgba(0,0,0,0.05)" : "none",
-                transition: "all 0.2s ease"
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>description</span>
-              Fill Details Form
-            </button>
-            
-            <button
-              onClick={() => setActiveTab("scheduler")}
-              style={{
-                flex: 1,
-                padding: "12px 16px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "0.9rem",
-                fontWeight: "700",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                background: activeTab === "scheduler" ? "var(--surface)" : "transparent",
-                color: activeTab === "scheduler" ? "var(--orange)" : "var(--muted)",
-                boxShadow: activeTab === "scheduler" ? "0 2px 8px rgba(0,0,0,0.05)" : "none",
-                transition: "all 0.2s ease"
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>calendar_month</span>
-              Book Call
-            </button>
-
-            <button
-              onClick={() => setActiveTab("whatsapp")}
-              style={{
-                flex: 1,
-                padding: "12px 16px",
-                borderRadius: "8px",
-                border: "none",
-                cursor: "pointer",
-                fontSize: "0.9rem",
-                fontWeight: "700",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                gap: "8px",
-                background: activeTab === "whatsapp" ? "var(--surface)" : "transparent",
-                color: activeTab === "whatsapp" ? "var(--orange)" : "var(--muted)",
-                boxShadow: activeTab === "whatsapp" ? "0 2px 8px rgba(0,0,0,0.05)" : "none",
-                transition: "all 0.2s ease"
-              }}
-            >
-              <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>chat</span>
-              WhatsApp Chat
-            </button>
-          </div>
 
           {/* Tab Panes */}
           <div className="tab-pane-container" style={{
@@ -352,7 +255,10 @@ export default function PaymentSuccessPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: "56px", color: "#10b981", marginBottom: "16px" }}>
                       task_alt
                     </span>
-                    <h3 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "8px" }}>Onboarding Details Submitted!</h3>
+                    <h3 style={{ fontSize: "1.6rem", fontWeight: "800", marginBottom: "8px", color: "var(--text)" }}>Onboarding Process Done!</h3>
+                    <p style={{ color: "var(--orange)", fontWeight: "700", fontSize: "1rem", marginBottom: "16px" }}>
+                      Thanks for choosing AiDigitals!
+                    </p>
                     {requestCallBack && (
                       <div style={{
                         display: "inline-flex",
@@ -371,7 +277,7 @@ export default function PaymentSuccessPage() {
                       </div>
                     )}
                     <p style={{ color: "var(--muted)", maxWidth: "500px", margin: "0 auto 24px auto" }}>
-                      Thank you. We have saved your project details. {requestCallBack ? "Our campaign specialist will call you back at your convenience to discuss these details." : "Our onboarding representative will review them and reach out shortly to kickstart the campaign."}
+                      We have saved your project details. {requestCallBack ? "Our campaign specialist will call you back at your convenience to discuss these details." : "Our onboarding representative will review them and reach out shortly to kickstart the campaign."}
                     </p>
                     <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
                       <a href="/" className="nav-button" style={{ textDecoration: "none", display: "inline-block", background: "var(--text)" }}>
@@ -602,32 +508,56 @@ export default function PaymentSuccessPage() {
                       </label>
                     </div>
 
-                    {/* Submit Button */}
-                    <button
-                      type="submit"
-                      disabled={formLoading}
-                      className="nav-button"
-                      style={{
-                        padding: "14px 24px",
-                        fontSize: "0.95rem",
-                        fontWeight: "700",
-                        background: "var(--orange)",
-                        color: "#ffffff",
-                        border: "none",
-                        borderRadius: "999px",
-                        cursor: "pointer",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "8px",
-                        boxShadow: "0 4px 15px rgba(229, 96, 48, 0.3)",
-                        transition: "all 0.2s ease",
-                        width: "fit-content",
-                        marginTop: "12px"
-                      }}
-                    >
-                      {formLoading ? "Saving details..." : "Submit Onboarding Details"}
-                    </button>
+                    {/* Submit Button & Skip Option */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "20px", marginTop: "16px", flexWrap: "wrap" }}>
+                      <button
+                        type="submit"
+                        disabled={formLoading}
+                        className="nav-button"
+                        style={{
+                          padding: "14px 24px",
+                          fontSize: "0.95rem",
+                          fontWeight: "700",
+                          background: "var(--orange)",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "999px",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "8px",
+                          boxShadow: "0 4px 15px rgba(229, 96, 48, 0.3)",
+                          transition: "all 0.2s ease",
+                          width: "fit-content"
+                        }}
+                      >
+                        {formLoading ? "Saving details..." : "Submit Onboarding Details"}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("scheduler")}
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          color: "var(--orange)",
+                          fontWeight: "700",
+                          fontSize: "0.95rem",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          padding: "10px 16px",
+                          borderRadius: "8px",
+                          transition: "all 0.2s ease"
+                        }}
+                        className="skip-btn"
+                      >
+                        Skip & Book a Call
+                        <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>
@@ -641,9 +571,12 @@ export default function PaymentSuccessPage() {
                     <span className="material-symbols-outlined" style={{ fontSize: "56px", color: "var(--blue)", marginBottom: "16px" }}>
                       calendar_today
                     </span>
-                    <h3 style={{ fontSize: "1.5rem", fontWeight: "700", marginBottom: "8px" }}>Strategy Meeting Scheduled!</h3>
+                    <h3 style={{ fontSize: "1.6rem", fontWeight: "800", marginBottom: "8px", color: "var(--text)" }}>Onboarding Process Done!</h3>
+                    <p style={{ color: "var(--orange)", fontWeight: "700", fontSize: "1rem", marginBottom: "16px" }}>
+                      Thanks for choosing AiDigitals!
+                    </p>
                     <p style={{ color: "var(--muted)", maxWidth: "550px", margin: "0 auto 24px auto" }}>
-                      We have booked your slot for **{selectedDate}** at **{selectedTimeSlot}**. A Google Meet calendar invite has been sent to your email. We look forward to onboarding you!
+                      We have booked your strategy meeting slot for **{selectedDate}** at **{selectedTimeSlot}**. A Google Meet invite has been sent to your email. We look forward to onboarding you!
                     </p>
                     <div style={{ display: "flex", gap: "12px", justifyContent: "center" }}>
                       <a href="/" className="nav-button" style={{ textDecoration: "none", display: "inline-block", background: "var(--text)" }}>
@@ -735,32 +668,79 @@ export default function PaymentSuccessPage() {
                       </div>
                     )}
 
-                    {/* Confirm Booking CTA */}
-                    <button
-                      type="submit"
-                      disabled={schedulerLoading || !selectedDate || !selectedTimeSlot}
-                      className="nav-button"
-                      style={{
-                        padding: "14px 24px",
-                        fontSize: "0.95rem",
-                        fontWeight: "700",
-                        background: "var(--orange)",
-                        color: "#ffffff",
-                        border: "none",
-                        borderRadius: "999px",
-                        cursor: (!selectedDate || !selectedTimeSlot) ? "not-allowed" : "pointer",
-                        opacity: (!selectedDate || !selectedTimeSlot) ? 0.6 : 1,
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        gap: "8px",
-                        boxShadow: "0 4px 15px rgba(229, 96, 48, 0.3)",
-                        transition: "all 0.2s ease",
-                        width: "fit-content"
-                      }}
-                    >
-                      {schedulerLoading ? "Scheduling call..." : "Confirm Booking Slot"}
-                    </button>
+                    {/* Confirm Booking CTA, Back, and Skip */}
+                    <div style={{ display: "flex", alignItems: "center", gap: "16px", marginTop: "24px", flexWrap: "wrap" }}>
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("form")}
+                        style={{
+                          background: "transparent",
+                          border: "1px solid var(--line)",
+                          color: "var(--text)",
+                          fontWeight: "700",
+                          fontSize: "0.95rem",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          padding: "12px 20px",
+                          borderRadius: "999px",
+                          transition: "all 0.2s ease"
+                        }}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_back</span>
+                        Back
+                      </button>
+
+                      <button
+                        type="submit"
+                        disabled={schedulerLoading || !selectedDate || !selectedTimeSlot}
+                        className="nav-button"
+                        style={{
+                          padding: "14px 24px",
+                          fontSize: "0.95rem",
+                          fontWeight: "700",
+                          background: "var(--orange)",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "999px",
+                          cursor: (!selectedDate || !selectedTimeSlot) ? "not-allowed" : "pointer",
+                          opacity: (!selectedDate || !selectedTimeSlot) ? 0.6 : 1,
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "8px",
+                          boxShadow: "0 4px 15px rgba(229, 96, 48, 0.3)",
+                          transition: "all 0.2s ease",
+                          width: "fit-content"
+                        }}
+                      >
+                        {schedulerLoading ? "Scheduling call..." : "Confirm Booking Slot"}
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab("whatsapp")}
+                        style={{
+                          background: "transparent",
+                          border: "none",
+                          color: "var(--orange)",
+                          fontWeight: "700",
+                          fontSize: "0.95rem",
+                          cursor: "pointer",
+                          display: "flex",
+                          alignItems: "center",
+                          gap: "6px",
+                          padding: "10px 16px",
+                          borderRadius: "8px",
+                          transition: "all 0.2s ease"
+                        }}
+                        className="skip-btn"
+                      >
+                        Skip & Onboard via WhatsApp
+                        <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
+                      </button>
+                    </div>
                   </form>
                 )}
               </div>
@@ -809,27 +789,51 @@ export default function PaymentSuccessPage() {
                   </strong>
                   {getWhatsAppOnboardingMessage()}
                 </div>
-                <a
-                  href={getWhatsAppOnboardingLink()}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="nav-button"
-                  style={{
-                    background: "#25d366",
-                    color: "#ffffff",
-                    textDecoration: "none",
-                    padding: "14px 28px",
-                    borderRadius: "999px",
-                    fontWeight: "700",
-                    display: "inline-flex",
-                    alignItems: "center",
-                    gap: "8px",
-                    boxShadow: "0 4px 15px rgba(37, 211, 102, 0.3)"
-                  }}
-                >
-                  <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>chat</span>
-                  Launch WhatsApp Chat
-                </a>
+                <div style={{ display: "flex", gap: "16px", justifyContent: "center", alignItems: "center", flexWrap: "wrap" }}>
+                  <button
+                    type="button"
+                    onClick={() => setActiveTab("scheduler")}
+                    style={{
+                      background: "transparent",
+                      border: "1px solid var(--line)",
+                      color: "var(--text)",
+                      fontWeight: "700",
+                      fontSize: "0.95rem",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      gap: "6px",
+                      padding: "12px 20px",
+                      borderRadius: "999px",
+                      transition: "all 0.2s ease"
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_back</span>
+                    Back
+                  </button>
+
+                  <a
+                    href={getWhatsAppOnboardingLink()}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="nav-button"
+                    style={{
+                      background: "#25d366",
+                      color: "#ffffff",
+                      textDecoration: "none",
+                      padding: "14px 28px",
+                      borderRadius: "999px",
+                      fontWeight: "700",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      boxShadow: "0 4px 15px rgba(37, 211, 102, 0.3)"
+                    }}
+                  >
+                    <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>chat</span>
+                    Launch WhatsApp Chat
+                  </a>
+                </div>
               </div>
             )}
 
@@ -860,6 +864,9 @@ export default function PaymentSuccessPage() {
           .plans-purchased-cell {
             grid-column: span 1 !important;
           }
+        }
+        .skip-btn:hover {
+          background-color: var(--orange-soft) !important;
         }
       `}</style>
     </div>

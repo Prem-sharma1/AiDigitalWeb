@@ -155,7 +155,7 @@ export default function CheckoutPage() {
             if (verifyData.success) {
               alert(`Payment Successful!\nPayment ID: ${paymentResponse.razorpay_payment_id}`);
               clearCart();
-              window.location.href = `/payment-success?payment_id=${paymentResponse.razorpay_payment_id}&amount=${finalTotal}&plans=${encodeURIComponent(selectedItem.name)}`;
+              window.location.href = `/payment-success?payment_id=${paymentResponse.razorpay_payment_id}&amount=${finalTotal}&plans=${encodeURIComponent(selectedItem.name)}&phone=${encodeURIComponent(customerPhone)}`;
             } else {
               alert("Payment verification failed.");
             }
