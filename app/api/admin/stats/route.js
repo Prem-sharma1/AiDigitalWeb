@@ -16,7 +16,8 @@ export async function GET(req) {
     pricing_plans: 0,
     portfolio_items: 0,
     blogs: 0,
-    whatsapp_logs: 0
+    whatsapp_logs: 0,
+    payment_reminders: 0
   };
 
   try {
@@ -35,10 +36,18 @@ export async function GET(req) {
     } catch (e) {
       console.warn("Could not fetch whatsapp_logs count:", e.message);
     }
+
+    try {
+      const [remRows] = await pool.query("SELECT COUNT(*) as count FROM payment_reminders");
+      counts.payment_reminders = remRows[0].count;
+    } catch (e) {
+      console.warn("Could not fetch payment_reminders count:", e.message);
+    }
   } catch (error) {
     console.error("Database status check error:", error);
     dbStatus = "offline";
   }
+
 
   return NextResponse.json({
     dbStatus,

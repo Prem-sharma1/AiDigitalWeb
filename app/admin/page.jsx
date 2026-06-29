@@ -18,6 +18,10 @@ export default function AdminPage() {
   const [activeTab, setActiveTab] = useState("overview");
   const [pricingData, setPricingData] = useState(null);
   const [portfolioData, setPortfolioData] = useState(null);
+  const [portfolioFilter, setPortfolioFilter] = useState("All");
+  const [newIndustryName, setNewIndustryName] = useState("");
+  const [newIndustryDesc, setNewIndustryDesc] = useState("");
+  const [showNewIndustryForm, setShowNewIndustryForm] = useState(false);
   const [blogsData, setBlogsData] = useState([]);
   const [statusMessage, setStatusMessage] = useState("");
   const [statusType, setStatusType] = useState("success");
@@ -49,15 +53,19 @@ export default function AdminPage() {
   const [isImporting, setIsImporting] = useState(false);
 
   // Pricing edit helpers
-  const [selectedPriceCategory, setSelectedPriceCategory] = useState("adsPlans");
+  const [selectedPriceCategory, setSelectedPriceCategory] = useState("facebookPlans");
 
   // Onboarding Clients State
   const [onboardingData, setOnboardingData] = useState([]);
+
+  // Payment Reminders State
+  const [remindersData, setRemindersData] = useState([]);
 
   // Auth checking on mount disabled to force manual login
   useEffect(() => {
     // Explicit email/password input is required to access the admin panel.
   }, []);
+
 
   const loadOnboardingData = async () => {
     try {
@@ -106,7 +114,37 @@ export default function AdminPage() {
     }
   };
 
+  const loadRemindersData = async () => {
+    try {
+      const res = await fetch("/api/admin/reminders?t=" + Date.now(), { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setRemindersData(data);
+      }
+    } catch (err) {
+      console.warn("Failed to load reminders data:", err);
+    }
+  };
+
+  const handleDeleteReminder = async (id) => {
+    if (!confirm("Are you sure you want to delete this payment reminder?")) return;
+    try {
+      const res = await fetch(`/api/admin/reminders?id=${id}`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        showToast("Payment reminder deleted successfully!");
+        loadRemindersData();
+      } else {
+        showToast("Failed to delete payment reminder", "error");
+      }
+    } catch (err) {
+      showToast("Network error deleting payment reminder", "error");
+    }
+  };
+
   const loadWhatsAppInfo = async () => {
+
     try {
       const res = await fetch("/api/admin/whatsapp?t=" + Date.now(), { cache: "no-store" });
       if (res.ok) {
@@ -136,6 +174,7 @@ export default function AdminPage() {
       loadBlogs();
       loadWhatsAppInfo();
       loadOnboardingData();
+      loadRemindersData();
     } catch (err) {
       showToast("Failed to load configuration data", "error");
     }
@@ -299,19 +338,47 @@ export default function AdminPage() {
 
   const addPricingPlan = (category) => {
     let newPlan;
-    if (category === "adsPlans") {
+    if (category === "googlePlans") {
       newPlan = {
-        platform: "Meta Ads",
-        badgeClass: "fb-badge",
-        level: "New Level",
+        platform: "Google Ads",
+        badgeClass: "gg-badge",
+        level: "New Google Plan",
         pillClass: "basic-pill",
-        price: 2999,
+        price: 4999,
         period: "/month",
-        features: ["Feature 1", "Feature 2"],
+        features: ["Google Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"],
         buttonText: "Select Plan",
         isPopular: false,
         serviceName: "Performance Marketing",
-        planParameter: "Meta Ads - New Level (₹2999/mo)"
+        planParameter: "Google Ads - New Plan (₹4999/mo)"
+      };
+    } else if (category === "facebookPlans") {
+      newPlan = {
+        platform: "Meta Ads",
+        badgeClass: "fb-badge",
+        level: "New Meta Plan",
+        pillClass: "basic-pill",
+        price: 2499,
+        period: "/month",
+        features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"],
+        buttonText: "Select Plan",
+        isPopular: false,
+        serviceName: "Performance Marketing",
+        planParameter: "Meta Ads - New Plan (₹2499/mo)"
+      };
+    } else if (category === "combinePlans") {
+      newPlan = {
+        platform: "Meta + Google Ads",
+        badgeClass: "multi-badge",
+        level: "New Combine Plan",
+        pillClass: "basic-pill",
+        price: 6999,
+        period: "/month",
+        features: ["Meta Ads + Google Ads", "Creative - 7", "AI Video - 2", "Reels/Shorts - 5", "Weekly Report"],
+        buttonText: "Select Plan",
+        isPopular: false,
+        serviceName: "Performance Marketing",
+        planParameter: "Combine - New Plan (₹6999/mo)"
       };
     } else if (category === "websitePlans") {
       newPlan = {
@@ -521,12 +588,14 @@ export default function AdminPage() {
   };
 
   const addCreativeMedia = (groupIndex) => {
+    const isWebsiteTab = portfolioFilter === "Website & SEO";
     const newMedia = {
-      src: "/creative_content/Creative1.jpeg",
-      title: "New Creative Visual",
-      description: "Describe this media file display visual.",
+      src: isWebsiteTab ? "https://" : "/creative_content/Creative1.jpeg",
+      title: isWebsiteTab ? "New Website Showcase" : "New Creative Visual",
+      description: isWebsiteTab ? "Describe this website showcase." : "Describe this media file display visual.",
       globalIndex: Date.now() % 1000,
-      type: "image"
+      type: isWebsiteTab ? "website" : "image",
+      category: isWebsiteTab ? "website" : undefined
     };
     setPortfolioData(prev => ({
       ...prev,
@@ -538,6 +607,106 @@ export default function AdminPage() {
         };
       })
     }));
+  };
+
+  const handleCreateIndustry = (e) => {
+    e.preventDefault();
+    if (!newIndustryName.trim()) {
+      alert("Please enter an industry name.");
+      return;
+    }
+    
+    // Check if industry already exists
+    const exists = portfolioData.industries.some(
+      (ind) => ind.name.toLowerCase() === newIndustryName.trim().toLowerCase()
+    );
+    if (exists) {
+      alert("This industry category already exists.");
+      return;
+    }
+
+    const newInd = {
+      name: newIndustryName.trim(),
+      description: newIndustryDesc.trim(),
+      projects: []
+    };
+
+    const newGrp = {
+      industry: newIndustryName.trim(),
+      description: newIndustryDesc.trim(),
+      images: []
+    };
+
+    setPortfolioData((prev) => ({
+      ...prev,
+      industries: [...prev.industries, newInd],
+      creativeGroups: [...prev.creativeGroups, newGrp]
+    }));
+
+    setNewIndustryName("");
+    setNewIndustryDesc("");
+    setShowNewIndustryForm(false);
+    showToast(`Industry "${newInd.name}" category created! Remember to Save Changes.`);
+  };
+
+  const handleDeleteIndustry = (name) => {
+    if (!confirm(`Are you sure you want to delete the entire "${name}" industry category, including all its projects and media files?`)) return;
+
+    setPortfolioData((prev) => ({
+      ...prev,
+      industries: prev.industries.filter((ind) => ind.name !== name),
+      creativeGroups: prev.creativeGroups.filter((grp) => grp.industry !== name)
+    }));
+
+    showToast(`Industry "${name}" category deleted! Remember to Save Changes.`);
+  };
+
+  const handleFileUpload = async (file, groupIndex, mediaIndex) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    showToast("Uploading file, please wait...", "info");
+
+    try {
+      const res = await fetch("/api/admin/upload", {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        // Update the source field with uploaded URL
+        updateCreativeMedia(groupIndex, mediaIndex, "src", data.url);
+
+        // Only auto-set type if it's NOT already set to "website"
+        // (website cards keep their type so uploaded image shows in website section)
+        setPortfolioData(prev => {
+          const currentType = prev.creativeGroups[groupIndex]?.images[mediaIndex]?.type;
+          if (currentType !== "website") {
+            const fileType = file.type.startsWith("video/") ? "video" : "image";
+            const updated = { ...prev };
+            updated.creativeGroups = updated.creativeGroups.map((grp, gi) => {
+              if (gi !== groupIndex) return grp;
+              return {
+                ...grp,
+                images: grp.images.map((img, ii) => {
+                  if (ii !== mediaIndex) return img;
+                  return { ...img, type: fileType };
+                })
+              };
+            });
+            return updated;
+          }
+          return prev;
+        });
+
+        showToast("Image uploaded successfully! Remember to Save Changes.", "success");
+      } else {
+        showToast(data.error || "Upload failed", "error");
+      }
+    } catch (err) {
+      showToast("Network error uploading file", "error");
+      console.error(err);
+    }
   };
 
   // Blog Operations
@@ -755,6 +924,12 @@ export default function AdminPage() {
           >
             <Icon name="assignment_ind" /> Onboarding Clients
           </button>
+          <button
+            onClick={() => { setActiveTab("reminders"); setEditingBlog(null); loadRemindersData(); }}
+            style={{ ...styles.sidebarBtn, ...(activeTab === "reminders" ? styles.sidebarBtnActive : {}) }}
+          >
+            <Icon name="alarm" /> Payment Reminders
+          </button>
         </aside>
 
         {/* Workspace Content */}
@@ -841,9 +1016,19 @@ export default function AdminPage() {
                     <p style={styles.statNumber}>{stats.counts.whatsapp_logs || 0}</p>
                     <span style={styles.statLabel}>Dispatched alerts</span>
                   </div>
+
+                  <div style={styles.miniCard}>
+                    <div style={styles.miniCardHeader}>
+                      <Icon name="alarm" style={{ color: "#e56030" }} />
+                      <h4 style={{ margin: 0 }}>Payment Reminders</h4>
+                    </div>
+                    <p style={styles.statNumber}>{stats.counts.payment_reminders || 0}</p>
+                    <span style={styles.statLabel}>Scheduled reminders</span>
+                  </div>
                 </div>
               </div>
             </div>
+
           )}
           {activeTab === "pricing" && pricingData && (
             <div>
@@ -867,10 +1052,22 @@ export default function AdminPage() {
               {/* Selector tabs for price categories */}
               <div style={styles.tabRow}>
                 <button
-                  onClick={() => setSelectedPriceCategory("adsPlans")}
-                  style={{ ...styles.tabSelectBtn, ...(selectedPriceCategory === "adsPlans" ? styles.tabSelectBtnActive : {}) }}
+                  onClick={() => setSelectedPriceCategory("facebookPlans")}
+                  style={{ ...styles.tabSelectBtn, ...(selectedPriceCategory === "facebookPlans" ? styles.tabSelectBtnActive : {}) }}
                 >
-                  Lead Campaigns
+                  Meta Ads Plans
+                </button>
+                <button
+                  onClick={() => setSelectedPriceCategory("googlePlans")}
+                  style={{ ...styles.tabSelectBtn, ...(selectedPriceCategory === "googlePlans" ? styles.tabSelectBtnActive : {}) }}
+                >
+                  Google Plans
+                </button>
+                <button
+                  onClick={() => setSelectedPriceCategory("combinePlans")}
+                  style={{ ...styles.tabSelectBtn, ...(selectedPriceCategory === "combinePlans" ? styles.tabSelectBtnActive : {}) }}
+                >
+                  Combine Plans
                 </button>
                 <button
                   onClick={() => setSelectedPriceCategory("websitePlans")}
@@ -961,7 +1158,7 @@ export default function AdminPage() {
                       <textarea
                         rows={4}
                         value={
-                          selectedPriceCategory === "adsPlans"
+                          ["googlePlans", "facebookPlans", "combinePlans"].includes(selectedPriceCategory)
                             ? plan.features.join(", ")
                             : plan.features.map(f => f.text).join(", ")
                         }
@@ -975,30 +1172,113 @@ export default function AdminPage() {
             </div>
           )}
 
-          {activeTab === "portfolio" && portfolioData && (
-            <div>
-              <div style={styles.contentHeader}>
-                <h2>Manage Portfolio Showcase</h2>
-                <button onClick={handleSavePortfolio} style={styles.saveBtn}>
-                  <Icon name="save" /> Save Changes
-                </button>
-              </div>
+          {activeTab === "portfolio" && portfolioData && (() => {
+            const getMediaTypeAdmin = (type, src, category) => {
+              if (category === "image" || category === "video" || category === "reel" || category === "website") return category;
+              let resolvedType = type;
+              if (!resolvedType && src) {
+                const url = src.toLowerCase();
+                if (url.includes("youtube.com") || url.includes("youtu.be")) resolvedType = "youtube";
+                else if (url.includes("instagram.com/reel") || url.includes("instagram.com/p")) resolvedType = "instagram";
+                else if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".ogg") || url.endsWith(".mov")) resolvedType = "video";
+                else if (url.startsWith("http")) resolvedType = "website";
+                else resolvedType = "image";
+              }
+              if (resolvedType === "youtube" || resolvedType === "iframe" || resolvedType === "video") return "video";
+              if (resolvedType === "instagram" || resolvedType === "reel") return "reel";
+              if (resolvedType === "website") return "website";
+              return "image";
+            };
 
-              <div style={styles.infoBanner}>
-                <Icon name="info" />
-                <span>Any edits, additions, or deletions will only be permanently saved when you click the <strong>Save Changes</strong> button at the top right.</span>
-              </div>
+            const hasVisibleShowcase = portfolioData.showcaseProjects.some(
+              proj => portfolioFilter === "All" || proj.category === portfolioFilter
+            );
 
-              {/* 1. SHOWCASE CAROUSEL ITEMS */}
-              <div style={styles.portfolioSectionHeader}>
-                <h3>Header Showcase Carousel</h3>
-                <button onClick={addShowcaseItem} style={styles.addBtn}>
-                  <Icon name="add" /> Add Showcase Item
-                </button>
-              </div>
+            return (
+              <div>
+                <div style={styles.contentHeader}>
+                  <h2>Manage Portfolio Showcase</h2>
+                  <div style={{ display: "flex", gap: "12px" }}>
+                    <button onClick={() => setShowNewIndustryForm(!showNewIndustryForm)} style={styles.addBtn}>
+                      <Icon name="add" /> {showNewIndustryForm ? "Cancel New Category" : "Create New Industry Category"}
+                    </button>
+                    <button onClick={handleSavePortfolio} style={styles.saveBtn}>
+                      <Icon name="save" /> Save Changes
+                    </button>
+                  </div>
+                </div>
 
-              <div style={styles.formGrid}>
-                {portfolioData.showcaseProjects.map((proj, idx) => (
+                {showNewIndustryForm && (
+                  <div style={{ ...styles.card, marginBottom: "24px", border: "1px dashed #3B82F6", backgroundColor: "rgba(59, 130, 246, 0.02)" }}>
+                    <div style={styles.cardHeader}>
+                      <h3 style={{ margin: 0, color: "#3B82F6", display: "flex", alignItems: "center", gap: "8px" }}>
+                        <Icon name="business_center" /> Create New Industry Category
+                      </h3>
+                    </div>
+                    <form onSubmit={handleCreateIndustry} style={{ display: "flex", flexDirection: "column", gap: "16px", marginTop: "12px" }}>
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>Industry/Category Name</label>
+                        <input
+                          type="text"
+                          value={newIndustryName}
+                          onChange={(e) => setNewIndustryName(e.target.value)}
+                          placeholder="e.g. Construction, Real Estate, Finance, SaaS"
+                          style={styles.input}
+                          required
+                        />
+                      </div>
+                      <div style={styles.inputGroup}>
+                        <label style={styles.label}>Category Description</label>
+                        <textarea
+                          rows={2}
+                          value={newIndustryDesc}
+                          onChange={(e) => setNewIndustryDesc(e.target.value)}
+                          placeholder="e.g. All-in-one Construction ERP & Project Management software showcase, web portal, and local SEO campaign."
+                          style={styles.textarea}
+                          required
+                        />
+                      </div>
+                      <button type="submit" style={{ ...styles.saveBtn, backgroundColor: "#3B82F6", alignSelf: "flex-start" }}>
+                        Create Category
+                      </button>
+                    </form>
+                  </div>
+                )}
+
+                <div style={styles.tabRow}>
+                  {["All", "Website & SEO", "Campaigns", "AI Videos", "Creative Content", "Reels"].map((f) => (
+                    <button
+                      key={f}
+                      onClick={() => setPortfolioFilter(f)}
+                      style={{
+                        ...styles.tabSelectBtn,
+                        ...(portfolioFilter === f ? styles.tabSelectBtnActive : {})
+                      }}
+                    >
+                      {f}
+                    </button>
+                  ))}
+                </div>
+
+                <div style={styles.infoBanner}>
+                  <Icon name="info" />
+                  <span>Any edits, additions, or deletions will only be permanently saved when you click the <strong>Save Changes</strong> button at the top right.</span>
+                </div>
+
+                {/* 1. SHOWCASE CAROUSEL ITEMS */}
+                {hasVisibleShowcase && (
+                  <>
+                    <div style={styles.portfolioSectionHeader}>
+                      <h3>Header Showcase Carousel</h3>
+                      <button onClick={addShowcaseItem} style={styles.addBtn}>
+                        <Icon name="add" /> Add Showcase Item
+                      </button>
+                    </div>
+
+                    <div style={styles.formGrid}>
+                      {portfolioData.showcaseProjects.map((proj, idx) => {
+                        if (portfolioFilter !== "All" && proj.category !== portfolioFilter) return null;
+                        return (
                   <div key={idx} style={styles.card}>
                     <div style={styles.cardHeader}>
                       <h4>{proj.title || "Untitled"}</h4>
@@ -1076,66 +1356,87 @@ export default function AdminPage() {
                         style={styles.input}
                       />
                     </div>
-                  </div>
-                ))}
+                    </div>
+                  );
+                })}
               </div>
+            </>
+          )}
 
-              {/* 2. FEATURED PROJECTS BY INDUSTRY */}
+          {/* 2. FEATURED PROJECTS BY INDUSTRY */}
+          {portfolioData.industries.some(ind => ind.projects.some(p => portfolioFilter === "All" || p.type === portfolioFilter)) && (
+            <>
               <div style={styles.portfolioSectionHeader}>
                 <h3>Featured Work by Industry</h3>
               </div>
 
-              {portfolioData.industries.map((ind, indIdx) => (
+              {portfolioData.industries.map((ind, indIdx) => {
+                const hasVisibleProj = ind.projects.some(p => portfolioFilter === "All" || p.type === portfolioFilter);
+                if (!hasVisibleProj) return null;
+                return (
                 <div key={indIdx} style={styles.industryBox}>
                   <div style={styles.industryTitleRow}>
                     <h4>{ind.name}</h4>
-                    <button onClick={() => addFeaturedProject(indIdx)} style={styles.addBtnSmall}>
-                      <Icon name="add" /> Add Project
-                    </button>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button onClick={() => handleDeleteIndustry(ind.name)} style={{ ...styles.deleteBtn, padding: "4px 8px", fontSize: "12px" }}>
+                        <Icon name="delete" /> Delete Industry Box
+                      </button>
+                      <button onClick={() => addFeaturedProject(indIdx)} style={styles.addBtnSmall}>
+                        <Icon name="add" /> Add Project
+                      </button>
+                    </div>
                   </div>
                   <div style={styles.projectListGrid}>
-                    {ind.projects.map((proj, projIdx) => (
-                      <div key={projIdx} style={{ ...styles.projectItemCard, flexDirection: "column", alignItems: "stretch", gap: "10px" }}>
-                        <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                          <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>PROJECT TITLE</label>
-                          <input
-                            type="text"
-                            value={proj.title}
-                            onChange={(e) => updateFeaturedProject(indIdx, projIdx, "title", e.target.value)}
-                            style={styles.inputSmall}
-                            placeholder="Enter project name..."
-                          />
-                        </div>
-                        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
-                          <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
-                            <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>CATEGORY</label>
-                            <select
-                              value={proj.type}
-                              onChange={(e) => updateFeaturedProject(indIdx, projIdx, "type", e.target.value)}
-                              style={styles.selectSmall}
-                            >
-                              <option value="Website & SEO">Website & SEO</option>
-                              <option value="Campaigns">Campaigns</option>
-                              <option value="AI Videos">AI Videos</option>
-                              <option value="Creative Content">Creative Content</option>
-                              <option value="Reels">Reels</option>
-                            </select>
+                    {ind.projects.map((proj, projIdx) => {
+                      if (portfolioFilter !== "All" && proj.type !== portfolioFilter) return null;
+                      return (
+                        <div key={projIdx} style={{ ...styles.projectItemCard, flexDirection: "column", alignItems: "stretch", gap: "10px" }}>
+                          <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                            <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>PROJECT TITLE</label>
+                            <input
+                              type="text"
+                              value={proj.title}
+                              onChange={(e) => updateFeaturedProject(indIdx, projIdx, "title", e.target.value)}
+                              style={styles.inputSmall}
+                              placeholder="Enter project name..."
+                            />
                           </div>
-                          <button 
-                            onClick={() => deleteFeaturedProject(indIdx, projIdx)} 
-                            style={{ ...styles.deleteBtnIcon, marginTop: "14px", padding: "6px", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px" }}
-                            title="Delete project"
-                          >
-                            <Icon name="delete" />
-                          </button>
+                          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                              <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>CATEGORY</label>
+                              <select
+                                value={proj.type}
+                                onChange={(e) => updateFeaturedProject(indIdx, projIdx, "type", e.target.value)}
+                                style={styles.selectSmall}
+                              >
+                                <option value="Website & SEO">Website & SEO</option>
+                                <option value="Campaigns">Campaigns</option>
+                                <option value="AI Videos">AI Videos</option>
+                                <option value="Creative Content">Creative Content</option>
+                                <option value="Reels">Reels</option>
+                              </select>
+                            </div>
+                            <button 
+                              onClick={() => deleteFeaturedProject(indIdx, projIdx)} 
+                              style={{ ...styles.deleteBtnIcon, marginTop: "14px", padding: "6px", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px" }}
+                              title="Delete project"
+                            >
+                              <Icon name="delete" />
+                            </button>
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                 </div>
-              ))}
+              );
+            })}
+          </>
+        )}
 
-              {/* 3. GENERAL / OTHER PROJECTS */}
+          {/* 3. GENERAL / OTHER PROJECTS */}
+          {portfolioData.otherProjects.some(proj => portfolioFilter === "All" || proj.type === portfolioFilter) && (
+            <>
               <div style={styles.portfolioSectionHeader}>
                 <h3>General Other Projects</h3>
                 <button onClick={addOtherProject} style={styles.addBtnSmall}>
@@ -1144,120 +1445,261 @@ export default function AdminPage() {
               </div>
 
               <div style={styles.projectListGrid}>
-                {portfolioData.otherProjects.map((proj, idx) => (
-                  <div key={idx} style={{ ...styles.projectItemCard, flexDirection: "column", alignItems: "stretch", gap: "10px" }}>
-                    <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
-                      <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>PROJECT TITLE</label>
-                      <input
-                        type="text"
-                        value={proj.title}
-                        onChange={(e) => updateOtherProject(idx, "title", e.target.value)}
-                        style={styles.inputSmall}
-                        placeholder="Enter project name..."
-                      />
-                    </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
-                      <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
-                        <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>CATEGORY</label>
-                        <select
-                          value={proj.type}
-                          onChange={(e) => updateOtherProject(idx, "type", e.target.value)}
-                          style={styles.selectSmall}
-                        >
-                          <option value="Website & SEO">Website & SEO</option>
-                          <option value="Campaigns">Campaigns</option>
-                          <option value="AI Videos">AI Videos</option>
-                          <option value="Creative Content">Creative Content</option>
-                          <option value="Reels">Reels</option>
-                        </select>
+                {portfolioData.otherProjects.map((proj, idx) => {
+                  if (portfolioFilter !== "All" && proj.type !== portfolioFilter) return null;
+                  return (
+                    <div key={idx} style={{ ...styles.projectItemCard, flexDirection: "column", alignItems: "stretch", gap: "10px" }}>
+                      <div style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+                        <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>PROJECT TITLE</label>
+                        <input
+                          type="text"
+                          value={proj.title}
+                          onChange={(e) => updateOtherProject(idx, "title", e.target.value)}
+                          style={styles.inputSmall}
+                          placeholder="Enter project name..."
+                        />
                       </div>
-                      <button 
-                        onClick={() => deleteOtherProject(idx)} 
-                        style={{ ...styles.deleteBtnIcon, marginTop: "14px", padding: "6px", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px" }}
-                        title="Delete project"
-                      >
-                        <Icon name="delete" />
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-
-              {/* 4. CREATIVE MEDIA GRID GROUPS */}
-              <div style={styles.portfolioSectionHeader}>
-                <h3>Creative Grid Items</h3>
-              </div>
-
-              {portfolioData.creativeGroups.map((group, grpIdx) => (
-                <div key={grpIdx} style={styles.industryBox}>
-                  <div style={styles.industryTitleRow}>
-                    <h4>{group.industry} Media</h4>
-                    <button onClick={() => addCreativeMedia(grpIdx)} style={styles.addBtnSmall}>
-                      <Icon name="add" /> Add Media File
-                    </button>
-                  </div>
-
-                  <div style={styles.mediaGrid}>
-                    {group.images.map((img, imgIdx) => (
-                      <div key={imgIdx} style={styles.mediaCard}>
-                        <div style={styles.mediaCardTop}>
-                          <span style={styles.mediaTypeLabel}>{img.type}</span>
-                          <button onClick={() => deleteCreativeMedia(grpIdx, imgIdx)} style={styles.deleteBtnIcon}>
-                            <Icon name="delete" />
-                          </button>
-                        </div>
-
-                        <div style={styles.inputGroupSmall}>
-                          <label style={styles.labelSmall}>Title</label>
-                          <input
-                            type="text"
-                            value={img.title}
-                            onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "title", e.target.value)}
-                            style={styles.inputSmall}
-                          />
-                        </div>
-
-                        <div style={styles.inputGroupSmall}>
-                          <label style={styles.labelSmall}>Media path / URL</label>
-                          <input
-                            type="text"
-                            value={img.src}
-                            onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "src", e.target.value)}
-                            style={styles.inputSmall}
-                          />
-                        </div>
-
-                        <div style={styles.inputGroupSmall}>
-                          <label style={styles.labelSmall}>Description</label>
-                          <textarea
-                            rows={2}
-                            value={img.description}
-                            onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "description", e.target.value)}
-                            style={styles.textareaSmall}
-                          />
-                        </div>
-
-                        <div style={styles.inputGroupSmall}>
-                          <label style={styles.labelSmall}>Media Type</label>
+                      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "8px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", gap: "4px", flex: 1 }}>
+                          <label style={{ fontSize: "10px", color: "#cbd5e1", fontWeight: "600", letterSpacing: "0.03em" }}>CATEGORY</label>
                           <select
-                            value={img.type}
-                            onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "type", e.target.value)}
+                            value={proj.type}
+                            onChange={(e) => updateOtherProject(idx, "type", e.target.value)}
                             style={styles.selectSmall}
                           >
-                            <option value="image">Image</option>
-                            <option value="video">Video</option>
-                            <option value="reel">Reel</option>
+                            <option value="Website & SEO">Website & SEO</option>
+                            <option value="Campaigns">Campaigns</option>
+                            <option value="AI Videos">AI Videos</option>
+                            <option value="Creative Content">Creative Content</option>
+                            <option value="Reels">Reels</option>
                           </select>
                         </div>
+                        <button 
+                          onClick={() => deleteOtherProject(idx)} 
+                          style={{ ...styles.deleteBtnIcon, marginTop: "14px", padding: "6px", backgroundColor: "rgba(239, 68, 68, 0.1)", borderRadius: "4px" }}
+                          title="Delete project"
+                        >
+                          <Icon name="delete" />
+                        </button>
                       </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </>
           )}
 
-          {activeTab === "blogs" && (
+              {/* 4. CREATIVE MEDIA GRID GROUPS */}
+              {(() => {
+                const isCreativeFilterActive = portfolioFilter === "All" || portfolioFilter === "Creative Content" || portfolioFilter === "AI Videos" || portfolioFilter === "Reels" || portfolioFilter === "Website & SEO";
+                if (!isCreativeFilterActive) return null;
+
+                const hasVisibleCreative = portfolioData.creativeGroups.some(group => 
+                  group.images.some(img => {
+                    const type = getMediaTypeAdmin(img.type, img.src, img.category);
+                    if (portfolioFilter === "All") return true;
+                    if (portfolioFilter === "Creative Content") return type === "image";
+                    if (portfolioFilter === "AI Videos") return type === "video";
+                    if (portfolioFilter === "Reels") return type === "reel";
+                    if (portfolioFilter === "Website & SEO") return type === "website";
+                    return false;
+                  })
+                );
+
+                if (!hasVisibleCreative) return null;
+
+                return (
+                  <>
+                    <div style={styles.portfolioSectionHeader}>
+                      <h3>Creative Grid Items</h3>
+                    </div>
+
+                    {portfolioData.creativeGroups.map((group, grpIdx) => {
+                      const hasVisibleImages = group.images.some(img => {
+                        const type = getMediaTypeAdmin(img.type, img.src, img.category);
+                        if (portfolioFilter === "All") return true;
+                        if (portfolioFilter === "Creative Content") return type === "image";
+                        if (portfolioFilter === "AI Videos") return type === "video";
+                        if (portfolioFilter === "Reels") return type === "reel";
+                        if (portfolioFilter === "Website & SEO") return type === "website";
+                        return false;
+                      });
+
+                      if (!hasVisibleImages) return null;
+
+                      return (
+                        <div key={grpIdx} style={styles.industryBox}>
+                          <div style={styles.industryTitleRow}>
+                            <h4>{group.industry} Media</h4>
+                            <div style={{ display: "flex", gap: "8px" }}>
+                              <button onClick={() => handleDeleteIndustry(group.industry)} style={{ ...styles.deleteBtn, padding: "4px 8px", fontSize: "12px" }}>
+                                <Icon name="delete" /> Delete Industry Box
+                              </button>
+                              <button onClick={() => addCreativeMedia(grpIdx)} style={styles.addBtnSmall}>
+                                <Icon name="add" /> Add Media File
+                              </button>
+                            </div>
+                          </div>
+
+                          <div style={styles.mediaGrid}>
+                            {group.images.map((img, imgIdx) => {
+                              const type = getMediaTypeAdmin(img.type, img.src, img.category);
+                              let isVisible = true;
+                              if (portfolioFilter === "Creative Content" && type !== "image") isVisible = false;
+                              if (portfolioFilter === "AI Videos" && type !== "video") isVisible = false;
+                              if (portfolioFilter === "Reels" && type !== "reel") isVisible = false;
+                              if (portfolioFilter === "Website & SEO" && type !== "website") isVisible = false;
+
+                              if (!isVisible) return null;
+
+                              return (
+                                <div key={imgIdx} style={styles.mediaCard}>
+                                  <div style={styles.mediaCardTop}>
+                                    <span style={styles.mediaTypeLabel}>{img.type}</span>
+                                    <button onClick={() => deleteCreativeMedia(grpIdx, imgIdx)} style={styles.deleteBtnIcon}>
+                                      <Icon name="delete" />
+                                    </button>
+                                  </div>
+
+                                  <div style={styles.inputGroupSmall}>
+                                    <label style={styles.labelSmall}>Title</label>
+                                    <input
+                                      type="text"
+                                      value={img.title}
+                                      onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "title", e.target.value)}
+                                      style={styles.inputSmall}
+                                    />
+                                  </div>
+
+                                  <div style={styles.inputGroupSmall}>
+                                    <label style={styles.labelSmall}>Media path / URL</label>
+                                    <input
+                                      type="text"
+                                      value={img.src}
+                                      onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "src", e.target.value)}
+                                      style={styles.inputSmall}
+                                      placeholder="e.g. /creative_content/image.jpg or https://..."
+                                    />
+                                  </div>
+
+                                  <div style={styles.inputGroupSmall}>
+                                    <label style={styles.labelSmall}>Media Type</label>
+                                    <select
+                                      value={img.type}
+                                      onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "type", e.target.value)}
+                                      style={styles.selectSmall}
+                                    >
+                                      <option value="image">Image</option>
+                                      <option value="video">Direct MP4 Video</option>
+                                      <option value="reel">Direct MP4 Reel</option>
+                                      <option value="youtube">YouTube (Video/Shorts)</option>
+                                      <option value="instagram">Instagram Reel</option>
+                                      <option value="iframe">Other Iframe Embed</option>
+                                      <option value="website">Website Link (Auto Screenshot)</option>
+                                    </select>
+                                  </div>
+
+                                  {img.type === "website" && (
+                                    <div style={styles.inputGroupSmall}>
+                                      <label style={styles.labelSmall}>Drop Website Image Here</label>
+                                      <div
+                                        onDragOver={(e) => {
+                                          e.preventDefault();
+                                          e.currentTarget.style.borderColor = "#e56030";
+                                          e.currentTarget.style.backgroundColor = "rgba(229, 96, 48, 0.05)";
+                                        }}
+                                        onDragLeave={(e) => {
+                                          e.preventDefault();
+                                          e.currentTarget.style.borderColor = "rgba(229, 96, 48, 0.3)";
+                                          e.currentTarget.style.backgroundColor = "transparent";
+                                        }}
+                                        onDrop={(e) => {
+                                          e.preventDefault();
+                                          e.currentTarget.style.borderColor = "rgba(229, 96, 48, 0.3)";
+                                          e.currentTarget.style.backgroundColor = "transparent";
+                                          const file = e.dataTransfer.files[0];
+                                          if (file && file.type.startsWith("image/")) {
+                                            handleFileUpload(file, grpIdx, imgIdx);
+                                          }
+                                        }}
+                                        style={{
+                                          border: "2px dashed rgba(229, 96, 48, 0.3)",
+                                          borderRadius: "8px",
+                                          padding: "16px",
+                                          textAlign: "center",
+                                          fontSize: "11px",
+                                          color: "#e56030",
+                                          cursor: "pointer",
+                                          backgroundColor: "rgba(229, 96, 48, 0.02)",
+                                          transition: "all 0.2s ease"
+                                        }}
+                                        onClick={() => document.getElementById(`ws-upload-${grpIdx}-${imgIdx}`).click()}
+                                      >
+                                        <span style={{ fontSize: "20px", display: "block", marginBottom: "4px" }}>🖼️</span>
+                                        <span>Drag & drop image here, or <strong>click to upload</strong></span>
+                                        <input
+                                          id={`ws-upload-${grpIdx}-${imgIdx}`}
+                                          type="file"
+                                          accept="image/*"
+                                          style={{ display: "none" }}
+                                          onChange={(e) => {
+                                            const file = e.target.files[0];
+                                            if (file) handleFileUpload(file, grpIdx, imgIdx);
+                                          }}
+                                        />
+                                      </div>
+                                    </div>
+                                  )}
+
+                                  <div style={styles.inputGroupSmall}>
+                                    <label style={styles.labelSmall}>Description</label>
+                                    <textarea
+                                      rows={2}
+                                      value={img.description}
+                                      onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "description", e.target.value)}
+                                    />
+                                  </div>
+
+                                  <div style={styles.inputGroupSmall}>
+                                    <label style={styles.labelSmall}>Display Tab / Category</label>
+                                    <select
+                                      value={img.category || ""}
+                                      onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "category", e.target.value)}
+                                      style={styles.selectSmall}
+                                    >
+                                      <option value="">Default (Based on Media Type)</option>
+                                      <option value="image">Creative Content</option>
+                                      <option value="video">AI Videos</option>
+                                      <option value="reel">Reels</option>
+                                      <option value="website">Website & SEO</option>
+                                    </select>
+                                  </div>
+
+                                  <div style={styles.inputGroupSmall}>
+                                    <label style={styles.labelSmall}>Sequence / Sort Order</label>
+                                    <input
+                                      type="number"
+                                      value={img.globalIndex !== undefined && img.globalIndex !== null ? img.globalIndex : ""}
+                                      placeholder="e.g. 1, 2, 3"
+                                      onChange={(e) => updateCreativeMedia(grpIdx, imgIdx, "globalIndex", e.target.value ? Number(e.target.value) : "")}
+                                      style={styles.inputSmall}
+                                    />
+                                  </div>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </>
+                );
+              })()}
+            </div>
+          );
+        })()}
+
+        {activeTab === "blogs" && (
             <div>
               {editingBlog === null ? (
                 <div>
@@ -1286,6 +1728,7 @@ export default function AdminPage() {
                           >
                             <option value="devto">Dev.to (by Username)</option>
                             <option value="rss">RSS Feed (Medium, WordPress, etc.)</option>
+                            <option value="url">Any Webpage URL (Scrape Post)</option>
                           </select>
                         </div>
                         <div style={styles.inputGroupFluid}>
@@ -1317,7 +1760,7 @@ export default function AdminPage() {
                               required
                             />
                           </>
-                        ) : (
+                        ) : importSourceType === "rss" ? (
                           <>
                             <label style={styles.label}>RSS Feed URL</label>
                             <input
@@ -1325,6 +1768,18 @@ export default function AdminPage() {
                               value={importFeedUrl}
                               onChange={(e) => setImportFeedUrl(e.target.value)}
                               placeholder="e.g. https://medium.com/feed/tag/technology"
+                              style={styles.input}
+                              required
+                            />
+                          </>
+                        ) : (
+                          <>
+                            <label style={styles.label}>Any Webpage URL (Link)</label>
+                            <input
+                              type="url"
+                              value={importFeedUrl}
+                              onChange={(e) => setImportFeedUrl(e.target.value)}
+                              placeholder="e.g. https://blog.google/technology/ai/gemini/"
                               style={styles.input}
                               required
                             />
@@ -1351,6 +1806,84 @@ export default function AdminPage() {
                         )}
                       </button>
                     </form>
+
+                    <div style={{ marginTop: "16px", paddingTop: "16px", borderTop: "1px solid rgba(253, 126, 20, 0.15)", fontSize: "13px" }}>
+                      <span style={{ fontWeight: "700", color: "#FD7E14", display: "block", marginBottom: "8px" }}>
+                        💡 Free Blog Sources & Links (Click to autofill):
+                      </span>
+                      
+                      <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                        <div>
+                          <strong>Dev.to Usernames:</strong>
+                          <div style={{ display: "flex", gap: "8px", marginTop: "4px", flexWrap: "wrap" }}>
+                            {["nutlope", "wesbos", "dangoslen"].map(user => (
+                              <button
+                                key={user}
+                                type="button"
+                                onClick={() => {
+                                  setImportSourceType("devto");
+                                  setImportUsername(user);
+                                  setImportFeedUrl("");
+                                }}
+                                style={{ padding: "4px 8px", backgroundColor: "#fff", border: "1px solid #ddd", borderRadius: "4px", fontSize: "12px", cursor: "pointer", color: "#333" }}
+                              >
+                                {user}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong>RSS Feeds:</strong>
+                          <div style={{ display: "flex", gap: "8px", marginTop: "4px", flexWrap: "wrap" }}>
+                            {[
+                              { name: "Medium AI Feed", url: "https://medium.com/feed/tag/artificial-intelligence" },
+                              { name: "Medium Tech Feed", url: "https://medium.com/feed/tag/technology" },
+                              { name: "Dev.to Main Feed", url: "https://dev.to/feed" }
+                            ].map(feed => (
+                              <button
+                                key={feed.name}
+                                type="button"
+                                onClick={() => {
+                                  setImportSourceType("rss");
+                                  setImportFeedUrl(feed.url);
+                                  setImportUsername("");
+                                }}
+                                style={{ padding: "4px 8px", backgroundColor: "#fff", border: "1px solid #ddd", borderRadius: "4px", fontSize: "12px", cursor: "pointer", color: "#333" }}
+                              >
+                                {feed.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+
+                        <div>
+                          <strong>Sample Webpage URLs:</strong>
+                          <div style={{ display: "flex", gap: "8px", marginTop: "4px", flexWrap: "wrap" }}>
+                            {[
+                              { name: "Neil Patel Blog", url: "https://neilpatel.com/blog/" },
+                              { name: "Digital Marketing Institute Blog", url: "https://digitalmarketinginstitute.com/blog" },
+                              { name: "Vercel Next.js 15 Blog", url: "https://vercel.com/blog/nextjs-15" },
+                              { name: "Google Gemini Blog", url: "https://blog.google/technology/ai/google-gemini-update-flash-models-io-2024/" }
+                            ].map(web => (
+                              <button
+                                key={web.name}
+                                type="button"
+                                onClick={() => {
+                                  setImportSourceType("url");
+                                  setImportFeedUrl(web.url);
+                                  setImportUsername("");
+                                }}
+                                style={{ padding: "4px 8px", backgroundColor: "#fff", border: "1px solid #ddd", borderRadius: "4px", fontSize: "12px", cursor: "pointer", color: "#333" }}
+                                title={web.url}
+                              >
+                                {web.name}
+                              </button>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
 
                   <div style={styles.blogListGrid}>
@@ -1818,6 +2351,90 @@ export default function AdminPage() {
                       <tr>
                         <td colSpan={6} style={{ padding: "30px 8px", textAlign: "center", color: "#94a3b8" }}>
                           No client onboarding details recorded in database yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "reminders" && (
+            <div>
+              <div style={styles.contentHeader}>
+                <div>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", margin: 0 }}>Scheduled Payment Reminders</h2>
+                  <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>View when potential customers have rescheduled their checkout payments</p>
+                </div>
+                <button onClick={loadRemindersData} style={styles.refreshBtn}>
+                  <Icon name="refresh" /> Refresh List
+                </button>
+              </div>
+
+              <div style={{ overflowX: "auto", marginTop: "24px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "13px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "2px solid rgba(255,255,255,0.1)", color: "#cbd5e1" }}>
+                      <th style={{ padding: "12px 8px" }}>Customer Info</th>
+                      <th style={{ padding: "12px 8px" }}>Selected Plan</th>
+                      <th style={{ padding: "12px 8px" }}>Scheduled Date</th>
+                      <th style={{ padding: "12px 8px" }}>Created At</th>
+                      <th style={{ padding: "12px 8px" }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {remindersData && remindersData.length > 0 ? (
+                      remindersData.map((reminder) => (
+                        <tr key={reminder.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", verticalAlign: "middle" }}>
+                          {/* Customer Info */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ fontWeight: "700", color: "#f8fafc" }}>{reminder.customer_name || "N/A"}</div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>Phone: {reminder.customer_phone || "N/A"}</div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8" }}>Email: {reminder.customer_email || "N/A"}</div>
+                          </td>
+                          {/* Plan Details */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ fontWeight: "600", color: "#f1f5f9" }}>{reminder.plan_name}</div>
+                            <div style={{ fontSize: "12px", color: "#FD7E14", marginTop: "2px", fontWeight: "700" }}>₹{reminder.plan_price}</div>
+                          </td>
+                          {/* Scheduled Date */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{
+                              display: "inline-flex",
+                              alignItems: "center",
+                              gap: "6px",
+                              padding: "4px 10px",
+                              borderRadius: "8px",
+                              fontSize: "12px",
+                              fontWeight: "700",
+                              backgroundColor: "rgba(253, 126, 20, 0.15)",
+                              color: "#FD7E14"
+                            }}>
+                              <Icon name="calendar_month" style={{ fontSize: "16px" }} />
+                              {reminder.reminder_date}
+                            </div>
+                          </td>
+                          {/* Created At */}
+                          <td style={{ padding: "14px 8px", color: "#94a3b8" }}>
+                            {new Date(reminder.created_at).toLocaleString()}
+                          </td>
+                          {/* Actions */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <button
+                              onClick={() => handleDeleteReminder(reminder.id)}
+                              style={styles.deleteBtnIconOnly}
+                              title="Delete Reminder"
+                            >
+                              <Icon name="delete" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={5} style={{ padding: "30px 8px", textAlign: "center", color: "#94a3b8" }}>
+                          No payment reminders recorded in database yet.
                         </td>
                       </tr>
                     )}

@@ -28,20 +28,62 @@ Welcome to our blog! We specialize in generating high-performing leads, developi
   }
 ];
 
-// GET all blogs
+// GET blogs (supports single query by slug/id or summary listing)
 export async function GET(req) {
   try {
     const url = new URL(req.url);
     const adminMode = url.searchParams.get("admin") === "true";
+    const slug = url.searchParams.get("slug");
+    const id = url.searchParams.get("id");
+
+    if (slug) {
+      const [rows] = await pool.query("SELECT * FROM blogs WHERE slug = ?", [slug]);
+      if (rows.length === 0) {
+        return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      }
+      const blog = rows[0];
+      return NextResponse.json({
+        id: blog.id,
+        title: blog.title,
+        slug: blog.slug,
+        content: blog.content,
+        excerpt: blog.excerpt,
+        coverImage: blog.cover_image,
+        category: blog.category,
+        published: Boolean(blog.published),
+        createdAt: blog.created_at,
+        updatedAt: blog.updated_at,
+      });
+    }
+
+    if (id) {
+      const [rows] = await pool.query("SELECT * FROM blogs WHERE id = ?", [id]);
+      if (rows.length === 0) {
+        return NextResponse.json({ error: "Blog not found" }, { status: 404 });
+      }
+      const blog = rows[0];
+      return NextResponse.json({
+        id: blog.id,
+        title: blog.title,
+        slug: blog.slug,
+        content: blog.content,
+        excerpt: blog.excerpt,
+        coverImage: blog.cover_image,
+        category: blog.category,
+        published: Boolean(blog.published),
+        createdAt: blog.created_at,
+        updatedAt: blog.updated_at,
+      });
+    }
 
     let rows;
     if (adminMode) {
       if (!checkAuth(req)) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
       }
-      [rows] = await pool.query("SELECT * FROM blogs ORDER BY created_at DESC");
+      [rows] = await pool.query("SELECT id, title, slug, LEFT(content, 100) as content, excerpt, cover_image, category, published, created_at, updated_at FROM blogs ORDER BY created_at DESC");
     } else {
-      [rows] = await pool.query("SELECT * FROM blogs WHERE published = 1 ORDER BY created_at DESC");
+      [rows] = await pool.query("SELECT id, title, slug, LEFT(content, 100) as content, excerpt, cover_image, category, published, created_at, updated_at FROM blogs WHERE published = 1 ORDER BY created_at DESC");
     }
 
     const blogs = rows.map((blog) => ({

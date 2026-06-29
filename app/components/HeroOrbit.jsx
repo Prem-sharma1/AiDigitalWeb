@@ -6,11 +6,15 @@ import { Icon } from "./SiteChrome";
 export default function HeroOrbit() {
     const dialogRef = useRef(null);
 
-    // Triggers the pricing popup natively when the page renders
+    // Triggers the pricing popup natively with a 10-second delay when the page renders
     useEffect(() => {
-        if (dialogRef.current) {
-            dialogRef.current.showModal();
-        }
+        const timer = setTimeout(() => {
+            if (dialogRef.current) {
+                dialogRef.current.showModal();
+            }
+        }, 10000);
+
+        return () => clearTimeout(timer);
     }, []);
 
     return (

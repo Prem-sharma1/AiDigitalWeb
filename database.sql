@@ -31,20 +31,27 @@ CREATE TABLE `pricing_plans` (
 
 -- Dumping data for table `pricing_plans`
 INSERT INTO `pricing_plans` VALUES 
-('ad1', 'adsPlans', 'Meta Ads', 'fb-badge', 'Basic', 'basic-pill', '2499', '/month', '[\"Meta Ads\",\"Creative - 3\",\"AI Video - 1\",\"Reels/Shorts - 1\",\"Weekly Report\"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Basic (₹2499/mo)', NULL, 0, NULL),
-('ad2', 'adsPlans', 'Meta Ads', 'fb-badge', 'Standard', 'standard-pill', '3999', '/month', '[\"Meta Ads\",\"Creative - 5\",\"AI Video - 2\",\"Reels/Shorts - 3\",\"Weekly Report\"]', 'Select Plan', 1, 'Performance Marketing', 'Meta Ads - Standard (₹3999/mo)', NULL, 0, NULL),
-('ad3', 'adsPlans', 'Google Ads', 'gg-badge', 'Premium', 'premium-pill', '4999', '/month', '[\"Google Ads\",\"Creative - 5\",\"AI Video - 1\",\"Reels/Shorts - 3\",\"Weekly Report\"]', 'Select Plan', 0, 'Performance Marketing', 'Google Ads - Premium (₹4999/mo)', NULL, 0, NULL),
-('ad4', 'adsPlans', 'Meta + Google Ads', 'multi-badge', 'Platinum', 'platinum-pill', '6999', '/month', '[\"Ads Multi-Channel\",\"Creative - 7\",\"AI Video - 2\",\"Reels/Shorts - 5\",\"Weekly Report\"]', 'Select Plan', 0, 'Performance Marketing', 'Multi-Channel - Platinum (₹6999/mo)', NULL, 0, NULL),
-('web1', 'websitePlans', NULL, NULL, 'Static', NULL, '7499', NULL, '[{\"icon\":\"language\",\"text\":\"Domain Name\"},{\"icon\":\"cloud_queue\",\"text\":\"Hosting\"},{\"icon\":\"description\",\"text\":\"1 Page Design\"},{\"icon\":\"settings_backup_restore\",\"text\":\"Maintenance\"}]', 'Select Plan', 0, 'Web Development', 'Static Website (₹7499)', 'static-tag', 0, NULL),
-('web2', 'websitePlans', NULL, NULL, 'Dynamic', NULL, '14999', NULL, '[{\"icon\":\"language\",\"text\":\"Domain Name\"},{\"icon\":\"cloud_queue\",\"text\":\"Hosting\"},{\"icon\":\"description\",\"text\":\"10 Page Design\"},{\"icon\":\"settings_backup_restore\",\"text\":\"Maintenance\"}]', 'Select Plan', 0, 'Web Development', 'Dynamic Website (₹14999)', 'dynamic-tag', 0, NULL),
-('cr1', 'creativePacks', NULL, NULL, 'Starter', NULL, '599', NULL, '[{\"icon\":\"image\",\"text\":\"5 Creatives\"},{\"icon\":\"brush\",\"text\":\"Social Media Sizes\"},{\"icon\":\"folder_zip\",\"text\":\"PNG & JPG Formats\"},{\"icon\":\"schedule\",\"text\":\"3-5 Days Delivery\"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Starter (5 for ₹599)', 'static-tag', 0, NULL),
-('cr2', 'creativePacks', NULL, NULL, 'Growth', NULL, '1099', NULL, '[{\"icon\":\"image\",\"text\":\"10 Creatives\"},{\"icon\":\"brush\",\"text\":\"Ad Banner Formats\"},{\"icon\":\"folder_zip\",\"text\":\"PNG & JPG Formats\"},{\"icon\":\"schedule\",\"text\":\"4-6 Days Delivery\"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Growth (10 for ₹1099)', 'static-tag', 0, NULL),
-('cr3', 'creativePacks', NULL, NULL, 'Value', NULL, '1499', NULL, '[{\"icon\":\"image\",\"text\":\"15 Creatives\"},{\"icon\":\"brush\",\"text\":\"Brand Style Match\"},{\"icon\":\"folder_zip\",\"text\":\"Source Files Included\"},{\"icon\":\"schedule\",\"text\":\"5-7 Days Delivery\"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Value (15 for ₹1499)', 'static-tag', 1, '{\"card\":{\"borderColor\":\"#2563EB\",\"borderWidth\":\"2px\",\"position\":\"relative\",\"overflow\":\"hidden\"},\"tag\":{\"backgroundColor\":\"#EBF3FF\",\"color\":\"#2563EB\"},\"icon\":{\"color\":\"#2563EB\"},\"button\":{\"backgroundColor\":\"#2563EB\"}}'),
-('cr4', 'creativePacks', NULL, NULL, 'Standard', NULL, '1899', NULL, '[{\"icon\":\"image\",\"text\":\"20 Creatives\"},{\"icon\":\"brush\",\"text\":\"Multi-Platform Sizes\"},{\"icon\":\"folder_zip\",\"text\":\"Source Files Included\"},{\"icon\":\"schedule\",\"text\":\"5-7 Days Delivery\"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Standard (20 for ₹1899)', 'static-tag', 0, NULL),
-('cr5', 'creativePacks', NULL, NULL, 'Pro', NULL, '2699', NULL, '[{\"icon\":\"image\",\"text\":\"30 Creatives\"},{\"icon\":\"brush\",\"text\":\"Complete Ad Sets\"},{\"icon\":\"folder_zip\",\"text\":\"Source Files Included\"},{\"icon\":\"schedule\",\"text\":\"7-10 Days Delivery\"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Pro (30 for ₹2699)', 'static-tag', 0, NULL),
-('v1', 'aiVideoPlans', NULL, NULL, 'Starter Plan', NULL, '4,500', NULL, '[{\"icon\":\"video_library\",\"text\":\"5 AI Videos\"},{\"icon\":\"check_circle\",\"text\":\"Perfect for getting started\"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Starter Plan (5 Videos for ₹4500)', 'static-tag', 0, NULL),
-('v2', 'aiVideoPlans', NULL, NULL, 'Growth Plan', NULL, '5,950', NULL, '[{\"icon\":\"video_library\",\"text\":\"7 AI Videos\"},{\"icon\":\"check_circle\",\"text\":\"Ideal for growing brands\"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Growth Plan (7 Videos for ₹5950)', 'static-tag', 1, '{\"card\":{\"borderColor\":\"#FD7E14\",\"borderWidth\":\"2px\",\"position\":\"relative\",\"overflow\":\"hidden\"},\"tag\":{\"backgroundColor\":\"#FFF0EA\",\"color\":\"#FD7E14\"},\"icon\":{\"color\":\"#FD7E14\"},\"button\":{\"backgroundColor\":\"#FD7E14\"}}'),
-('v3', 'aiVideoPlans', NULL, NULL, 'Pro Plan', NULL, '8,000', NULL, '[{\"icon\":\"video_library\",\"text\":\"10 AI Videos\"},{\"icon\":\"check_circle\",\"text\":\"Best for maximum impact\"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Pro Plan (10 Videos for ₹8000)', 'static-tag', 0, NULL);
+('g_basic', 'googlePlans', 'Google Ads', 'gg-badge', 'Basic Plan', 'basic-pill', '4999', '/month', '["Google Ads","Creative - 3","AI Video - 1","Reels/Shorts - 1","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Google Ads - Basic (₹4999/mo)', NULL, 0, NULL),
+('g_standard', 'googlePlans', 'Google Ads', 'gg-badge', 'Standard Plan', 'standard-pill', '13499', '/3 months', '["Google Ads","Creative - 9","AI Video - 3","Reels/Shorts - 3","Weekly Report"]', 'Select Plan', 1, 'Performance Marketing', 'Google Ads - Standard (₹13499/3mo)', NULL, 0, NULL),
+('g_premium', 'googlePlans', 'Google Ads', 'gg-badge', 'Premium Plan', 'premium-pill', '23999', '/6 months', '["Google Ads","Creative - 18","AI Video - 6","Reels/Shorts - 6","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Google Ads - Premium (₹23999/6mo)', NULL, 0, NULL),
+('fb_basic', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Basic', 'basic-pill', '2499', '/month', '["Meta Ads","Creative - 3","AI Video - 1","Reels/Shorts - 1","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Basic (₹2499/mo)', NULL, 0, NULL),
+('fb_standard_monthly', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Standard (Monthly)', 'standard-pill', '3999', '/month', '["Meta Ads","Creative - 5","AI Video - 2","Reels/Shorts - 3","Weekly Report"]', 'Select Plan', 1, 'Performance Marketing', 'Meta Ads - Standard Monthly (₹3999/mo)', NULL, 0, NULL),
+('fb_standard', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Standard (3-Month)', 'standard-pill', '6899', '/3 months', '["Meta Ads","Creative - 9","AI Video - 3","Reels/Shorts - 3","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Standard (₹6899/3mo)', NULL, 0, NULL),
+('fb_premium', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Premium', 'premium-pill', '12599', '/6 months', '["Meta Ads","Creative - 18","AI Video - 6","Reels/Shorts - 6","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Premium (₹12599/6mo)', NULL, 0, NULL),
+('comb_basic', 'combinePlans', 'Meta + Google Ads', 'multi-badge', 'Basic', 'basic-pill', '6999', '/month', '["Meta Ads + Google Ads","Creative - 7","AI Video - 2","Reels/Shorts - 5","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Combine - Basic (₹6999/mo)', NULL, 0, NULL),
+('comb_standard', 'combinePlans', 'Meta + Google Ads', 'multi-badge', 'Standard', 'standard-pill', '19499', '/3 months', '["Meta Ads + Google Ads","Creative - 21","AI Video - 6","Reels/Shorts - 15","Weekly Report"]', 'Select Plan', 1, 'Performance Marketing', 'Combine - Standard (₹19499/3mo)', NULL, 0, NULL),
+('comb_premium', 'combinePlans', 'Meta + Google Ads', 'multi-badge', 'Premium', 'premium-pill', '35999', '/6 months', '["Meta Ads + Google Ads","Creative - 42","AI Video - 6","Reels/Shorts - 30","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Combine - Premium (₹35999/6mo)', NULL, 0, NULL),
+('wlif025b38', 'websitePlans', NULL, NULL, 'Static', NULL, '7499', NULL, '[{"icon":"language","text":"Domain Name"},{"icon":"cloud_queue","text":"Hosting"},{"icon":"description","text":"1 Page Design"},{"icon":"settings_backup_restore","text":"Maintenance"}]', 'Select Plan', 0, 'Web Development', 'Static Website (₹7499)', 'static-tag', 0, NULL),
+('upvnq4eclhl', 'websitePlans', NULL, NULL, 'Dynamic', NULL, '14999', NULL, '[{"icon":"language","text":"Domain Name"},{"icon":"cloud_queue","text":"Hosting"},{"icon":"description","text":"10 Page Design"},{"icon":"settings_backup_restore","text":"Maintenance"}]', 'Select Plan', 0, 'Web Development', 'Dynamic Website (₹14999)', 'dynamic-tag', 0, NULL),
+('70hropyn13u', 'creativePacks', NULL, NULL, 'Starter', NULL, '599', NULL, '[{"icon":"image","text":"5 Creatives"},{"icon":"brush","text":"Social Media Sizes"},{"icon":"folder_zip","text":"PNG & JPG Formats"},{"icon":"check_circle","text":"Standard delivery time"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Starter (5 for ₹599)', 'static-tag', 0, NULL),
+('1h0r6fthwlqh', 'creativePacks', NULL, NULL, 'Growth', NULL, '1099', NULL, '[{"icon":"image","text":"10 Creatives"},{"icon":"brush","text":"Ad Banner Formats"},{"icon":"folder_zip","text":"PNG & JPG Formats"},{"icon":"check_circle","text":"Standard delivery time"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Growth (10 for ₹1099)', 'static-tag', 0, NULL),
+('iis9djdpfvs', 'creativePacks', NULL, NULL, 'Value', NULL, '1499', NULL, '[{"icon":"image","text":"15 Creatives"},{"icon":"brush","text":"Brand Style Match"},{"icon":"folder_zip","text":"Source Files Included"},{"icon":"check_circle","text":"Standard delivery time"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Value (15 for ₹1499)', 'static-tag', 1, '{"card":{"borderColor":"#2563EB","borderWidth":"2px","position":"relative","overflow":"hidden"},"tag":{"backgroundColor":"#EBF3FF","color":"#2563EB"},"icon":{"color":"#2563EB"},"button":{"backgroundColor":"#2563EB"}}'),
+('4fup4cqc4q5', 'creativePacks', NULL, NULL, 'Standard', NULL, '1899', NULL, '[{"icon":"image","text":"20 Creatives"},{"icon":"brush","text":"Multi-Platform Sizes"},{"icon":"folder_zip","text":"Source Files Included"},{"icon":"check_circle","text":"Standard delivery time"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Standard (20 for ₹1899)', 'static-tag', 0, NULL),
+('cla9x3gfvw', 'creativePacks', NULL, NULL, 'Pro', NULL, '2699', NULL, '[{"icon":"image","text":"30 Creatives"},{"icon":"brush","text":"Complete Ad Sets"},{"icon":"folder_zip","text":"Source Files Included"},{"icon":"check_circle","text":"Standard delivery time"}]', 'Select Plan', 0, 'SEO Growth', 'Creative Packs - Pro (30 for ₹2699)', 'static-tag', 0, NULL),
+('0skxtis9sk7', 'aiVideoPlans', NULL, NULL, 'Starter Plan', NULL, '4,500', NULL, '[{"icon":"video_library","text":"5 AI Videos"},{"icon":"check_circle","text":"Perfect for getting started"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Starter Plan (5 Videos for ₹4500)', 'static-tag', 0, NULL),
+('p6pk00m966', 'aiVideoPlans', NULL, NULL, 'Growth Plan', NULL, '5,950', NULL, '[{"icon":"video_library","text":"7 AI Videos"},{"icon":"check_circle","text":"Ideal for growing brands"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Growth Plan (7 Videos for ₹5950)', 'static-tag', 1, '{"card":{"borderColor":"#FD7E14","borderWidth":"2px","position":"relative","overflow":"hidden"},"tag":{"backgroundColor":"#FFF0EA","color":"#FD7E14"},"icon":{"color":"#FD7E14"},"button":{"backgroundColor":"#FD7E14"}}'),
+('22w0etoexmy', 'aiVideoPlans', NULL, NULL, 'Pro Plan', NULL, '8,000', NULL, '[{"icon":"video_library","text":"10 AI Videos"},{"icon":"check_circle","text":"Best for maximum impact"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Pro Plan (10 Videos for ₹8000)', 'static-tag', 0, NULL);
+
 
 -- --------------------------------------------------------
 -- Table structure for table `portfolio_items`
@@ -205,6 +212,25 @@ CREATE TABLE `onboarding_details` (
   `status` VARCHAR(50) DEFAULT 'Pending',
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `payment_id` (`payment_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `checkout_exit_feedback`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `checkout_exit_feedback`;
+CREATE TABLE `checkout_exit_feedback` (
+  `id` VARCHAR(36) NOT NULL,
+  `customer_name` VARCHAR(100) DEFAULT NULL,
+  `customer_email` VARCHAR(100) DEFAULT NULL,
+  `customer_phone` VARCHAR(50) DEFAULT NULL,
+  `plan_name` VARCHAR(100) DEFAULT NULL,
+  `plan_price` VARCHAR(50) DEFAULT NULL,
+  `reason_exit` VARCHAR(255) DEFAULT NULL,
+  `help_reconsider` VARCHAR(255) DEFAULT NULL,
+  `wants_contact` VARCHAR(255) DEFAULT NULL,
+  `additional_notes` TEXT DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+

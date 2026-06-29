@@ -4,30 +4,143 @@ import React, { useState, useEffect } from "react";
 import { SiteHeader, SiteFooter, Icon } from "../../components/SiteChrome";
 import Link from "next/link";
 
+function renderMarkdown(text) {
+  if (!text) return null;
+
+  const lines = text.split("\n");
+  const elements = [];
+  let listItems = [];
+
+  const parseInline = (lineText) => {
+    const tokens = [];
+    const regex = /(\*\*.*?\*\*|`.*?`)/g;
+    const parts = lineText.split(regex);
+    
+    parts.forEach((part, i) => {
+      if (part.startsWith("**") && part.endsWith("**")) {
+        tokens.push(
+          <strong key={i} style={{ fontWeight: "700", color: "#0f172a" }}>
+            {part.slice(2, -2)}
+          </strong>
+        );
+      } else if (part.startsWith("`") && part.endsWith("`")) {
+        tokens.push(
+          <code key={i} style={{ fontFamily: "monospace", backgroundColor: "#e2e8f0", padding: "2px 6px", borderRadius: "4px", fontSize: "0.9em" }}>
+            {part.slice(1, -1)}
+          </code>
+        );
+      } else {
+        tokens.push(part);
+      }
+    });
+    return tokens;
+  };
+
+  const flushList = (key) => {
+    if (listItems.length > 0) {
+      elements.push(
+        <ul key={`list-${key}`} style={{ margin: "0 0 20px 20px", padding: 0 }}>
+          {listItems}
+        </ul>
+      );
+      listItems = [];
+    }
+  };
+
+  lines.forEach((line, index) => {
+    const trimmed = line.trim();
+
+    if (trimmed === "") {
+      flushList(index);
+      return;
+    }
+
+    if (trimmed.startsWith("## ")) {
+      flushList(index);
+      elements.push(
+        <h2 key={index} style={styles.bodyH2}>
+          {parseInline(trimmed.substring(3))}
+        </h2>
+      );
+    } else if (trimmed.startsWith("### ")) {
+      flushList(index);
+      elements.push(
+        <h3 key={index} style={styles.bodyH3}>
+          {parseInline(trimmed.substring(4))}
+        </h3>
+      );
+    } else if (trimmed.startsWith("#### ")) {
+      flushList(index);
+      elements.push(
+        <h4 key={index} style={{ ...styles.bodyH3, fontSize: "18px", marginTop: "20px" }}>
+          {parseInline(trimmed.substring(5))}
+        </h4>
+      );
+    } else if (trimmed.startsWith("- ") || trimmed.startsWith("* ")) {
+      const content = trimmed.substring(2);
+      listItems.push(
+        <li key={`li-${index}`} style={styles.bodyLi}>
+          {parseInline(content)}
+        </li>
+      );
+    } else {
+      flushList(index);
+      elements.push(
+        <p key={index} style={styles.bodyParagraph}>
+          {parseInline(trimmed)}
+        </p>
+      );
+    }
+  });
+
+  flushList(lines.length);
+  return elements;
+}
+
 export default function BlogDetailPage({ params }) {
   // Safe extraction of params (React.use is standard for React 19)
   const resolvedParams = React.use(params);
-  const slug = resolvedParams.slug;
+  const slug = resolvedParams?.slug;
+  console.log("BlogDetailPage rendered. params:", params, "resolvedParams:", resolvedParams, "slug:", slug);
 
   const [blog, setBlog] = useState(null);
   const [loading, setLoading] = useState(true);
   const [blogsList, setBlogsList] = useState([]);
 
   useEffect(() => {
-    // Fetch all blogs to filter and find current slug, plus recent suggestions
-    fetch("/api/blogs")
-      .then((res) => res.json())
-      .then((data) => {
-        if (Array.isArray(data)) {
-          const current = data.find((b) => b.slug === slug);
-          setBlog(current || null);
-          // Suggest other blogs excluding current
-          setBlogsList(data.filter((b) => b.slug !== slug).slice(0, 3));
+    if (!slug) return;
+    setLoading(true);
+
+    const decodedSlug = decodeURIComponent(slug).toLowerCase().trim();
+
+    // 1. Fetch single blog post details (with full content)
+    fetch(`/api/blogs?slug=${encodeURIComponent(decodedSlug)}`)
+      .then((res) => {
+        if (!res.ok) throw new Error("Blog not found");
+        return res.json();
+      })
+      .then((detailData) => {
+        setBlog(detailData);
+        
+        // 2. Fetch list summaries for suggestions (omitting heavy content)
+        return fetch("/api/blogs");
+      })
+      .then((res) => {
+        if (res) return res.json();
+      })
+      .then((listData) => {
+        if (Array.isArray(listData)) {
+          const filtered = listData.filter((b) => {
+            const dbSlug = decodeURIComponent(b.slug || "").toLowerCase().trim();
+            return dbSlug !== decodedSlug;
+          });
+          setBlogsList(filtered.slice(0, 3));
         }
         setLoading(false);
       })
       .catch((err) => {
-        console.error("Failed to fetch blog post:", err);
+        console.error("Failed to fetch blog details:", err);
+        setBlog(null);
         setLoading(false);
       });
   }, [slug]);
@@ -91,19 +204,7 @@ export default function BlogDetailPage({ params }) {
 
         {/* Article Body */}
         <article style={styles.articleBody}>
-          {blog.content.split("\n").map((paragraph, index) => {
-            if (paragraph.startsWith("## ")) {
-              return <h2 key={index} style={styles.bodyH2}>{paragraph.replace("## ", "")}</h2>;
-            }
-            if (paragraph.startsWith("### ")) {
-              return <h3 key={index} style={styles.bodyH3}>{paragraph.replace("### ", "")}</h3>;
-            }
-            if (paragraph.startsWith("- ")) {
-              return <li key={index} style={styles.bodyLi}>{paragraph.replace("- ", "")}</li>;
-            }
-            if (paragraph.trim() === "") return null;
-            return <p key={index} style={styles.bodyParagraph}>{paragraph}</p>;
-          })}
+          {renderMarkdown(blog.content)}
         </article>
 
         {/* Suggestions Row */}
@@ -230,33 +331,35 @@ const styles = {
     objectFit: "cover",
   },
   articleBody: {
-    fontSize: "16px",
+    fontSize: "18px",
     color: "#334155",
-    lineHeight: "1.7",
+    lineHeight: "1.8",
     marginBottom: "60px",
   },
   bodyH2: {
     fontFamily: "var(--font-headline)",
-    fontSize: "22px",
+    fontSize: "26px",
     fontWeight: "700",
     color: "#0f172a",
-    marginTop: "32px",
-    marginBottom: "16px",
+    marginTop: "36px",
+    marginBottom: "18px",
   },
   bodyH3: {
     fontFamily: "var(--font-headline)",
-    fontSize: "18px",
+    fontSize: "21px",
     fontWeight: "700",
     color: "#0f172a",
-    marginTop: "24px",
-    marginBottom: "12px",
+    marginTop: "28px",
+    marginBottom: "14px",
   },
   bodyParagraph: {
+    fontSize: "18px",
     marginBottom: "20px",
   },
   bodyLi: {
+    fontSize: "18px",
     marginLeft: "20px",
-    marginBottom: "8px",
+    marginBottom: "10px",
     listStyleType: "disc",
   },
   suggestionsSection: {

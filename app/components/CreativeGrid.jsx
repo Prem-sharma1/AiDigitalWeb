@@ -268,6 +268,19 @@ const creativeGroups = [
         type: "video"
       }
     ]
+  },
+  {
+    industry: "Construction",
+    description: "All-in-one Construction ERP & Project Management software showcase, web portal, and local SEO campaign.",
+    images: [
+      {
+        src: "https://www.hitoffice.co.in/",
+        title: "Hitoffice Construction ERP",
+        description: "Complete construction ERP and project management software website showcase. Feature-rich, optimized for lead generation and search engine visibility.",
+        globalIndex: 101,
+        type: "website"
+      }
+    ]
   }
 ];
 
@@ -290,19 +303,118 @@ export default function CreativeGrid({ activeFilter = "All" }) {
       .catch((err) => console.warn("Using static fallback creative groups:", err));
   }, []);
 
+  const getMediaType = (type, src, category) => {
+    if (category === "image" || category === "video" || category === "reel" || category === "website") {
+      return category;
+    }
+    
+    let resolvedType = type;
+    if (!resolvedType && src) {
+      const url = src.toLowerCase();
+      if (url.includes("youtube.com") || url.includes("youtu.be")) resolvedType = "youtube";
+      else if (url.includes("instagram.com/reel") || url.includes("instagram.com/p")) resolvedType = "instagram";
+      else if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".ogg") || url.endsWith(".mov")) resolvedType = "video";
+      else if (url.startsWith("http")) resolvedType = "website";
+      else resolvedType = "image";
+    }
+
+    if (resolvedType === "youtube" || resolvedType === "iframe" || resolvedType === "video") return "video";
+    if (resolvedType === "instagram" || resolvedType === "reel") return "reel";
+    if (resolvedType === "website") return "website";
+    return "image";
+  };
+
+  const getPlayerType = (src, type) => {
+    if (type === "website") return "website";
+    if (!src) return "image";
+    const url = src.toLowerCase();
+    if (url.includes("youtube.com") || url.includes("youtu.be")) return "youtube";
+    if (url.includes("instagram.com/reel") || url.includes("instagram.com/p")) return "instagram";
+    if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".ogg") || url.endsWith(".mov")) return "video";
+    if (url.startsWith("http") && !url.match(/\.(jpeg|jpg|gif|png|webp|svg)/)) return "website";
+    return "image";
+  };
+
+  const getYoutubeThumbnail = (src) => {
+    let videoId = "";
+    if (src.includes("youtu.be/")) {
+      videoId = src.split("youtu.be/")[1]?.split("?")[0]?.split("&")[0];
+    } else if (src.includes("youtube.com/shorts/")) {
+      videoId = src.split("youtube.com/shorts/")[1]?.split("?")[0]?.split("&")[0];
+    } else if (src.includes("v=")) {
+      videoId = src.split("v=")[1]?.split("&")[0];
+    } else if (src.includes("embed/")) {
+      videoId = src.split("embed/")[1]?.split("?")[0];
+    }
+    return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
+  };
+
+  const getThumbnail = (src, type) => {
+    const playerType = getPlayerType(src, type);
+    if (playerType === "youtube") {
+      const ytThumb = getYoutubeThumbnail(src);
+      if (ytThumb) return ytThumb;
+    }
+    if (playerType === "instagram") {
+      return "https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=500&auto=format&fit=crop&q=60";
+    }
+    if (playerType === "iframe") {
+      return "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=500&auto=format&fit=crop&q=60";
+    }
+    if (playerType === "website") {
+      if (src && (src.startsWith("http://") || src.startsWith("https://"))) {
+        return `https://image.thum.io/get/${src}`;
+      }
+      return src;
+    }
+    return src;
+  };
+
+  const getEmbedUrl = (src) => {
+    if (!src) return "";
+    if (src.includes("youtube.com") || src.includes("youtu.be")) {
+      let videoId = "";
+      if (src.includes("youtu.be/")) {
+        videoId = src.split("youtu.be/")[1]?.split("?")[0]?.split("&")[0];
+      } else if (src.includes("youtube.com/shorts/")) {
+        videoId = src.split("youtube.com/shorts/")[1]?.split("?")[0]?.split("&")[0];
+      } else if (src.includes("v=")) {
+        videoId = src.split("v=")[1]?.split("&")[0];
+      } else if (src.includes("embed/")) {
+        videoId = src.split("embed/")[1]?.split("?")[0];
+      }
+      return videoId ? `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0` : src;
+    }
+    if (src.includes("instagram.com/reel") || src.includes("instagram.com/p")) {
+      const cleanUrl = src.split("?")[0].replace(/\/+$/, "");
+      return `${cleanUrl}/embed/`;
+    }
+    return src;
+  };
+
   // Filter groups and their media items dynamically based on the active tab/filter
   const filteredGroups = useMemo(() => {
     return creativeGroupsState.map(group => {
       const filteredImages = group.images.filter(img => {
+        const type = getMediaType(img.type, img.src, img.category);
         if (activeFilter === "All") return true;
-        if (activeFilter === "Creative Content") return img.type === "image";
-        if (activeFilter === "AI Videos") return img.type === "video";
-        if (activeFilter === "Reels") return img.type === "reel";
+        if (activeFilter === "Creative Content") return type === "image";
+        if (activeFilter === "AI Videos") return type === "video";
+        if (activeFilter === "Reels") return type === "reel";
+        if (activeFilter === "Website & SEO") return type === "website";
         return true;
       });
+
+      // Sort images by globalIndex/sequence ascending
+      const sortedImages = [...filteredImages].sort((a, b) => {
+        const indexA = a.globalIndex !== undefined && a.globalIndex !== null && a.globalIndex !== "" ? Number(a.globalIndex) : 999999;
+        const indexB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
+        return indexA - indexB;
+      });
+
       return {
         ...group,
-        images: filteredImages
+        images: sortedImages
       };
     }).filter(group => group.images.length > 0);
   }, [activeFilter, creativeGroupsState]);
@@ -406,37 +518,102 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                   }}
                 >
                   <div className="creative-img-wrapper" style={{ position: "relative", width: "100%", height: "200px" }}>
-                    {img.type === "video" ? (
-                      <video
-                        src={img.src}
-                        className="creative-img"
-                        style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
-                        muted
-                        playsInline
-                        loop
-                        onMouseOver={(e) => e.target.play()}
-                        onMouseOut={(e) => e.target.pause()}
-                      />
-                    ) : (
-                      <Image
-                        src={img.src}
-                        alt={img.title}
-                        fill
-                        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                        className="creative-img"
-                      />
-                    )}
+                    {(() => {
+                      const playerType = getPlayerType(img.src, img.type);
+                      const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
+
+                      if (playerType === "video") {
+                        return (
+                          <video
+                            src={img.src}
+                            className="creative-img"
+                            style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                            muted
+                            playsInline
+                            loop
+                            onMouseOver={(e) => e.target.play()}
+                            onMouseOut={(e) => e.target.pause()}
+                          />
+                        );
+                      }
+
+                      // Website type: if local uploaded image, render directly; if external URL, use thum.io screenshot
+                      if (playerType === "website") {
+                        const thumb = isExternalUrl
+                          ? `https://image.thum.io/get/${img.src}`
+                          : img.src;
+                        return (
+                          <img
+                            src={thumb}
+                            alt={img.title}
+                            className="creative-img"
+                            style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                            loading="lazy"
+                          />
+                        );
+                      }
+                      
+                      const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
+                      return (
+                        <img
+                          src={thumb}
+                          alt={img.title}
+                          className="creative-img"
+                          style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                          loading="lazy"
+                        />
+                      );
+                    })()}
                     <div className="creative-overlay">
                       <div className="creative-overlay-icon">
                         <span className="material-symbols-outlined">
-                          {img.type === "video" ? "play_circle" : "zoom_in"}
+                          {(() => {
+                            const playerType = getPlayerType(img.src, img.type);
+                            return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel") 
+                              ? "play_circle" 
+                              : "zoom_in";
+                          })()}
                         </span>
                       </div>
                     </div>
                   </div>
-                  <div className="creative-card-info">
-                    <h4>{img.title}</h4>
-                    <p>{img.description}</p>
+                  <div className="creative-card-info" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+                    <div>
+                      <h4>{img.title}</h4>
+                      <p>{img.description}</p>
+                    </div>
+                    {getPlayerType(img.src, img.type) === "website" && img.src && (img.src.startsWith("http://") || img.src.startsWith("https://")) && (
+                      <a
+                        href={img.src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="open-website-btn"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          gap: "6px",
+                          marginTop: "12px",
+                          backgroundColor: "#d63e13",
+                          color: "#fff",
+                          padding: "8px 16px",
+                          borderRadius: "6px",
+                          fontSize: "12px",
+                          fontWeight: "600",
+                          textDecoration: "none",
+                          border: "none",
+                          cursor: "pointer",
+                          width: "fit-content",
+                          transition: "background-color 0.2s ease"
+                        }}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                        }}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>open_in_new</span>
+                        Visit Website
+                      </a>
+                    )}
                   </div>
                 </div>
               );
@@ -474,22 +651,84 @@ export default function CreativeGrid({ activeFilter = "All" }) {
               <span className="material-symbols-outlined">chevron_left</span>
             </button>
 
-            <div className="lightbox-image-wrapper">
-              {activeImage.type === "video" ? (
-                <video
-                  src={activeImage.src}
-                  controls
-                  autoPlay
-                  className="lightbox-image"
-                  style={{ maxHeight: "80vh", maxWidth: "100%", borderRadius: "8px", objectFit: "contain" }}
-                />
-              ) : (
-                <img
-                  src={activeImage.src}
-                  alt={activeImage.title}
-                  className="lightbox-image"
-                />
-              )}
+            <div className="lightbox-image-wrapper" style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
+              {(() => {
+                const playerType = getPlayerType(activeImage.src, activeImage.type);
+                if (playerType === "video") {
+                  return (
+                    <video
+                      src={activeImage.src}
+                      controls
+                      autoPlay
+                      className="lightbox-image"
+                      style={{ maxHeight: "80vh", maxWidth: "100%", borderRadius: "8px", objectFit: "contain" }}
+                    />
+                  );
+                } else if (playerType === "youtube" || playerType === "instagram" || playerType === "iframe") {
+                  const embedUrl = getEmbedUrl(activeImage.src);
+                  return (
+                    <iframe
+                      src={embedUrl}
+                      title={activeImage.title}
+                      className="lightbox-image"
+                      style={{
+                        width: "80vw",
+                        height: "70vh",
+                        maxWidth: "960px",
+                        maxHeight: "600px",
+                        border: "none",
+                        borderRadius: "12px",
+                        backgroundColor: "#000"
+                      }}
+                      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  );
+                } else if (playerType === "website") {
+                  const imageSrc = activeImage.src && (activeImage.src.startsWith("http://") || activeImage.src.startsWith("https://"))
+                    ? `https://image.thum.io/get/${activeImage.src}`
+                    : activeImage.src;
+                  return (
+                    <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
+                      <img
+                        src={imageSrc}
+                        alt={activeImage.title}
+                        className="lightbox-image"
+                        style={{ maxHeight: "70vh", maxWidth: "100%", borderRadius: "8px", objectFit: "contain" }}
+                      />
+                      <a
+                        href={activeImage.src}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        style={{
+                          display: "inline-flex",
+                          alignItems: "center",
+                          gap: "8px",
+                          backgroundColor: "#d63e13",
+                          color: "#fff",
+                          padding: "12px 24px",
+                          borderRadius: "8px",
+                          fontSize: "14px",
+                          fontWeight: "600",
+                          textDecoration: "none",
+                          transition: "background-color 0.2s ease"
+                        }}
+                      >
+                        <span className="material-symbols-outlined">open_in_new</span>
+                        Open Website Link
+                      </a>
+                    </div>
+                  );
+                } else {
+                  return (
+                    <img
+                      src={activeImage.src}
+                      alt={activeImage.title}
+                      className="lightbox-image"
+                    />
+                  );
+                }
+              })()}
             </div>
 
             <button

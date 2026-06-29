@@ -1,11 +1,13 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import GoalSelector from "./components/GoalSelector";
 import { Icon, SiteFooter, SiteHeader } from "./components/SiteChrome";
 import HeroOrbit from "./components/HeroOrbit";
 import ContactForm from "./components/ContactForm";
+import useScrollReveal from "./hooks/useScrollReveal";
 
 const services = [
   {
@@ -121,64 +123,56 @@ const whyItems = [
   }
 ];
 
-const insights = [
-  {
-    label: "SEO",
-    title: "The Future of AI-Driven Content Creation in 2026",
-    body: "Discover how artificial intelligence is reshaping organic search strategies.",
-    image: "/blog_seo.png"
-  },
-  {
-    label: "Performance Marketing",
-    title: "Maximizing ROAS with Predictive Analytics",
-    body: "Learn how to predict campaign success before allocating ad spend.",
-    image: "/blog_ads.png"
-  },
-  {
-    label: "Branding",
-    title: "Building Trust in a Digital World",
-    body: "Strategies for maintaining authentic connection while scaling your brand.",
-    image: "/blog_branding.png"
-  },
-  {
-    label: "Social Media",
-    title: "Viral Video Marketing Secrets for Startups",
-    body: "How to conceptualize, edit, and launch short-form content that captures views.",
-    image: "/blog_social.png"
-  },
-  {
-    label: "PPC",
-    title: "Google Ads vs. Meta Ads: Which Channel Wins?",
-    body: "A deep dive comparison of cost-per-click, target audiences, and conversion rates.",
-    image: "/blog_ads.png"
-  },
-  {
-    label: "Web Design",
-    title: "CRO Guidelines for High-Converting Landing Pages",
-    body: "Key elements that turn casual digital marketing traffic into verified paying customers.",
-    image: "/blog_seo.png"
-  },
-  {
-    label: "Branding",
-    title: "The Science Behind Curated Color Palettes",
-    body: "How choosing modern colors, fonts, and typography directly impacts consumer trust.",
-    image: "/blog_branding.png"
-  },
-  {
-    label: "Local SEO",
-    title: "Dominating Google Map Listings in Your City",
-    body: "Actionable local SEO guidelines to place your service business in the top local 3-pack.",
-    image: "/blog_seo.png"
-  }
-];
-
 export default function Home() {
+  const [homeBlogs, setHomeBlogs] = useState([]);
+  const [loading, setLoading] = useState(true);
   const blogContainerRef = useRef(null);
+
+  useScrollReveal([loading]);
+
+  useEffect(() => {
+    fetch("/api/blogs")
+      .then((res) => res.json())
+      .then((data) => {
+        if (Array.isArray(data) && data.length > 0) {
+          const shuffled = [...data].sort(() => 0.5 - Math.random());
+          setHomeBlogs(shuffled.slice(0, 12));
+        }
+        setLoading(false);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch blogs for homepage:", err);
+        setLoading(false);
+      });
+  }, []);
+
+  const getBlogLink = (post) => {
+    const contentTrimmed = post.content ? post.content.trim() : "";
+    const slugTrimmed = post.slug ? post.slug.trim() : "";
+    
+    if (contentTrimmed.startsWith("http://") || contentTrimmed.startsWith("https://")) {
+      return contentTrimmed;
+    }
+    if (slugTrimmed.startsWith("http://") || slugTrimmed.startsWith("https://")) {
+      return slugTrimmed;
+    }
+    
+    const mdLinkMatch = contentTrimmed.match(/^\[.*?\]\((https?:\/\/.*?)\)$/);
+    if (mdLinkMatch) {
+      return mdLinkMatch[1];
+    }
+    
+    if (/^https?:\/\/[^\s]+$/.test(contentTrimmed)) {
+      return contentTrimmed;
+    }
+    
+    return `/blog/${post.slug}`;
+  };
 
   const handleBlogScroll = (direction) => {
     const container = blogContainerRef.current;
     if (container) {
-      const scrollAmount = container.clientWidth * 0.8;
+      const scrollAmount = container.clientWidth * 0.95;
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth"
@@ -192,14 +186,14 @@ export default function Home() {
 
       {/* 1. Introduction */}
       <header className="hero section">
-        <div className="hero-copy">
+        <div className="hero-copy reveal">
           <h1>
             Your Business <span>Our Success</span>
           </h1>
           <p>
             AI Digital helps businesses grow By adopting 360 Degress approach through SMO,Google Ads,SEO,Website and analytics powered by AI
           </p>
-          <div className="hero-actions">
+          <div className="hero-actions reveal reveal-delay-1">
             <a className="button button-primary" href="#contact">Get Free Growth Audit</a>
             <a className="button button-ghost" href="#services">View Services</a>
           </div>
@@ -231,8 +225,8 @@ export default function Home() {
           </p>
         </div>
         <div className="campaign-grid">
-          {campaigns.map((campaign) => (
-            <article className="campaign-card" key={campaign.title}>
+          {campaigns.map((campaign, i) => (
+            <article className={`campaign-card reveal reveal-delay-${(i % 3) + 1}`} key={campaign.title}>
               <Icon name={campaign.icon} />
               <h3>{campaign.title}</h3>
               <p>{campaign.body}</p>
@@ -252,8 +246,8 @@ export default function Home() {
           <h2>Why Choose AI Digital</h2>
         </div>
         <div className="why-grid">
-          {whyItems.map((item) => (
-            <article key={item.title} className="why-item">
+          {whyItems.map((item, i) => (
+            <article key={item.title} className={`why-item reveal reveal-delay-${(i % 3) + 1}`}>
               <Icon name={item.icon} />
               <div>
                 <h3>{item.title}</h3>
@@ -271,7 +265,7 @@ export default function Home() {
       <section id="insights" className="section section-muted insights">
         <div className="split-heading">
           <h2>Latest Insights</h2>
-          <a href="#contact">View All <Icon name="arrow_forward" /></a>
+          <Link href="/blog">View All <Icon name="arrow_forward" /></Link>
         </div>
         <div className="creative-slider-wrapper">
           <button
@@ -284,24 +278,48 @@ export default function Home() {
           </button>
 
           <div className="insight-grid" ref={blogContainerRef}>
-            {insights.map((insight) => (
-              <article className="insight-card" key={insight.title}>
-                <div className="insight-image" style={{ position: "relative" }}>
-                  <Image
-                    src={insight.image}
-                    alt={insight.title}
-                    fill
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                    style={{ objectFit: "cover" }}
-                  />
-                </div>
-                <div className="insight-body">
-                  <span>{insight.label}</span>
-                  <h3>{insight.title}</h3>
-                  <p>{insight.body}</p>
-                </div>
-              </article>
-            ))}
+            {loading ? (
+              <div style={{ padding: "40px 0", textAlign: "center", width: "100%", color: "#64748b", fontWeight: "600" }}>
+                Loading latest insights...
+              </div>
+            ) : homeBlogs.length === 0 ? (
+              <div style={{ padding: "40px 0", textAlign: "center", width: "100%", color: "#64748b", fontWeight: "600" }}>
+                No insights found. Check back later!
+              </div>
+            ) : (
+              homeBlogs.map((post) => {
+                const url = getBlogLink(post);
+                const isExternal = url.startsWith("http://") || url.startsWith("https://");
+                
+                const CardTag = isExternal ? "a" : Link;
+                const cardProps = isExternal 
+                  ? { href: url, target: "_blank", rel: "noopener noreferrer" } 
+                  : { href: url };
+
+                return (
+                  <CardTag 
+                    {...cardProps} 
+                    key={post.id} 
+                    className="insight-card-link reveal"
+                  >
+                    <article className="insight-card" style={{ height: "100%" }}>
+                      <div className="insight-image">
+                        <img
+                          src={post.coverImage || "/creative_content/Creative1.jpeg"}
+                          alt={post.title}
+                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                        />
+                      </div>
+                      <div className="insight-body">
+                        <span>{post.category}</span>
+                        <h3>{post.title}</h3>
+                        <p>{post.excerpt}</p>
+                      </div>
+                    </article>
+                  </CardTag>
+                );
+              })
+            )}
           </div>
 
           <button

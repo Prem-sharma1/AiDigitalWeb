@@ -1,6 +1,7 @@
 const mysql = require("mysql2/promise");
 const fs = require("fs");
 const path = require("path");
+const { expandBlogContent } = require("./blog_expansion_helper");
 
 // Manually parse .env file to avoid external dependencies like dotenv
 const envPath = path.join(process.cwd(), ".env");
@@ -123,7 +124,7 @@ async function main() {
     await db.query("DELETE FROM pricing_plans");
     console.log("Cleared old pricing plans.");
 
-    const categories = ["adsPlans", "websitePlans", "creativePacks", "aiVideoPlans"];
+    const categories = ["googlePlans", "facebookPlans", "combinePlans", "websitePlans", "creativePacks", "aiVideoPlans"];
     for (const cat of categories) {
       if (pricingData[cat]) {
         for (const plan of pricingData[cat]) {
@@ -248,26 +249,157 @@ async function main() {
     console.log("Seeded portfolio items.");
   }
 
-  // 6. Seed default Blog
-  const [blogs] = await db.query("SELECT COUNT(*) as cnt FROM blogs");
-  if (blogs[0].cnt === 0) {
-    const id = Math.random().toString(36).substring(2, 15);
-    await db.query(`
-      INSERT INTO blogs (id, title, slug, content, excerpt, category, published)
-      VALUES (?, 'Welcome to AI Digital Blogs', 'welcome-to-ai-digital-blogs', ?, ?, 'Marketing', 1)
-    `, [
-      id,
-      `## Exploring AI Powered Digital Marketing
+  // 6. Seed default Blogs
+  const defaultBlogs = [
+    {
+      title: "Welcome to AI Digital Blogs",
+      slug: "welcome-to-ai-digital-blogs",
+      category: "Marketing",
+      cover_image: "/creative_content/Creative1.jpeg",
+      excerpt: "An overview of how AI digital neural tech is transforming digital marketing paradigms.",
+      content: `## Exploring AI Powered Digital Marketing
 
 Welcome to our blog! We specialize in generating high-performing leads, developing optimized web applications, and building AI videos.
 
 ### Why Choose AI Marketing?
 - **Efficiency**: AI algorithms analyze audience insights rapidly.
 - **Conversion**: Dynamically targeted landing pages convert higher.
-- **Speed**: Automating workflow saves precious time.`,
-      "An overview of how AI digital neural tech is transforming digital marketing paradigms."
-    ]);
-    console.log("Seeded default blog article.");
+- **Speed**: Automating workflow saves precious time.`
+    },
+    {
+      title: "The Future of AI-Driven Content Creation in 2026",
+      slug: "the-future-of-ai-driven-content-creation-in-2026",
+      category: "SEO",
+      cover_image: "/blog_seo.png",
+      excerpt: "Discover how artificial intelligence is reshaping organic search strategies.",
+      content: `## Reshaping Organic Search Strategies in 2026
+
+As we head into 2026, artificial intelligence continues to transform content marketing. Search engines have evolved to focus heavily on user intent, depth of knowledge, and authentic expertise.
+
+### Key Shifts in Content Creation:
+- **Generative Engine Optimization (GEO)**: Optimizing content not just for search engines, but for AI summaries and search assistants.
+- **E-E-A-T First**: Prioritizing real human experiences, author authority, and structured data verification.
+- **Multimedia Integration**: Combining high-quality text, interactive tools, and AI videos to capture engagement.`
+    },
+    {
+      title: "Maximizing ROAS with Predictive Analytics",
+      slug: "maximizing-roas-with-predictive-analytics",
+      category: "Performance Marketing",
+      cover_image: "/blog_ads.png",
+      excerpt: "Learn how to predict campaign success before allocating ad spend.",
+      content: `## Predicting Campaign Success Before Allocating Ad Spend
+
+In performance marketing, predictive analytics uses machine learning algorithms to analyze historical campaign metrics and predict future outcomes.
+
+### How to Optimize ROAS:
+- **Audience Modeling**: Predictive models can identify prospective buyers who share characteristics with your top customers.
+- **Budget Allocation**: Algorithms dynamically assign spend to platforms and campaigns with the highest expected conversions.
+- **Creative Testing**: AI tools analyze historical click-through rates of visual assets to estimate performance before launch.`
+    },
+    {
+      title: "Building Trust in a Digital World",
+      slug: "building-trust-in-a-digital-world",
+      category: "Branding",
+      cover_image: "/blog_branding.png",
+      excerpt: "Strategies for maintaining authentic connection while scaling your brand.",
+      content: `## Maintaining Authentic Connection While Scaling Your Brand
+
+Establishing consumer trust online requires transparency, high-quality experiences, and consistent brand presence.
+
+### Trust-Building Pillars:
+- **Social Proof**: Real customer testimonials, verified product reviews, and case studies.
+- **Secure Design**: Fast page load speeds, SSL verification, and transparent data privacy guidelines.
+- **Brand Voice**: Authentic storytelling and helpful content that focuses on solving real customer problems.`
+    },
+    {
+      title: "Viral Video Marketing Secrets for Startups",
+      slug: "viral-video-marketing-secrets-for-startups",
+      category: "Social Media",
+      cover_image: "/blog_social.png",
+      excerpt: "How to conceptualize, edit, and launch short-form content that captures views.",
+      content: `## Launching Short-Form Video Content That Captures Views
+
+Short-form content on platforms like YouTube Shorts, Instagram Reels, and TikTok has become the fastest way to build brand awareness.
+
+### Viral Secrets:
+- **The 3-Second Hook**: Start with a compelling visual or question that stops users from scrolling.
+- **Micro-Animations**: Add subtitles, dynamic transitions, and sound effects to retain attention.
+- **Clear Call to Action**: Direct viewers to a single, easily actionable step at the end of the video.`
+    },
+    {
+      title: "Google Ads vs. Meta Ads: Which Channel Wins?",
+      slug: "google-ads-vs-meta-ads-which-channel-wins",
+      category: "SEO",
+      cover_image: "/blog_ads.png",
+      excerpt: "A deep dive comparison of cost-per-click, target audiences, and conversion rates.",
+      content: `## Comparing CPC, Target Audiences, and Conversion Rates
+
+Deciding where to allocate your digital marketing budget depends on your target customer's intent.
+
+### Google Ads vs. Meta Ads:
+- **Google Ads**: Targets active search intent. Best for bottom-of-funnel conversions where users are actively looking to buy.
+- **Meta Ads**: Focuses on demographic and interest targeting. Ideal for building brand awareness and discovery.
+- **Strategy**: A hybrid approach using Meta for discovery and Google for capturing search demand yields the best results.`
+    },
+    {
+      title: "CRO Guidelines for High-Converting Landing Pages",
+      slug: "cro-guidelines-for-high-converting-landing-pages",
+      category: "Web Design",
+      cover_image: "/blog_seo.png",
+      excerpt: "Key elements that turn casual digital marketing traffic into verified paying customers.",
+      content: `## Turning Casual Visitors into Verified Paying Customers
+
+Conversion Rate Optimization (CRO) is the practice of increasing the percentage of users who perform a desired action on a landing page.
+
+### Best Practices:
+- **Clear Headlines**: State the value proposition in 5-10 words at the top of the page.
+- **Frictionless Forms**: Keep input fields to a minimum (e.g. name, email, phone).
+- **Visual Hierarchy**: Use contrasting button colors for call-to-actions (CTAs) and place them above the fold.`
+    },
+    {
+      title: "The Science Behind Curated Color Palettes",
+      slug: "the-science-behind-curated-color-palettes",
+      category: "Branding",
+      cover_image: "/blog_branding.png",
+      excerpt: "How choosing modern colors, fonts, and typography directly impacts consumer trust.",
+      content: `## How Brand Aesthetics Directly Impact Consumer Trust
+
+Visual design sets the tone for how users perceive your company. Curated colors and typography build an immediate premium impression.
+
+### Aesthetic Decisions:
+- **Color Psychology**: Sleek dark modes represent modern technology, while warm tones build approachable, human-centric vibes.
+- **Font Choice**: Using modern clean typography (like Inter or Outfit) signals state-of-the-art engineering.
+- **Spacing**: Generous margins and white space allow content to breathe and feel uncluttered.`
+    },
+    {
+      title: "Dominating Google Map Listings in Your City",
+      slug: "dominating-google-map-listings-in-your-city",
+      category: "SEO",
+      cover_image: "/blog_seo.png",
+      excerpt: "Actionable local SEO guidelines to place your service business in the top local 3-pack.",
+      content: `## Local SEO Strategies to Place Your Business in the Top local 3-pack
+
+For service businesses, high local visibility on Google Maps is the single biggest source of new leads.
+
+### Action Steps:
+- **Complete Profile**: Fill out every detail on your Google Business Profile (GBP), including hours and services.
+- **Review Acquisition**: Proactively request reviews from satisfied clients and respond to each review promptly.
+- **Local Citations**: Ensure your business name, address, and phone number (NAP) are identical across all local directory sites.`
+    }
+  ];
+
+  console.log("Checking and seeding default blogs...");
+  for (const item of defaultBlogs) {
+    const [existing] = await db.query("SELECT id FROM blogs WHERE slug = ?", [item.slug]);
+    if (existing.length === 0) {
+      const id = Math.random().toString(36).substring(2, 15);
+      const expandedContent = expandBlogContent(item.content, item.category, item.title);
+      await db.query(`
+        INSERT INTO blogs (id, title, slug, content, excerpt, cover_image, category, published)
+        VALUES (?, ?, ?, ?, ?, ?, ?, 1)
+      `, [id, item.title, item.slug, expandedContent, item.excerpt, item.cover_image, item.category]);
+      console.log(`Seeded blog: "${item.title}"`);
+    }
   }
 
   await db.end();

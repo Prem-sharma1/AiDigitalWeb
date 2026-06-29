@@ -21,76 +21,163 @@ function getJsonFallback() {
   } catch (err) {
     console.error("Critical: Failed to read backup pricing JSON file:", err);
   }
-  return { adsPlans: [], websitePlans: [], creativePacks: [], aiVideoPlans: [] };
+  return { googlePlans: [], facebookPlans: [], combinePlans: [], websitePlans: [], creativePacks: [], aiVideoPlans: [] };
+}
+
+// Helper to auto-create pricing_plans table
+async function ensurePricingTable(connection) {
+  const query = `
+    CREATE TABLE IF NOT EXISTS pricing_plans (
+      id VARCHAR(36) NOT NULL,
+      category VARCHAR(50) NOT NULL,
+      platform VARCHAR(50) DEFAULT NULL,
+      badge_class VARCHAR(50) DEFAULT NULL,
+      level VARCHAR(50) NOT NULL,
+      pill_class VARCHAR(50) DEFAULT NULL,
+      price VARCHAR(50) NOT NULL,
+      period VARCHAR(50) DEFAULT NULL,
+      features TEXT NOT NULL,
+      button_text VARCHAR(50) DEFAULT 'Select Plan',
+      is_popular TINYINT(1) DEFAULT '0',
+      service_name VARCHAR(100) DEFAULT NULL,
+      plan_parameter VARCHAR(255) DEFAULT NULL,
+      tag_class VARCHAR(50) DEFAULT NULL,
+      is_highlight TINYINT(1) DEFAULT '0',
+      highlight_styles TEXT DEFAULT NULL,
+      PRIMARY KEY (id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `;
+  await connection.query(query);
+}
+
+// Helper to synchronize JSON pricing data into the database
+async function syncPricingToDb(connection, pricingData) {
+  await connection.query("DELETE FROM pricing_plans");
+  const planCategories = ["googlePlans", "facebookPlans", "combinePlans", "websitePlans", "creativePacks", "aiVideoPlans"];
+  for (const cat of planCategories) {
+    if (pricingData[cat]) {
+      for (const plan of pricingData[cat]) {
+        const id = plan.id || Math.random().toString(36).substring(2, 15);
+        await connection.query(`
+          INSERT INTO pricing_plans 
+          (id, category, platform, badge_class, level, pill_class, price, period, features, button_text, is_popular, service_name, plan_parameter, tag_class, is_highlight, highlight_styles)
+          VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `, [
+          id,
+          cat,
+          plan.platform || null,
+          plan.badgeClass || null,
+          plan.level || "",
+          plan.pillClass || null,
+          String(plan.price),
+          plan.period || null,
+          JSON.stringify(plan.features),
+          plan.buttonText || "Select Plan",
+          plan.isPopular ? 1 : 0,
+          plan.serviceName || null,
+          plan.planParameter || null,
+          plan.tagClass || null,
+          plan.isHighlight ? 1 : 0,
+          plan.highlightStyles ? JSON.stringify(plan.highlightStyles) : null
+        ]);
+      }
+    }
+  }
+}
+
+// Helper to format and sort rows for frontend response
+function formatAndSortPricing(rows) {
+  const formattedData = {
+    googlePlans: [],
+    facebookPlans: [],
+    combinePlans: [],
+    websitePlans: [],
+    creativePacks: [],
+    aiVideoPlans: [],
+  };
+
+  rows.forEach((plan) => {
+    const parsedPlan = {
+      id: plan.id,
+      platform: plan.platform,
+      badgeClass: plan.badge_class,
+      level: plan.level,
+      pillClass: plan.pill_class,
+      price: plan.price.includes(",") ? plan.price : Number(plan.price),
+      period: plan.period,
+      features: JSON.parse(plan.features),
+      buttonText: plan.button_text,
+      isPopular: Boolean(plan.is_popular),
+      serviceName: plan.service_name,
+      planParameter: plan.plan_parameter,
+      tagClass: plan.tag_class,
+      isHighlight: Boolean(plan.is_highlight),
+      highlightStyles: plan.highlight_styles ? JSON.parse(plan.highlight_styles) : undefined,
+    };
+
+    if (formattedData[plan.category]) {
+      formattedData[plan.category].push(parsedPlan);
+    }
+  });
+
+  const getPriceVal = (price) => Number(String(price).replace(/,/g, "")) || 0;
+  Object.keys(formattedData).forEach((cat) => {
+    formattedData[cat].sort((a, b) => getPriceVal(a.price) - getPriceVal(b.price));
+  });
+
+  return formattedData;
 }
 
 export async function GET() {
   try {
-    // Attempt querying MySQL database
-    const [rows] = await pool.query("SELECT * FROM pricing_plans");
+    const connection = await pool.getConnection();
+    try {
+      await ensurePricingTable(connection);
 
-    const formattedData = {
-      adsPlans: [],
-      websitePlans: [],
-      creativePacks: [],
-      aiVideoPlans: [],
-    };
+      const [rows] = await connection.query("SELECT * FROM pricing_plans");
+      const jsonPricing = getJsonFallback();
 
-    rows.forEach((plan) => {
-      const parsedPlan = {
-        id: plan.id,
-        platform: plan.platform,
-        badgeClass: plan.badge_class,
-        level: plan.level,
-        pillClass: plan.pill_class,
-        price: plan.price.includes(",") ? plan.price : Number(plan.price),
-        period: plan.period,
-        features: JSON.parse(plan.features),
-        buttonText: plan.button_text,
-        isPopular: Boolean(plan.is_popular),
-        serviceName: plan.service_name,
-        planParameter: plan.plan_parameter,
-        tagClass: plan.tag_class,
-        isHighlight: Boolean(plan.is_highlight),
-        highlightStyles: plan.highlight_styles ? JSON.parse(plan.highlight_styles) : undefined,
-      };
+      // Check count to see if database needs sync
+      let dbCount = rows.length;
+      let jsonCount = 0;
+      const planCategories = ["googlePlans", "facebookPlans", "combinePlans", "websitePlans", "creativePacks", "aiVideoPlans"];
+      planCategories.forEach(cat => {
+        if (jsonPricing[cat]) jsonCount += jsonPricing[cat].length;
+      });
 
-      if (formattedData[plan.category]) {
-        formattedData[plan.category].push(parsedPlan);
+      // Synchronize database if empty or out of sync with JSON config
+      if ((dbCount === 0 && jsonCount > 0) || dbCount !== jsonCount) {
+        console.log(`Pricing out of sync. Syncing JSON data to database (DB count: ${dbCount}, JSON count: ${jsonCount})...`);
+        await syncPricingToDb(connection, jsonPricing);
+        const [refetchedRows] = await connection.query("SELECT * FROM pricing_plans");
+        const formatted = formatAndSortPricing(refetchedRows);
+        return NextResponse.json(formatted, {
+          headers: {
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
+          }
+        });
       }
-    });
 
-    const levelOrder = {
-      "basic": 1, "static": 1, "starter": 1, "starter plan": 1,
-      "standard": 2, "dynamic": 2, "growth": 2, "value": 2, "growth plan": 2,
-      "premium": 3, "premium plan": 3, "pro": 3, "pro plan": 3
-    };
-    const getWeight = (lvl) => levelOrder[String(lvl).toLowerCase().trim()] || 99;
-
-    Object.keys(formattedData).forEach((cat) => {
-      formattedData[cat].sort((a, b) => getWeight(a.level) - getWeight(b.level));
-    });
-
-    return NextResponse.json(formattedData, {
-      headers: {
-        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-        "Pragma": "no-cache",
-        "Expires": "0"
-      }
-    });
+      const formatted = formatAndSortPricing(rows);
+      return NextResponse.json(formatted, {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0"
+        }
+      });
+    } finally {
+      connection.release();
+    }
   } catch (error) {
-    console.warn("MySQL database connection failed. Falling back to local pricing JSON backup. Error:", error.message);
+    console.warn("MySQL database pricing fetch or sync failed. Using local JSON fallback. Error:", error.message);
     const fallback = getJsonFallback();
-
-    const levelOrder = {
-      "basic": 1, "static": 1, "starter": 1, "starter plan": 1,
-      "standard": 2, "dynamic": 2, "growth": 2, "value": 2, "growth plan": 2,
-      "premium": 3, "premium plan": 3, "pro": 3, "pro plan": 3
-    };
-    const getWeight = (lvl) => levelOrder[String(lvl).toLowerCase().trim()] || 99;
-
+    
+    const getPriceVal = (price) => Number(String(price).replace(/,/g, "")) || 0;
     Object.keys(fallback).forEach((cat) => {
-      fallback[cat].sort((a, b) => getWeight(a.level) - getWeight(b.level));
+      fallback[cat].sort((a, b) => getPriceVal(a.price) - getPriceVal(b.price));
     });
 
     return NextResponse.json(fallback, {
@@ -111,7 +198,7 @@ export async function POST(req) {
 
     const pricingData = await req.json();
 
-    // Direct backup copy to JSON file for safety and sync
+    // 1. Direct backup copy to JSON file for safety and sync
     try {
       const backupPath = path.join(process.cwd(), "data", "pricingData.json");
       fs.writeFileSync(backupPath, JSON.stringify(pricingData, null, 2), "utf-8");
@@ -119,44 +206,14 @@ export async function POST(req) {
       console.error("Failed to update backup pricing JSON file:", fsErr);
     }
 
+    // 2. Direct write to MySQL Database
     try {
       const connection = await pool.getConnection();
-
       try {
+        await ensurePricingTable(connection);
         await connection.beginTransaction();
 
-        await connection.query("DELETE FROM pricing_plans");
-
-        const planCategories = ["adsPlans", "websitePlans", "creativePacks", "aiVideoPlans"];
-        for (const cat of planCategories) {
-          if (pricingData[cat]) {
-            for (const plan of pricingData[cat]) {
-              const id = Math.random().toString(36).substring(2, 15);
-              await connection.query(`
-                INSERT INTO pricing_plans 
-                (id, category, platform, badge_class, level, pill_class, price, period, features, button_text, is_popular, service_name, plan_parameter, tag_class, is_highlight, highlight_styles)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
-              `, [
-                id,
-                cat,
-                plan.platform || null,
-                plan.badgeClass || null,
-                plan.level || "",
-                plan.pillClass || null,
-                String(plan.price),
-                plan.period || null,
-                JSON.stringify(plan.features),
-                plan.buttonText || "Select Plan",
-                plan.isPopular ? 1 : 0,
-                plan.serviceName || null,
-                plan.planParameter || null,
-                plan.tagClass || null,
-                plan.isHighlight ? 1 : 0,
-                plan.highlightStyles ? JSON.stringify(plan.highlightStyles) : null
-              ]);
-            }
-          }
-        }
+        await syncPricingToDb(connection, pricingData);
 
         await connection.commit();
         return NextResponse.json({ success: true, message: "Pricing plans saved to MySQL and JSON backup successfully" });

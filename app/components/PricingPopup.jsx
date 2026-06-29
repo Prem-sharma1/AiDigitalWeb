@@ -5,12 +5,14 @@ import Image from 'next/image';
 import { useCart } from "../hooks/useCart";
 import { useRouter } from "next/navigation";
 
+const defaultPlans = {
+    facebook: { price: 2499, period: "/mo", features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
+    google: { price: 4999, period: "/mo", features: ["Google Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
+    combine: { price: 6999, period: "/mo", features: ["Meta Ads + Google Ads", "Creative - 7", "AI Video - 2", "Reels/Shorts - 5", "Weekly Report"] }
+};
+
 export default function PricingPopup({ dialogRef }) {
-    const [popupPlans, setPopupPlans] = useState({
-        Basic: { price: 2499, period: "/mo", features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
-        Standard: { price: 3999, period: "/mo", features: ["Meta Ads", "Creative - 5", "AI Video - 2", "Reels/Shorts - 3", "Weekly Report"] },
-        Premium: { price: 4999, period: "/mo", features: ["Google Ads", "Creative - 5", "AI Video - 1", "Reels/Shorts - 3", "Weekly Report"] }
-    });
+    const [popupPlans, setPopupPlans] = useState(defaultPlans);
 
     useEffect(() => {
         fetch("/api/admin/pricing?t=" + Date.now(), { cache: "no-store" })
@@ -19,29 +21,32 @@ export default function PricingPopup({ dialogRef }) {
                 throw new Error("Offline");
             })
             .then(data => {
-                if (data.adsPlans) {
-                    const basic = data.adsPlans.find(p => p.level === "Basic") || popupPlans.Basic;
-                    const standard = data.adsPlans.find(p => p.level === "Standard") || popupPlans.Standard;
-                    const premium = data.adsPlans.find(p => p.level === "Premium" || p.level === "Premium Plan") || popupPlans.Premium;
+                const normalizePeriod = (p) => {
+                    if (!p) return "/mo";
+                    return p === "/month" ? "/mo" : p;
+                };
 
-                    setPopupPlans({
-                        Basic: {
-                            price: basic.price,
-                            period: basic.period || "/mo",
-                            features: basic.features
-                        },
-                        Standard: {
-                            price: standard.price,
-                            period: standard.period || "/mo",
-                            features: standard.features
-                        },
-                        Premium: {
-                            price: premium.price,
-                            period: premium.period || "/mo",
-                            features: premium.features
-                        }
-                    });
-                }
+                const fbPlan = data.facebookPlans?.find(p => p.level.toLowerCase().includes("basic") || p.id === "fb_basic") || defaultPlans.facebook;
+                const gPlan = data.googlePlans?.find(p => p.level.toLowerCase().includes("basic") || p.id === "g_basic") || defaultPlans.google;
+                const combPlan = data.combinePlans?.find(p => p.level.toLowerCase().includes("basic") || p.id === "comb_basic") || defaultPlans.combine;
+
+                setPopupPlans({
+                    facebook: {
+                        price: fbPlan.price,
+                        period: normalizePeriod(fbPlan.period),
+                        features: fbPlan.features
+                    },
+                    google: {
+                        price: gPlan.price,
+                        period: normalizePeriod(gPlan.period),
+                        features: gPlan.features
+                    },
+                    combine: {
+                        price: combPlan.price,
+                        period: normalizePeriod(combPlan.period),
+                        features: combPlan.features
+                    }
+                });
             })
             .catch(err => console.warn("Using default static popup plans:", err));
     }, []);
@@ -105,17 +110,17 @@ export default function PricingPopup({ dialogRef }) {
                 </div>
 
                 <div className="pricing-grid">
-                    {/* Basic Plan */}
+                    {/* Facebook Plan */}
                     <div className="plan-card">
                             <div className="plan-header-row">
-                                <span className="plan-name">Basic</span>
+                                <span className="plan-name">Facebook Plan</span>
                             </div>
                             <div className="plan-price-area">
-                                <span className="price-amount">₹{popupPlans.Basic.price}</span>
-                                <span className="price-period">{popupPlans.Basic.period}</span>
+                                <span className="price-amount">₹{popupPlans.facebook.price}</span>
+                                <span className="price-period">{popupPlans.facebook.period}</span>
                             </div>
                             <ul className="plan-features">
-                                {popupPlans.Basic.features.map((feat, i) => (
+                                {popupPlans.facebook.features.map((feat, i) => (
                                     <li className="feature-item" key={i}>
                                         <div className="feature-icon-wrapper icon-check">
                                             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
@@ -127,7 +132,7 @@ export default function PricingPopup({ dialogRef }) {
                                 ))}
                             </ul>
                             <button
-                                onClick={() => handleBuyNow("Basic", popupPlans.Basic.price, popupPlans.Basic.features)}
+                                onClick={() => handleBuyNow("Meta Ads - Basic", popupPlans.facebook.price, popupPlans.facebook.features)}
                                 className="btn-card-outline"
                                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
                             >
@@ -135,18 +140,18 @@ export default function PricingPopup({ dialogRef }) {
                             </button>
                     </div>
 
-                    {/* Standard Plan */}
+                    {/* Google Plan */}
                     <div className="plan-card popular">
                             <div className="plan-header-row">
-                                <span className="plan-name">Standard</span>
+                                <span className="plan-name">Google Plan</span>
                                 <span className="popular-badge">Popular</span>
                             </div>
                             <div className="plan-price-area">
-                                <span className="price-amount">₹{popupPlans.Standard.price}</span>
-                                <span className="price-period">{popupPlans.Standard.period}</span>
+                                <span className="price-amount">₹{popupPlans.google.price}</span>
+                                <span className="price-period">{popupPlans.google.period}</span>
                             </div>
                             <ul className="plan-features">
-                                {popupPlans.Standard.features.map((feat, i) => (
+                                {popupPlans.google.features.map((feat, i) => (
                                     <li className="feature-item" key={i}>
                                         <div className={`feature-icon-wrapper ${i === 0 ? "icon-star" : "icon-check"}`}>
                                             {i === 0 ? (
@@ -164,7 +169,7 @@ export default function PricingPopup({ dialogRef }) {
                                 ))}
                             </ul>
                             <button
-                                onClick={() => handleBuyNow("Standard", popupPlans.Standard.price, popupPlans.Standard.features)}
+                                onClick={() => handleBuyNow("Google Ads - Basic", popupPlans.google.price, popupPlans.google.features)}
                                 className="btn-card-solid"
                                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
                             >
@@ -172,17 +177,17 @@ export default function PricingPopup({ dialogRef }) {
                             </button>
                     </div>
 
-                    {/* Premium Plan */}
+                    {/* Combine Plan */}
                     <div className="plan-card">
                             <div className="plan-header-row">
-                                <span className="plan-name">Premium</span>
+                                <span className="plan-name">Combine Plan</span>
                             </div>
                             <div className="plan-price-area">
-                                <span className="price-amount">₹{popupPlans.Premium.price}</span>
-                                <span className="price-period">{popupPlans.Premium.period}</span>
+                                <span className="price-amount">₹{popupPlans.combine.price}</span>
+                                <span className="price-period">{popupPlans.combine.period}</span>
                             </div>
                             <ul className="plan-features">
-                                {popupPlans.Premium.features.map((feat, i) => (
+                                {popupPlans.combine.features.map((feat, i) => (
                                     <li className="feature-item" key={i}>
                                         <div className="feature-icon-wrapper icon-check">
                                             <svg fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3.5}>
@@ -194,7 +199,7 @@ export default function PricingPopup({ dialogRef }) {
                                 ))}
                             </ul>
                             <button
-                                onClick={() => handleBuyNow("Premium", popupPlans.Premium.price, popupPlans.Premium.features)}
+                                onClick={() => handleBuyNow("Meta + Google Ads - Basic", popupPlans.combine.price, popupPlans.combine.features)}
                                 className="btn-card-outline"
                                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto" }}
                             >

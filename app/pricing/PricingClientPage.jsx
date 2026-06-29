@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
-import { adsPlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
+import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
 import { useCart } from "../hooks/useCart";
 import { useRouter } from "next/navigation";
 
@@ -15,7 +15,9 @@ export default function PricingClientPage() {
   const { addToCart, clearCart } = useCart();
   const router = useRouter();
 
-  const [adsPlansState, setAdsPlansState] = React.useState(adsPlans);
+  const [googlePlansState, setGooglePlansState] = React.useState(googlePlans);
+  const [facebookPlansState, setFacebookPlansState] = React.useState(facebookPlans);
+  const [combinePlansState, setCombinePlansState] = React.useState(combinePlans);
   const [websitePlansState, setWebsitePlansState] = React.useState(websitePlans);
   const [creativePacksState, setCreativePacksState] = React.useState(creativePacks);
   const [aiVideoPlansState, setAiVideoPlansState] = React.useState(aiVideoPlans);
@@ -37,7 +39,9 @@ export default function PricingClientPage() {
         throw new Error("Failed to load pricing configurations");
       })
       .then((data) => {
-        if (data.adsPlans) setAdsPlansState(data.adsPlans);
+        if (data.googlePlans) setGooglePlansState(data.googlePlans);
+        if (data.facebookPlans) setFacebookPlansState(data.facebookPlans);
+        if (data.combinePlans) setCombinePlansState(data.combinePlans);
         if (data.websitePlans) setWebsitePlansState(data.websitePlans);
         if (data.creativePacks) setCreativePacksState(data.creativePacks);
         if (data.aiVideoPlans) setAiVideoPlansState(data.aiVideoPlans);
@@ -63,7 +67,9 @@ export default function PricingClientPage() {
 
       {/* Category Anchor Sub-nav */}
       <div className="pricing-sub-nav">
-        <a href="#ads" className="sub-nav-link">Lead Campaigns</a>
+        <a href="#facebook" className="sub-nav-link">Meta Ads Plans</a>
+        <a href="#google" className="sub-nav-link">Google Plans</a>
+        <a href="#combine" className="sub-nav-link">Combine Plans</a>
         <a href="#websites" className="sub-nav-link">Websites</a>
         <a href="#creative" className="sub-nav-link">Creative</a>
         <a href="#aivideo" className="sub-nav-link">AI Video</a>
@@ -80,27 +86,26 @@ export default function PricingClientPage() {
         </p>
       </section>
 
-      {/* Ads Performance Plans Section */}
-      <section id="ads" className="pricing-section section-muted-light">
+      {/* Meta Ads Plans Section */}
+      <section id="facebook" className="pricing-section section-muted-light">
         <div className="section-title-wrapper">
-          <h2 className="section-title-text">Lead Campaign Plans</h2>
+          <h2 className="section-title-text">
+            Meta Ads Plans
+          </h2>
           <div className="section-title-underline" />
         </div>
 
-        <div className="ads-pricing-grid">
-          {adsPlansState.map((plan, index) => (
+        <div className="ads-pricing-grid" style={{ gridTemplateColumns: facebookPlansState.length < 4 ? `repeat(${facebookPlansState.length}, 1fr)` : undefined, maxWidth: facebookPlansState.length < 4 ? `${facebookPlansState.length * 300 + 30}px` : undefined }}>
+          {facebookPlansState.map((plan, index) => (
             <div
               key={index}
               className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
-              style={{ display: "flex", flexDirection: "column", justifyContent: "between" }}
+              style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
             >
               <div>
-                <div className={`card-top-info`}>
-                  <div className={`ad-platform-badge ${plan.badgeClass}`}>
-                    <span className="platform-icon">{plan.platform}</span>
-                  </div>
-                  <div className={`card-label-badge ${plan.pillClass}`}>{plan.level}</div>
-                  <div className="price-display">
+                <div className="card-top-info" style={{ marginTop: "8px" }}>
+                  <div className={`card-label-badge ${plan.pillClass}`} style={{ marginBottom: "16px" }}>{plan.level}</div>
+                  <div className="price-display" style={{ marginBottom: "8px" }}>
                     <span className="currency">₹</span>
                     <span className="value">{plan.price}</span>
                     <span className="period">{plan.period}</span>
@@ -110,7 +115,7 @@ export default function PricingClientPage() {
                 <ul className="card-features-list">
                   {plan.features.map((feat, i) => (
                     <li key={i}>
-                      <span className="check-icon-wrapper">✓</span>
+                      <span className="check-icon-wrapper" style={{ color: "#1877F2", background: "rgba(24, 119, 242, 0.1)" }}>✓</span>
                       {feat}
                     </li>
                   ))}
@@ -119,7 +124,101 @@ export default function PricingClientPage() {
               <button
                 onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
                 className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
-                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", border: "none", cursor: "pointer" }}
+                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", cursor: "pointer" }}
+              >
+                Buy Now
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Google Ads Plans Section */}
+      <section id="google" className="pricing-section">
+        <div className="section-title-wrapper">
+          <h2 className="section-title-text">
+            Google Ads Plans
+          </h2>
+          <div className="section-title-underline" />
+        </div>
+
+        <div className="ads-pricing-grid" style={{ gridTemplateColumns: googlePlansState.length < 4 ? `repeat(${googlePlansState.length}, 1fr)` : undefined, maxWidth: googlePlansState.length < 4 ? `${googlePlansState.length * 300 + 30}px` : undefined }}>
+          {googlePlansState.map((plan, index) => (
+            <div
+              key={index}
+              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
+              style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+            >
+              <div>
+                <div className="card-top-info" style={{ marginTop: "8px" }}>
+                  <div className={`card-label-badge ${plan.pillClass}`} style={{ marginBottom: "16px" }}>{plan.level}</div>
+                  <div className="price-display" style={{ marginBottom: "8px" }}>
+                    <span className="currency">₹</span>
+                    <span className="value">{plan.price}</span>
+                    <span className="period">{plan.period}</span>
+                  </div>
+                </div>
+
+                <ul className="card-features-list">
+                  {plan.features.map((feat, i) => (
+                    <li key={i}>
+                      <span className="check-icon-wrapper" style={{ color: "#4285F4", background: "rgba(66, 133, 244, 0.1)" }}>✓</span>
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
+                className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
+                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", cursor: "pointer" }}
+              >
+                Buy Now
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* Combine Plans Section */}
+      <section id="combine" className="pricing-section section-muted-light">
+        <div className="section-title-wrapper">
+          <h2 className="section-title-text">
+            Combine Plans (Meta + Google Ads)
+          </h2>
+          <div className="section-title-underline" />
+        </div>
+
+        <div className="ads-pricing-grid" style={{ gridTemplateColumns: combinePlansState.length < 4 ? `repeat(${combinePlansState.length}, 1fr)` : undefined, maxWidth: combinePlansState.length < 4 ? `${combinePlansState.length * 300 + 30}px` : undefined }}>
+          {combinePlansState.map((plan, index) => (
+            <div
+              key={index}
+              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
+              style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+            >
+              <div>
+                <div className="card-top-info" style={{ marginTop: "8px" }}>
+                  <div className={`card-label-badge ${plan.pillClass}`} style={{ marginBottom: "16px" }}>{plan.level}</div>
+                  <div className="price-display" style={{ marginBottom: "8px" }}>
+                    <span className="currency">₹</span>
+                    <span className="value">{plan.price}</span>
+                    <span className="period">{plan.period}</span>
+                  </div>
+                </div>
+
+                <ul className="card-features-list">
+                  {plan.features.map((feat, i) => (
+                    <li key={i}>
+                      <span className="check-icon-wrapper" style={{ color: "#3B2FC9", background: "rgba(59, 47, 201, 0.1)" }}>✓</span>
+                      {feat}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              <button
+                onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
+                className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
+                style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", cursor: "pointer" }}
               >
                 Buy Now
               </button>
@@ -242,16 +341,7 @@ export default function PricingClientPage() {
                     <button
                       onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price, plan.features.map(f => f.text))}
                       className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
-                      style={plan.isHighlight ? {
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        marginTop: "24px",
-                        backgroundColor: plan.highlightStyles.button.backgroundColor,
-                        color: "#ffffff",
-                        border: "none",
-                        cursor: "pointer"
-                      } : {
+                      style={{
                         display: "block",
                         width: "100%",
                         textAlign: "center",
@@ -332,16 +422,7 @@ export default function PricingClientPage() {
                     <button
                       onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price, plan.features.map(f => f.text))}
                       className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
-                      style={plan.isHighlight ? {
-                        display: "block",
-                        width: "100%",
-                        textAlign: "center",
-                        marginTop: "24px",
-                        backgroundColor: plan.highlightStyles.button.backgroundColor,
-                        color: "#ffffff",
-                        border: "none",
-                        cursor: "pointer"
-                      } : {
+                      style={{
                         display: "block",
                         width: "100%",
                         textAlign: "center",
@@ -428,16 +509,7 @@ export default function PricingClientPage() {
                 <button
                   onClick={() => handleBuyNow("AI Video - " + plan.level, plan.price, plan.features.map(f => f.text))}
                   className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
-                  style={plan.isHighlight ? {
-                    display: "block",
-                    width: "100%",
-                    textAlign: "center",
-                    marginTop: "24px",
-                    backgroundColor: plan.highlightStyles.button.backgroundColor,
-                    color: "#ffffff",
-                    border: "none",
-                    cursor: "pointer"
-                  } : {
+                  style={{
                     display: "block",
                     width: "100%",
                     textAlign: "center",

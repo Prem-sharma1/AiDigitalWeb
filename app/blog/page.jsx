@@ -7,7 +7,8 @@ import Link from "next/link";
 export default function BlogListingPage() {
   const [blogs, setBlogs] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [currentPage, setCurrentPage] = useState(1);
+  const blogsPerPage = 12;
 
   useEffect(() => {
     fetch("/api/blogs")
@@ -24,11 +25,10 @@ export default function BlogListingPage() {
       });
   }, []);
 
-  const categories = ["All", ...new Set(blogs.map((b) => b.category))];
-
-  const filteredBlogs = selectedCategory === "All"
-    ? blogs
-    : blogs.filter((b) => b.category === selectedCategory);
+  const indexOfLastBlog = currentPage * blogsPerPage;
+  const indexOfFirstBlog = indexOfLastBlog - blogsPerPage;
+  const currentBlogs = blogs.slice(indexOfFirstBlog, indexOfLastBlog);
+  const totalPages = Math.ceil(blogs.length / blogsPerPage);
 
   const getBlogLink = (post) => {
     const contentTrimmed = post.content ? post.content.trim() : "";
@@ -69,71 +69,84 @@ export default function BlogListingPage() {
         </p>
       </section>
 
-      {/* Categories Filter Row */}
-      <section style={styles.filterSection}>
-        <div style={styles.filterRow}>
-          {categories.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setSelectedCategory(cat)}
-              style={{
-                ...styles.filterBtn,
-                ...(selectedCategory === cat ? styles.filterBtnActive : {}),
-              }}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
-      </section>
-
       {/* Blogs Main Grid */}
       <section style={styles.gridSection}>
         {loading ? (
           <div style={styles.loader}>Loading blogs...</div>
-        ) : filteredBlogs.length === 0 ? (
+        ) : blogs.length === 0 ? (
           <div style={styles.empty}>No blog posts found. Check back later!</div>
         ) : (
-          <div style={styles.blogsGrid}>
-            {filteredBlogs.map((post) => {
-              const url = getBlogLink(post);
-              const isExternal = url.startsWith("http://") || url.startsWith("https://");
-              
-              const CardTag = isExternal ? "a" : Link;
-              const cardProps = isExternal 
-                ? { href: url, target: "_blank", rel: "noopener noreferrer" } 
-                : { href: url };
+          <>
+            <div style={styles.blogsGrid}>
+              {currentBlogs.map((post) => {
+                const url = getBlogLink(post);
+                const isExternal = url.startsWith("http://") || url.startsWith("https://");
+                
+                const CardTag = isExternal ? "a" : Link;
+                const cardProps = isExternal 
+                  ? { href: url, target: "_blank", rel: "noopener noreferrer" } 
+                  : { href: url };
 
-              return (
-                <CardTag 
-                  key={post.id} 
-                  {...cardProps} 
-                  style={{ ...styles.blogCard, textDecoration: "none", color: "inherit" }}
-                >
-                  <div style={styles.cardMedia}>
-                    <img
-                      src={post.coverImage || "/creative_content/Creative1.jpeg"}
-                      alt={post.title}
-                      style={styles.cardImage}
-                    />
-                    <span style={styles.cardCategory}>{post.category}</span>
-                  </div>
-                  <div style={styles.cardBody}>
-                    <div style={styles.cardMeta}>
-                      <span>{new Date(post.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
-                      <span>•</span>
-                      <span>5 min read</span>
+                return (
+                  <CardTag 
+                    key={post.id} 
+                    {...cardProps} 
+                    style={{ ...styles.blogCard, textDecoration: "none", color: "inherit" }}
+                  >
+                    <div style={styles.cardMedia}>
+                      <img
+                        src={post.coverImage || "/creative_content/Creative1.jpeg"}
+                        alt={post.title}
+                        style={styles.cardImage}
+                      />
+                      <span style={styles.cardCategory}>{post.category}</span>
                     </div>
-                    <h2 style={styles.cardTitle}>{post.title}</h2>
-                    <p style={styles.cardExcerpt}>{post.excerpt}</p>
-                    <span style={styles.readMoreLink}>
-                      Read Post <Icon name="arrow_forward" style={styles.arrowIcon} />
-                    </span>
-                  </div>
-                </CardTag>
-              );
-            })}
-          </div>
+                    <div style={styles.cardBody}>
+                      <div style={styles.cardMeta}>
+                        <span>{new Date(post.createdAt).toLocaleDateString("en-IN", { day: "numeric", month: "short", year: "numeric" })}</span>
+                        <span>•</span>
+                        <span>5 min read</span>
+                      </div>
+                      <h2 style={styles.cardTitle}>{post.title}</h2>
+                      <p style={styles.cardExcerpt}>{post.excerpt}</p>
+                      <span style={styles.readMoreLink}>
+                        Read Post <Icon name="arrow_forward" style={styles.arrowIcon} />
+                      </span>
+                    </div>
+                  </CardTag>
+                );
+              })}
+            </div>
+            {totalPages > 1 && (
+              <div className="blog-pagination-row">
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="blog-page-btn"
+                >
+                  <Icon name="chevron_left" className="blog-page-icon" /> Previous
+                </button>
+                <div className="blog-page-numbers">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                    <button
+                      key={pageNum}
+                      onClick={() => setCurrentPage(pageNum)}
+                      className={`blog-page-number-btn ${currentPage === pageNum ? "active" : ""}`}
+                    >
+                      {pageNum}
+                    </button>
+                  ))}
+                </div>
+                <button
+                  onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="blog-page-btn"
+                >
+                  Next <Icon name="chevron_right" className="blog-page-icon" />
+                </button>
+              </div>
+            )}
+          </>
         )}
       </section>
 
@@ -176,33 +189,7 @@ const styles = {
     color: "#64748b",
     lineHeight: "1.5",
   },
-  filterSection: {
-    paddingInline: "var(--page-gutter)",
-    marginBottom: "40px",
-  },
-  filterRow: {
-    display: "flex",
-    justifyContent: "center",
-    flexWrap: "wrap",
-    gap: "10px",
-  },
-  filterBtn: {
-    backgroundColor: "#ffffff",
-    border: "1px solid #e2e8f0",
-    color: "#64748b",
-    padding: "8px 20px",
-    borderRadius: "999px",
-    fontSize: "13px",
-    fontWeight: "600",
-    cursor: "pointer",
-    transition: "all 0.2s ease",
-  },
-  filterBtnActive: {
-    backgroundColor: "#e56030",
-    color: "#ffffff",
-    borderColor: "#e56030",
-    boxShadow: "0 4px 12px rgba(229, 96, 48, 0.2)",
-  },
+
   gridSection: {
     paddingInline: "var(--page-gutter)",
     paddingBottom: "80px",

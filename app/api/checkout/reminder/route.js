@@ -1,0 +1,124 @@
+import { NextResponse } from "next/server";
+import { pool } from "../../../../lib/db";
+import { sendWhatsAppMessage } from "../../../../lib/whatsapp";
+import { sendEmail } from "../../../../lib/email";
+
+async function ensureReminderTable() {
+  const query = `
+    CREATE TABLE IF NOT EXISTS payment_reminders (
+      id VARCHAR(36) NOT NULL,
+      customer_name VARCHAR(100) DEFAULT NULL,
+      customer_email VARCHAR(100) DEFAULT NULL,
+      customer_phone VARCHAR(50) DEFAULT NULL,
+      plan_name VARCHAR(100) DEFAULT NULL,
+      plan_price VARCHAR(50) DEFAULT NULL,
+      reminder_date VARCHAR(50) DEFAULT NULL,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+      PRIMARY KEY (id)
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+  `;
+  try {
+    await pool.query(query);
+  } catch (err) {
+    console.error("Failed to auto-create payment_reminders table:", err.message);
+  }
+}
+
+export async function POST(req) {
+  try {
+    await ensureReminderTable();
+    const { name, email, phone, planName, planPrice, reminderDate } = await req.json();
+
+    const reminderId = Math.random().toString(36).substring(2, 15);
+
+    // Save to Database
+    try {
+      const insertQuery = `
+        INSERT INTO payment_reminders (
+          id, customer_name, customer_email, customer_phone, 
+          plan_name, plan_price, reminder_date
+        ) VALUES (?, ?, ?, ?, ?, ?, ?)
+      `;
+      await pool.query(insertQuery, [
+        reminderId,
+        name || "Unknown",
+        email || "N/A",
+        phone || "N/A",
+        planName || "Unknown Plan",
+        planPrice || "N/A",
+        reminderDate || "Not specified"
+      ]);
+    } catch (dbErr) {
+      console.warn("Could not save reminder to MySQL database. Error:", dbErr.message);
+    }
+
+    // Format notification messages
+    const displayPhone = phone || "N/A";
+    const displayEmail = email || "N/A";
+    const displayPlan = planName || "N/A";
+    const displayPrice = planPrice || "N/A";
+    const displayDate = reminderDate || "N/A";
+
+    const adminMessage = `📅 *New Payment Reminder Scheduled!*
+
+*Customer Details:*
+- Name: ${name || "Unknown"}
+- Phone: ${displayPhone}
+- Email: ${displayEmail}
+
+*Plan Details:*
+- Plan: ${displayPlan} (Price: ${displayPrice})
+- *Reminder Date:* ${displayDate}`;
+
+    // 1. WhatsApp Notification to Admin
+    try {
+      const adminNumber = process.env.WHATSAPP_ADMIN_NUMBER || "919096090701";
+      await sendWhatsAppMessage({
+        to: adminNumber,
+        message: adminMessage
+      });
+    } catch (waErr) {
+      console.error("WhatsApp admin alert for reminder failed:", waErr.message);
+    }
+
+    // 2. Email Notification to Admin
+    try {
+      const adminEmail = process.env.ADMIN_EMAIL || "admin@aidigital.com";
+      const subject = `📅 Payment Reminder Scheduled by ${name || "Unknown User"}`;
+      const emailText = `Hello Admin,
+
+A user has scheduled a reminder to complete their payment later.
+
+Customer Details:
+- Name: ${name || "Unknown"}
+- Phone: ${displayPhone}
+- Email: ${displayEmail}
+
+Plan Details:
+- Plan Name: ${displayPlan}
+- Plan Price: ${displayPrice}
+- Scheduled Payment Date: ${displayDate}
+
+Please follow up with this potential customer on their selected date.
+
+Best regards,
+AI Digital Notification System`;
+
+      await sendEmail({
+        to: adminEmail,
+        subject: subject,
+        text: emailText
+      });
+    } catch (emailErr) {
+      console.error("Email admin alert for reminder failed:", emailErr.message);
+    }
+
+    return NextResponse.json({ success: true, message: "Reminder scheduled successfully." });
+  } catch (error) {
+    console.error("Error saving payment reminder:", error);
+    return NextResponse.json(
+      { error: error.message || "Failed to process payment reminder." },
+      { status: 500 }
+    );
+  }
+}

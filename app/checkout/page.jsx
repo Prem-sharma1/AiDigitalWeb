@@ -31,6 +31,13 @@ export default function CheckoutPage() {
   const [referralSuccessMsg, setReferralSuccessMsg] = useState("");
   const [referralErrorMsg, setReferralErrorMsg] = useState("");
 
+  // Recovery Modal States
+  const [showExitSurvey, setShowExitSurvey] = useState(false);
+  const [reminderDate, setReminderDate] = useState("");
+  const [submittingReminder, setSubmittingReminder] = useState(false);
+  const [reminderSuccess, setReminderSuccess] = useState(false);
+
+
   useEffect(() => {
     setMounted(true);
   }, []);
@@ -180,6 +187,12 @@ export default function CheckoutPage() {
         theme: {
           color: "#e56030",
         },
+        modal: {
+          ondismiss: function () {
+            setLoading(false);
+            setShowExitSurvey(true);
+          }
+        }
       };
 
       const paymentObject = new window.Razorpay(options);
@@ -190,6 +203,46 @@ export default function CheckoutPage() {
       setLoading(false);
     }
   };
+
+  const handleScheduleReminder = async (e) => {
+    if (e) e.preventDefault();
+    if (!reminderDate) {
+      alert("Please select a date for the reminder.");
+      return;
+    }
+    setSubmittingReminder(true);
+    try {
+      const response = await fetch("/api/checkout/reminder", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: customerName,
+          email: customerEmail,
+          phone: customerPhone,
+          planName: selectedItem?.name,
+          planPrice: finalTotal,
+          reminderDate: reminderDate
+        })
+      });
+      const data = await response.json();
+      if (data.success) {
+        setReminderSuccess(true);
+        setTimeout(() => {
+          setShowExitSurvey(false);
+          setReminderSuccess(false);
+          setReminderDate("");
+        }, 3000);
+      } else {
+        alert("Failed to schedule reminder. Please try again.");
+      }
+    } catch (err) {
+      console.error("Reminder scheduling error:", err);
+      alert("Connection error. Please try again.");
+    } finally {
+      setSubmittingReminder(false);
+    }
+  };
+
 
   if (!mounted) {
     return (
@@ -602,9 +655,274 @@ export default function CheckoutPage() {
       </main>
 
       <SiteFooter />
+
+      {showExitSurvey && (
+        <div style={{
+          position: "fixed",
+          top: 0,
+          left: 0,
+          width: "100%",
+          height: "100%",
+          backgroundColor: "rgba(15, 23, 42, 0.6)",
+          backdropFilter: "blur(8px)",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 9999,
+          padding: "20px",
+          animation: "fadeIn 0.3s ease-out"
+        }}>
+          <div style={{
+            background: "rgba(255, 255, 255, 0.98)",
+            borderRadius: "24px",
+            boxShadow: "0 20px 50px rgba(15, 23, 42, 0.15)",
+            border: "1px solid rgba(255, 255, 255, 0.6)",
+            width: "100%",
+            maxWidth: "850px",
+            padding: "40px",
+            position: "relative",
+            maxHeight: "90vh",
+            overflowY: "auto",
+            animation: "slideUp 0.3s ease-out"
+          }}>
+            {/* Close Button */}
+            <button 
+              onClick={() => setShowExitSurvey(false)}
+              style={{
+                position: "absolute",
+                top: "20px",
+                right: "20px",
+                background: "transparent",
+                border: "none",
+                color: "var(--muted)",
+                cursor: "pointer",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+              aria-label="Close modal"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: "24px" }}>close</span>
+            </button>
+
+            {reminderSuccess ? (
+              <div style={{ textAlign: "center", padding: "40px 0" }}>
+                <span className="material-symbols-outlined" style={{ fontSize: "72px", color: "#10b981", marginBottom: "20px" }}>check_circle</span>
+                <h3 style={{ fontSize: "1.75rem", fontWeight: "800", color: "#1e293b", marginBottom: "12px", fontFamily: "inherit" }}>Reminder Scheduled!</h3>
+                <p style={{ color: "#64748b", fontSize: "1.05rem", fontFamily: "inherit" }}>We've successfully scheduled your payment reminder on <strong>{reminderDate}</strong>. Talk to you soon!</p>
+              </div>
+            ) : (
+              <div>
+                <div style={{ textAlign: "center", marginBottom: "36px" }}>
+                  <h3 style={{ fontSize: "1.8rem", fontWeight: "800", color: "#1e293b", margin: 0, fontFamily: "inherit" }}>
+                    Select how you would like to proceed 🚀
+                  </h3>
+                  <p style={{ color: "#64748b", fontSize: "0.98rem", margin: "8px 0 0 0", fontFamily: "inherit" }}>
+                    You dismissed the payment step. Let us help you continue your growth journey.
+                  </p>
+                </div>
+
+                <div className="recovery-options-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
+                  
+                  {/* Option 1: Reschedule / Remind */}
+                  <div className="recovery-card" style={{
+                    background: "#f8fafc",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "18px",
+                    padding: "24px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    transition: "all 0.3s ease"
+                  }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "12px",
+                        background: "var(--orange-soft)",
+                        color: "var(--orange)",
+                        marginBottom: "8px"
+                      }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "28px" }}>calendar_month</span>
+                      </div>
+                      <h4 style={{ fontSize: "1.15rem", fontWeight: "700", color: "#1e293b", margin: 0 }}>Reschedule / Remind</h4>
+                      <p style={{ fontSize: "0.85rem", color: "#64748b", margin: 0, lineHeight: "1.4" }}>
+                        Pick a date and we will record a reminder for you to make the payment later.
+                      </p>
+                    </div>
+
+                    <form onSubmit={handleScheduleReminder} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
+                      <input 
+                        type="date"
+                        required
+                        value={reminderDate}
+                        onChange={(e) => setReminderDate(e.target.value)}
+                        style={{
+                          width: "100%",
+                          padding: "10px 12px",
+                          borderRadius: "8px",
+                          border: "1px solid #cbd5e1",
+                          fontSize: "0.88rem",
+                          color: "#1e293b",
+                          fontFamily: "inherit",
+                          outline: "none"
+                        }}
+                      />
+                      <button 
+                        type="submit"
+                        disabled={submittingReminder}
+                        style={{
+                          width: "100%",
+                          padding: "12px",
+                          background: "var(--orange)",
+                          color: "#ffffff",
+                          border: "none",
+                          borderRadius: "8px",
+                          fontWeight: "700",
+                          fontSize: "0.85rem",
+                          cursor: "pointer",
+                          transition: "background-color 0.2s"
+                        }}
+                      >
+                        {submittingReminder ? "Scheduling..." : "Set Reminder"}
+                      </button>
+                    </form>
+                  </div>
+
+                  {/* Option 2: Connect with Sales */}
+                  <div className="recovery-card" style={{
+                    background: "#f8fafc",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "18px",
+                    padding: "24px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    transition: "all 0.3s ease"
+                  }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "12px",
+                        background: "#e8fcf0",
+                        color: "#25D366",
+                        marginBottom: "8px"
+                      }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "28px" }}>chat</span>
+                      </div>
+                      <h4 style={{ fontSize: "1.15rem", fontWeight: "700", color: "#1e293b", margin: 0 }}>Connect with Sales</h4>
+                      <p style={{ fontSize: "0.85rem", color: "#64748b", margin: 0, lineHeight: "1.4" }}>
+                        Have questions about pricing, custom deliverables, or special packages? Chat with our team.
+                      </p>
+                    </div>
+
+                    <a 
+                      href={`https://api.whatsapp.com/send?phone=919096090701&text=${encodeURIComponent(
+                        `Hi, I was checking out the ${selectedItem?.name || "Premium Plan"} on AI Digital (₹${finalTotal || "0"}) and wanted to discuss custom options or ask a few questions. My details: Name: ${customerName || "N/A"}, Phone: ${customerPhone || "N/A"}.`
+                      )}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      style={{
+                        width: "100%",
+                        padding: "12px",
+                        background: "#25D366",
+                        color: "#ffffff",
+                        textAlign: "center",
+                        borderRadius: "8px",
+                        fontWeight: "700",
+                        fontSize: "0.85rem",
+                        textDecoration: "none",
+                        display: "block",
+                        transition: "background-color 0.2s"
+                      }}
+                    >
+                      Chat on WhatsApp
+                    </a>
+                  </div>
+
+                  {/* Option 3: Explore Portfolio */}
+                  <div className="recovery-card" style={{
+                    background: "#f8fafc",
+                    border: "1px solid #e2e8f0",
+                    borderRadius: "18px",
+                    padding: "24px",
+                    display: "flex",
+                    flexDirection: "column",
+                    justifyContent: "space-between",
+                    transition: "all 0.3s ease"
+                  }}>
+                    <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginBottom: "20px" }}>
+                      <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        width: "48px",
+                        height: "48px",
+                        borderRadius: "12px",
+                        background: "var(--blue-soft)",
+                        color: "var(--blue)",
+                        marginBottom: "8px"
+                      }}>
+                        <span className="material-symbols-outlined" style={{ fontSize: "28px" }}>folder_open</span>
+                      </div>
+                      <h4 style={{ fontSize: "1.15rem", fontWeight: "700", color: "#1e293b", margin: 0 }}>Check Portfolio</h4>
+                      <p style={{ fontSize: "0.85rem", color: "#64748b", margin: 0, lineHeight: "1.4" }}>
+                        Would you like to check our portfolio or completed projects first? See our case studies.
+                      </p>
+                    </div>
+
+                    <button 
+                      onClick={() => {
+                        setShowExitSurvey(false);
+                        window.location.href = "/portfolio";
+                      }}
+                      style={{
+                        width: "100%",
+                        padding: "12px",
+                        background: "var(--text)",
+                        color: "#ffffff",
+                        border: "none",
+                        borderRadius: "8px",
+                        fontWeight: "700",
+                        fontSize: "0.85rem",
+                        cursor: "pointer",
+                        transition: "background-color 0.2s"
+                      }}
+                    >
+                      View Portfolio Page
+                    </button>
+                  </div>
+
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
       
       {/* Responsive layout styles specifically for Checkout page */}
       <style jsx global>{`
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideUp {
+          from { transform: translateY(20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        .recovery-card:hover {
+          transform: translateY(-6px);
+          border-color: var(--orange) !important;
+          box-shadow: 0 10px 24px rgba(229, 96, 48, 0.08);
+        }
         @media (min-width: 992px) {
           .cart-content-grid {
             grid-template-columns: 1.6fr 1fr !important;
@@ -614,8 +932,12 @@ export default function CheckoutPage() {
           .biz-fields-grid {
             grid-template-columns: 1fr !important;
           }
+          .recovery-options-grid {
+            grid-template-columns: 1fr !important;
+          }
         }
       `}</style>
     </div>
   );
 }
+

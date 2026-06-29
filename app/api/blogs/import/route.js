@@ -63,6 +63,23 @@ function htmlToMarkdown(html) {
   return text.trim();
 }
 
+function unescapeHtml(text) {
+  if (!text) return "";
+  return text
+    .replace(/&amp;/g, "&")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&#39;/g, "'")
+    .replace(/&#x27;/g, "'")
+    .replace(/&ldquo;/g, '"')
+    .replace(/&rdquo;/g, '"')
+    .replace(/&lsquo;/g, "'")
+    .replace(/&rsquo;/g, "'")
+    .replace(/&nbsp;/g, " ")
+    .trim();
+}
+
 function generateSlug(title) {
   return title
     .toLowerCase()
@@ -81,15 +98,15 @@ export async function POST(req) {
     if (sourceType === "devto" && !username) {
       return NextResponse.json({ error: "Dev.to username is required." }, { status: 400 });
     }
-    if (sourceType === "rss" && !feedUrl) {
-      return NextResponse.json({ error: "RSS Feed URL is required." }, { status: 400 });
+    if ((sourceType === "rss" || sourceType === "url") && !feedUrl) {
+      return NextResponse.json({ error: "URL is required." }, { status: 400 });
     }
 
     let articlesToImport = [];
 
     if (sourceType === "devto") {
       // 1. Fetch articles list from Dev.to
-      const listRes = await fetch(`https://www.youngurbanproject.com/blog/?username=${encodeURIComponent(username)}`, {
+      const listRes = await fetch(`https://dev.to/api/articles?username=${encodeURIComponent(username)}`, {
         headers: { "User-Agent": "Mozilla/5.0 (AI Digital Blog Importer)" },
       });
       if (!listRes.ok) {
@@ -101,7 +118,7 @@ export async function POST(req) {
       const limitList = list.slice(0, 10);
       for (const item of limitList) {
         try {
-          const detailRes = await fetch(`https://www.youngurbanproject.com/blog/${item.id}`, {
+          const detailRes = await fetch(`https://dev.to/api/articles/${item.id}`, {
             headers: { "User-Agent": "Mozilla/5.0 (AI Digital Blog Importer)" },
           });
           if (detailRes.ok) {
@@ -166,6 +183,138 @@ export async function POST(req) {
           });
         }
       }
+    } else if (sourceType === "url") {
+      // 1. Fetch website HTML
+      const webRes = await fetch(feedUrl, {
+        headers: {
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36",
+          "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,*/*;q=0.8"
+        },
+      });
+      if (!webRes.ok) {
+        throw new Error(`Failed to fetch the website: ${webRes.statusText}`);
+      }
+      const html = await webRes.text();
+
+      // 2. Extract metadata
+      // Extract title
+      let title = "";
+      const ogTitleMatch = html.match(/<meta[^>]+property=["']og:title["'][^>]+content=["']([^"']+)["']/i) ||
+                          html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:title["']/i) ||
+                          html.match(/<meta[^>]+name=["']twitter:title["'][^>]+content=["']([^"']+)["']/i) ||
+                          html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:title["']/i);
+      if (ogTitleMatch) {
+        title = unescapeHtml(ogTitleMatch[1]);
+      } else {
+        const titleTagMatch = html.match(/<title[^>]*>([\s\S]*?)<\/title>/i);
+        if (titleTagMatch) {
+          title = unescapeHtml(titleTagMatch[1]);
+        }
+      }
+      
+      if (!title) {
+        try {
+          title = "Imported Blog Post - " + new URL(feedUrl).hostname;
+        } catch {
+          title = "Imported Blog Post";
+        }
+      }
+
+      // Extract excerpt/description
+      let excerpt = "";
+      const ogDescMatch = html.match(/<meta[^>]+property=["']og:description["'][^>]+content=["']([^"']+)["']/i) ||
+                         html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:description["']/i) ||
+                         html.match(/<meta[^>]+name=["']description["'][^>]+content=["']([^"']+)["']/i) ||
+                         html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']description["']/i);
+      if (ogDescMatch) {
+        excerpt = unescapeHtml(ogDescMatch[1]);
+      } else {
+        excerpt = "An article imported from " + feedUrl;
+      }
+
+      // Extract cover image
+      let coverImage = "";
+      const ogImgMatch = html.match(/<meta[^>]+property=["']og:image["'][^>]+content=["']([^"']+)["']/i) ||
+                        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+property=["']og:image["']/i) ||
+                        html.match(/<meta[^>]+name=["']twitter:image["'][^>]+content=["']([^"']+)["']/i) ||
+                        html.match(/<meta[^>]+content=["']([^"']+)["'][^>]+name=["']twitter:image["']/i);
+      if (ogImgMatch) {
+        coverImage = ogImgMatch[1];
+      }
+
+      // Extract body content
+      let contentArea = html;
+      // Remove head, script, style, header, footer, nav tags to avoid extracting junk
+      contentArea = contentArea.replace(/<head[^>]*>([\s\S]*?)<\/head>/gi, "");
+      contentArea = contentArea.replace(/<script[^>]*>([\s\S]*?)<\/script>/gi, "");
+      contentArea = contentArea.replace(/<style[^>]*>([\s\S]*?)<\/style>/gi, "");
+      contentArea = contentArea.replace(/<header[^>]*>([\s\S]*?)<\/header>/gi, "");
+      contentArea = contentArea.replace(/<footer[^>]*>([\s\S]*?)<\/footer>/gi, "");
+      contentArea = contentArea.replace(/<nav[^>]*>([\s\S]*?)<\/nav>/gi, "");
+      contentArea = contentArea.replace(/<aside[^>]*>([\s\S]*?)<\/aside>/gi, "");
+
+      // Try to isolate the article tag if present
+      const articleTagMatch = contentArea.match(/<article[^>]*>([\s\S]*?)<\/article>/i);
+      if (articleTagMatch) {
+        contentArea = articleTagMatch[1];
+      } else {
+        const mainTagMatch = contentArea.match(/<main[^>]*>([\s\S]*?)<\/main>/i);
+        if (mainTagMatch) {
+          contentArea = mainTagMatch[1];
+        }
+      }
+
+      // Extract paragraphs, list items, headers
+      const blockRegex = /<(h[1-6]|p|li)[^>]*>([\s\S]*?)<\/\1>/gi;
+      let blockMatch;
+      const blocks = [];
+      while ((blockMatch = blockRegex.exec(contentArea)) !== null) {
+        const tag = blockMatch[1].toLowerCase();
+        let blockContent = blockMatch[2];
+        // Strip nested html tags inside the block
+        blockContent = blockContent.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
+        blockContent = unescapeHtml(blockContent);
+        
+        if (blockContent.length > 10) {
+          if (tag.startsWith("h")) {
+            const level = tag[1];
+            blocks.push(`${"#".repeat(parseInt(level, 10))} ${blockContent}`);
+          } else if (tag === "li") {
+            blocks.push(`- ${blockContent}`);
+          } else {
+            blocks.push(blockContent);
+          }
+        }
+      }
+
+      let content = "";
+      if (blocks.length > 0) {
+        content = blocks.join("\n\n");
+      } else {
+        content = htmlToMarkdown(contentArea);
+      }
+
+      // Fallback excerpt from content if needed
+      if (!excerpt || excerpt === ("An article imported from " + feedUrl)) {
+        const plainText = content.replace(/[#*\-`_]/g, "").replace(/\s+/g, " ").trim();
+        if (plainText.length > 10) {
+          excerpt = plainText.substring(0, 150) + "...";
+        }
+      }
+
+      if (excerpt.length > 250) {
+        excerpt = excerpt.substring(0, 247) + "...";
+      }
+
+      articlesToImport.push({
+        title,
+        slug: generateSlug(title),
+        excerpt,
+        content: content || `Read full article here: ${feedUrl}`,
+        coverImage,
+        category: defaultCategory || "Marketing",
+        published: true,
+      });
     }
 
     if (articlesToImport.length === 0) {

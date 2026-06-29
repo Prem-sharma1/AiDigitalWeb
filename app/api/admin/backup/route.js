@@ -17,7 +17,9 @@ export async function POST(req) {
     // 1. Backup pricing_plans
     const [pricingRows] = await pool.query("SELECT * FROM pricing_plans");
     const pricingData = {
-      adsPlans: [],
+      googlePlans: [],
+      facebookPlans: [],
+      combinePlans: [],
       websitePlans: [],
       creativePacks: [],
       aiVideoPlans: [],

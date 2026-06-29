@@ -92,6 +92,14 @@ const industries = [
       { title: "Sustainable Farm Campaign", type: "Campaigns" },
       { title: "Mack Agro Promo", type: "AI Videos" }
     ]
+  },
+  {
+    name: "Construction",
+    description:
+      "All-in-one Construction ERP & Project Management software showcase, web portal, and local SEO campaign.",
+    projects: [
+      { title: "Hitoffice Construction ERP", type: "Website & SEO" }
+    ]
   }
 ];
 
@@ -185,7 +193,7 @@ export default function FeaturedWork() {
       )}
 
       <div className="industry-list">
-        {activeFilter === "Creative Content" || activeFilter === "AI Videos" || activeFilter === "Reels" || activeFilter === "All" ? (
+        {activeFilter === "Creative Content" || activeFilter === "AI Videos" || activeFilter === "Reels" || activeFilter === "Website & SEO" || activeFilter === "All" ? (
           <CreativeGrid activeFilter={activeFilter} />
         ) : (
           <>
