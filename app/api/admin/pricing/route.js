@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import pool from "../../../../lib/db";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 
 function checkAuth(req) {
   const session = req.cookies.get("admin_session");
@@ -54,12 +55,23 @@ async function ensurePricingTable(connection) {
 
 // Helper to synchronize JSON pricing data into the database
 async function syncPricingToDb(connection, pricingData) {
+  try {
+    await performPricingSync(connection, pricingData);
+  } catch (error) {
+    console.warn("Pricing sync failed, dropping table and trying again. Error:", error.message);
+    await connection.query("DROP TABLE IF EXISTS pricing_plans");
+    await ensurePricingTable(connection);
+    await performPricingSync(connection, pricingData);
+  }
+}
+
+async function performPricingSync(connection, pricingData) {
   await connection.query("DELETE FROM pricing_plans");
   const planCategories = ["googlePlans", "facebookPlans", "combinePlans", "websitePlans", "creativePacks", "aiVideoPlans"];
   for (const cat of planCategories) {
     if (pricingData[cat]) {
       for (const plan of pricingData[cat]) {
-        const id = plan.id || Math.random().toString(36).substring(2, 15);
+        const id = plan.id || crypto.randomUUID();
         await connection.query(`
           INSERT INTO pricing_plans 
           (id, category, platform, badge_class, level, pill_class, price, period, features, button_text, is_popular, service_name, plan_parameter, tag_class, is_highlight, highlight_styles)
