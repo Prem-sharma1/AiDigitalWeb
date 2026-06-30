@@ -105,7 +105,7 @@ export default function PricingPopup({ dialogRef }) {
                         <h2 className="popup-title">
                             Elevate Your Digital Presence with <span>aidigitals</span>
                         </h2>
-                        <p className="popup-subtitle">Join 500+ teams automating their growth today.</p>
+                        <p className="popup-subtitle">Join 300+ customer businesses automating their growth today with AiDigitals</p>
                     </div>
                 </div>
 
