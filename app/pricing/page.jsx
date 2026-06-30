@@ -1,4 +1,3 @@
-import Script from "next/script";
 import PricingClientPage from "./PricingClientPage";
 
 export const metadata = {
@@ -17,7 +16,6 @@ export default function PricingPage() {
   return (
     <>
       <PricingClientPage />
-      <Script src="https://checkout.razorpay.com/v1/checkout.js" strategy="lazyOnload" />
     </>
   );
 }

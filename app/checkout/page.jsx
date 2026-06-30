@@ -16,7 +16,7 @@ export default function CheckoutPage() {
   const { items, clearCart } = useCart();
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(false);
-  
+
   // Onboarding details
   const [customerName, setCustomerName] = useState("");
   const [customerEmail, setCustomerEmail] = useState("");
@@ -60,7 +60,7 @@ export default function CheckoutPage() {
   const handleApplyReferral = () => {
     setReferralErrorMsg("");
     setReferralSuccessMsg("");
-    
+
     const formattedCode = referralInput.trim().toUpperCase();
 
     if (!formattedCode) {
@@ -122,8 +122,8 @@ export default function CheckoutPage() {
       const response = await fetch("/api/razorpay/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ 
-          amount: finalTotal, 
+        body: JSON.stringify({
+          amount: finalTotal,
           planName: selectedItem.name,
           referralCode: appliedCode || "None"
         }),
@@ -261,7 +261,7 @@ export default function CheckoutPage() {
       <SiteHeader active="checkout" />
 
       <main className="cart-container" style={{ maxWidth: "1200px", margin: "40px auto", padding: "0 24px", minHeight: "75vh" }}>
-        
+
         {/* Checkout Header */}
         <div className="cart-header" style={{ marginBottom: "40px", textAlign: "center" }}>
           <div className="badge-pill" style={{ display: "inline-block", background: "var(--orange-soft)", color: "var(--orange)", padding: "4px 16px", borderRadius: "999px", fontSize: "0.85rem", fontWeight: "700" }}>
@@ -302,7 +302,7 @@ export default function CheckoutPage() {
         ) : (
           /* Checkout Content Layout */
           <div className="cart-content-grid" style={{ display: "grid", gridTemplateColumns: "1fr", gap: "40px" }}>
-            
+
             {/* Left side: Details Form */}
             <form onSubmit={handleCheckout} style={{ display: "flex", flexDirection: "column", gap: "32px" }}>
               {/* Customer Contact Details */}
@@ -323,8 +323,8 @@ export default function CheckoutPage() {
                     <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "700", color: "var(--text)", marginBottom: "8px" }}>
                       Full Name *
                     </label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       required
                       placeholder="Enter your name"
                       value={customerName}
@@ -346,8 +346,8 @@ export default function CheckoutPage() {
                       <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "700", color: "var(--text)", marginBottom: "8px" }}>
                         Email Address *
                       </label>
-                      <input 
-                        type="email" 
+                      <input
+                        type="email"
                         required
                         placeholder="name@company.com"
                         value={customerEmail}
@@ -367,8 +367,8 @@ export default function CheckoutPage() {
                       <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "700", color: "var(--text)", marginBottom: "8px" }}>
                         WhatsApp Phone Number *
                       </label>
-                      <input 
-                        type="tel" 
+                      <input
+                        type="tel"
                         required
                         placeholder="e.g. +91 90960 90701"
                         value={customerPhone}
@@ -408,8 +408,8 @@ export default function CheckoutPage() {
                     <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "700", color: "var(--text)", marginBottom: "8px" }}>
                       Company / Organization Name
                     </label>
-                    <input 
-                      type="text" 
+                    <input
+                      type="text"
                       placeholder="e.g. Acme Corporation"
                       value={companyName}
                       onChange={(e) => setCompanyName(e.target.value)}
@@ -429,7 +429,7 @@ export default function CheckoutPage() {
                     <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "700", color: "var(--text)", marginBottom: "8px" }}>
                       Business Category / Brief Description
                     </label>
-                    <textarea 
+                    <textarea
                       rows={3}
                       placeholder="Describe what your business does and target audience..."
                       value={businessCategory}
@@ -501,10 +501,10 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Promo Code Box */}
-                <div style={{ 
-                  border: "1px solid var(--line-soft)", 
-                  borderRadius: "14px", 
-                  padding: "16px", 
+                <div style={{
+                  border: "1px solid var(--line-soft)",
+                  borderRadius: "14px",
+                  padding: "16px",
                   background: "rgba(248, 250, 252, 0.6)",
                   marginBottom: "20px"
                 }}>
@@ -514,8 +514,8 @@ export default function CheckoutPage() {
 
                   {!appliedCode ? (
                     <div style={{ display: "flex", gap: "10px" }}>
-                      <input 
-                        type="text" 
+                      <input
+                        type="text"
                         placeholder="e.g. WELCOME10"
                         value={referralInput}
                         onChange={(e) => setReferralInput(e.target.value)}
@@ -529,7 +529,7 @@ export default function CheckoutPage() {
                           textTransform: "uppercase"
                         }}
                       />
-                      <button 
+                      <button
                         type="button"
                         onClick={handleApplyReferral}
                         style={{
@@ -551,8 +551,8 @@ export default function CheckoutPage() {
                       <span style={{ fontSize: "0.88rem", fontWeight: "700", color: "#166534" }}>
                         ✓ {appliedCode} (-{discountPercent}%)
                       </span>
-                      <button 
-                        type="button" 
+                      <button
+                        type="button"
                         onClick={handleRemoveReferral}
                         style={{
                           background: "transparent",
@@ -611,7 +611,7 @@ export default function CheckoutPage() {
                 </div>
 
                 {/* Submit Checkout Button */}
-                <button 
+                <button
                   onClick={handleCheckout}
                   disabled={loading}
                   className="nav-button"
@@ -686,7 +686,7 @@ export default function CheckoutPage() {
             animation: "slideUp 0.3s ease-out"
           }}>
             {/* Close Button */}
-            <button 
+            <button
               onClick={() => setShowExitSurvey(false)}
               style={{
                 position: "absolute",
@@ -723,7 +723,7 @@ export default function CheckoutPage() {
                 </div>
 
                 <div className="recovery-options-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr 1fr", gap: "24px" }}>
-                  
+
                   {/* Option 1: Reschedule / Remind */}
                   <div className="recovery-card" style={{
                     background: "#f8fafc",
@@ -756,7 +756,7 @@ export default function CheckoutPage() {
                     </div>
 
                     <form onSubmit={handleScheduleReminder} style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-                      <input 
+                      <input
                         type="date"
                         required
                         value={reminderDate}
@@ -772,7 +772,7 @@ export default function CheckoutPage() {
                           outline: "none"
                         }}
                       />
-                      <button 
+                      <button
                         type="submit"
                         disabled={submittingReminder}
                         style={{
@@ -824,7 +824,7 @@ export default function CheckoutPage() {
                       </p>
                     </div>
 
-                    <a 
+                    <a
                       href={`https://api.whatsapp.com/send?phone=919096090701&text=${encodeURIComponent(
                         `Hi, I was checking out the ${selectedItem?.name || "Premium Plan"} on AI Digital (₹${finalTotal || "0"}) and wanted to discuss custom options or ask a few questions. My details: Name: ${customerName || "N/A"}, Phone: ${customerPhone || "N/A"}.`
                       )}`}
@@ -879,7 +879,7 @@ export default function CheckoutPage() {
                       </p>
                     </div>
 
-                    <button 
+                    <button
                       onClick={() => {
                         setShowExitSurvey(false);
                         window.location.href = "/portfolio";
@@ -907,7 +907,7 @@ export default function CheckoutPage() {
           </div>
         </div>
       )}
-      
+
       {/* Responsive layout styles specifically for Checkout page */}
       <style jsx global>{`
         @keyframes fadeIn {
