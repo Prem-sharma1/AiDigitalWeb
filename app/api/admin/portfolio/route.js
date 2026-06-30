@@ -4,6 +4,7 @@ import { NextResponse } from "next/server";
 import pool from "../../../../lib/db";
 import fs from "fs";
 import path from "path";
+import crypto from "crypto";
 
 function checkAuth(req) {
   const session = req.cookies.get("admin_session");
@@ -55,7 +56,7 @@ async function syncPortfolioToDb(connection, portfolioData) {
   // 1. Showcase Projects
   if (portfolioData.showcaseProjects) {
     for (const item of portfolioData.showcaseProjects) {
-      const id = item.id || Math.random().toString(36).substring(2, 15);
+      const id = item.id || crypto.randomUUID();
       await connection.query(`
         INSERT INTO portfolio_items 
         (id, section, title, category, industry, metric, metric_label, description, tags, accent, icon)
@@ -79,7 +80,7 @@ async function syncPortfolioToDb(connection, portfolioData) {
   if (portfolioData.industries) {
     for (const ind of portfolioData.industries) {
       for (const proj of ind.projects) {
-        const id = Math.random().toString(36).substring(2, 15);
+        const id = crypto.randomUUID();
         await connection.query(`
           INSERT INTO portfolio_items 
           (id, section, title, category, industry, description)
@@ -98,7 +99,7 @@ async function syncPortfolioToDb(connection, portfolioData) {
   // 3. Other Projects
   if (portfolioData.otherProjects) {
     for (const proj of portfolioData.otherProjects) {
-      const id = Math.random().toString(36).substring(2, 15);
+      const id = crypto.randomUUID();
       await connection.query(`
         INSERT INTO portfolio_items 
         (id, section, title, category)
@@ -115,7 +116,7 @@ async function syncPortfolioToDb(connection, portfolioData) {
   if (portfolioData.creativeGroups) {
     for (const grp of portfolioData.creativeGroups) {
       for (const img of grp.images) {
-        const id = Math.random().toString(36).substring(2, 15);
+        const id = crypto.randomUUID();
         await connection.query(`
           INSERT INTO portfolio_items 
           (id, section, title, description, src, type, global_index, industry, category)
