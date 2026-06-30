@@ -3,8 +3,16 @@ import { NextResponse } from "next/server";
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
-    const expectedEmail = process.env.ADMIN_EMAIL || "admin@aidigital.com";
-    const expectedPassword = process.env.ADMIN_PASSWORD || "AdminPassword123";
+    const expectedEmail = process.env.ADMIN_EMAIL;
+    const expectedPassword = process.env.ADMIN_PASSWORD;
+
+    if (!expectedEmail || !expectedPassword) {
+      console.error("ADMIN_EMAIL or ADMIN_PASSWORD environment variables are not set.");
+      return NextResponse.json(
+        { success: false, error: "Server authentication is not configured" },
+        { status: 500 }
+      );
+    }
 
     if (email === expectedEmail && password === expectedPassword) {
       const isHttps = req.nextUrl.protocol === "https:" || req.headers.get("x-forwarded-proto") === "https";
