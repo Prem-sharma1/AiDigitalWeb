@@ -7,13 +7,14 @@ export async function POST(req) {
     const expectedPassword = process.env.ADMIN_PASSWORD || "AdminPassword123";
 
     if (email === expectedEmail && password === expectedPassword) {
+      const isHttps = req.nextUrl.protocol === "https:" || req.headers.get("x-forwarded-proto") === "https";
       const response = NextResponse.json({ success: true });
       // Set a session cookie (admin_session)
       response.cookies.set("admin_session", "authenticated", {
         path: "/",
         httpOnly: true,
-        sameSite: "strict",
-        secure: process.env.NODE_ENV === "production",
+        sameSite: "lax",
+        secure: isHttps,
       });
       return response;
     }

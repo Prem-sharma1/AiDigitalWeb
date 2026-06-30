@@ -27,17 +27,34 @@ Action Directives:
 - Keep answers accurate to this pricing context. Do not invent plans or prices outside of these.
 `;
 
+import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans } from "../../pricing/pricingData";
+
 function getJsonFallback() {
   try {
     const filePath = path.join(process.cwd(), "data", "pricingData.json");
     if (fs.existsSync(filePath)) {
       const raw = fs.readFileSync(filePath, "utf-8");
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      return {
+        adsPlans: [
+          ...(parsed.googlePlans || []),
+          ...(parsed.facebookPlans || []),
+          ...(parsed.combinePlans || [])
+        ],
+        websitePlans: parsed.websitePlans || [],
+        creativePacks: parsed.creativePacks || [],
+        aiVideoPlans: parsed.aiVideoPlans || []
+      };
     }
   } catch (err) {
-    console.error("Failed to read fallback pricing JSON:", err);
+    console.warn("Could not read backup pricing JSON file, using static code import. Error:", err.message);
   }
-  return { adsPlans: [], websitePlans: [], creativePacks: [], aiVideoPlans: [] };
+  return {
+    adsPlans: [...googlePlans, ...facebookPlans, ...combinePlans],
+    websitePlans,
+    creativePacks,
+    aiVideoPlans
+  };
 }
 
 async function getActivePricingContext() {
@@ -54,7 +71,10 @@ async function getActivePricingContext() {
           period: plan.period,
           features: JSON.parse(plan.features),
         };
-        if (plansData[plan.category]) {
+        
+        if (plan.category === "googlePlans" || plan.category === "facebookPlans" || plan.category === "combinePlans") {
+          plansData.adsPlans.push(parsedPlan);
+        } else if (plansData[plan.category]) {
           plansData[plan.category].push(parsedPlan);
         }
       });

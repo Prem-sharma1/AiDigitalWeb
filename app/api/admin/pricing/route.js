@@ -10,6 +10,8 @@ function checkAuth(req) {
   return session && session.value === "authenticated";
 }
 
+import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans } from "../../../pricing/pricingData";
+
 // Fallback pricing retrieval from backup JSON file
 function getJsonFallback() {
   try {
@@ -19,9 +21,9 @@ function getJsonFallback() {
       return JSON.parse(raw);
     }
   } catch (err) {
-    console.error("Critical: Failed to read backup pricing JSON file:", err);
+    console.warn("Could not read backup pricing JSON file, using static code import. Error:", err.message);
   }
-  return { googlePlans: [], facebookPlans: [], combinePlans: [], websitePlans: [], creativePacks: [], aiVideoPlans: [] };
+  return { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans };
 }
 
 // Helper to auto-create pricing_plans table
