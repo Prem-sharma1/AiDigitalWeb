@@ -3,3 +3,13 @@ node_modules
 out
 *.log
 .env*
+
+# Ignore video assets
+*.mp4
+*.webm
+*.mov
+*.ogg
+*.avi
+public/ai_videos/
+public/reels/
+
