@@ -5,13 +5,13 @@ export const googlePlans = [
     badgeClass: "gg-badge",
     level: "Basic Plan",
     pillClass: "basic-pill",
-    price: 4999,
+    price: 4995,
     period: "/month",
     features: ["Google Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"],
     buttonText: "Select Plan",
     isPopular: false,
     serviceName: "Performance Marketing",
-    planParameter: "Google Ads - Basic (₹4999/mo)"
+    planParameter: "Google Ads - Basic (₹4995/mo)"
   },
   {
     id: "g_standard",
