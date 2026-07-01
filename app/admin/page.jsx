@@ -894,12 +894,7 @@ export default function AdminPage() {
           >
             <Icon name="analytics" /> Overview Dashboard
           </button>
-          <button
-            onClick={() => { setActiveTab("pricing"); setEditingBlog(null); }}
-            style={{ ...styles.sidebarBtn, ...(activeTab === "pricing" ? styles.sidebarBtnActive : {}) }}
-          >
-            <Icon name="payments" /> Pricing Packages
-          </button>
+
           <button
             onClick={() => { setActiveTab("portfolio"); setEditingBlog(null); }}
             style={{ ...styles.sidebarBtn, ...(activeTab === "portfolio" ? styles.sidebarBtnActive : {}) }}
