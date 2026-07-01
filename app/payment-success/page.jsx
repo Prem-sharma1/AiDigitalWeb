@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
+import { isValidMobileNumber, isValidName, isValidPinCode, isValidGstin } from "../../lib/validation";
 
 export default function PaymentSuccessPage() {
   const [mounted, setMounted] = useState(false);
@@ -64,6 +65,25 @@ export default function PaymentSuccessPage() {
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
+    
+    // Client-side validations
+    if (contactName && !isValidName(contactName)) {
+      alert("Please enter a valid contact name (at least 2 letters).");
+      return;
+    }
+    if (altPhone && !isValidMobileNumber(altPhone)) {
+      alert("Please enter a valid 10-digit alternative phone number.");
+      return;
+    }
+    if (pinCode && !isValidPinCode(pinCode)) {
+      alert("Please enter a valid 6-digit pin code.");
+      return;
+    }
+    if (gstin && !isValidGstin(gstin)) {
+      alert("Please enter a valid 15-character GSTIN format.");
+      return;
+    }
+
     setFormLoading(true);
     
     try {

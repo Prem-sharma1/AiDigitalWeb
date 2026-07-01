@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { pool } from "../../../lib/db";
+import { isValidMobileNumber, isValidName, isValidPinCode, isValidGstin } from "../../../lib/validation";
 
 // Auto-initialize the onboarding_details table if not exists
 async function ensureOnboardingTable() {
@@ -56,6 +57,20 @@ export async function POST(req) {
       scheduled_time,
       status
     } = body;
+
+    // Server-side input validations
+    if (contact_name && !isValidName(contact_name)) {
+      return NextResponse.json({ success: false, error: "Please enter a valid contact name (at least 2 letters)." }, { status: 400 });
+    }
+    if (alt_phone && !isValidMobileNumber(alt_phone)) {
+      return NextResponse.json({ success: false, error: "Please enter a valid 10-digit alternative phone number." }, { status: 400 });
+    }
+    if (pin_code && !isValidPinCode(pin_code)) {
+      return NextResponse.json({ success: false, error: "Please enter a valid 6-digit pin code." }, { status: 400 });
+    }
+    if (gstin && !isValidGstin(gstin)) {
+      return NextResponse.json({ success: false, error: "Please enter a valid 15-character GSTIN format." }, { status: 400 });
+    }
 
     if (!payment_id) {
       return NextResponse.json({ success: false, error: "Payment ID is required" }, { status: 400 });

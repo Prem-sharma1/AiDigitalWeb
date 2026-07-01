@@ -1,8 +1,15 @@
 import { NextResponse } from "next/server";
+import { isValidEmail } from "../../../../lib/validation";
 
 export async function POST(req) {
   try {
     const { email, password } = await req.json();
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { success: false, error: "Please enter a valid email address with a domain (e.g. admin@aidigital.com)." },
+        { status: 400 }
+      );
+    }
     const expectedEmail = process.env.ADMIN_EMAIL;
     const expectedPassword = process.env.ADMIN_PASSWORD;
 

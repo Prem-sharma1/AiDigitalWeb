@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useCart } from "../hooks/useCart";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
+import { isValidEmail, isValidMobileNumber, isValidName } from "../../lib/validation";
 
 // Define valid referral codes and their discount percentages
 const REFERRAL_CODES = {
@@ -109,6 +110,19 @@ export default function CheckoutPage() {
       return;
     }
 
+    if (!isValidName(customerName)) {
+      alert("Please enter a valid name (at least 2 letters).");
+      return;
+    }
+    if (!isValidEmail(customerEmail)) {
+      alert("Please enter a valid email address (e.g. name@domain.com).");
+      return;
+    }
+    if (!isValidMobileNumber(customerPhone)) {
+      alert("Please enter a valid 10-digit WhatsApp/mobile number.");
+      return;
+    }
+
     setLoading(true);
 
     const loaded = await loadRazorpayScript();
@@ -210,6 +224,25 @@ export default function CheckoutPage() {
       alert("Please select a date for the reminder.");
       return;
     }
+
+    if (!customerName || !customerEmail || !customerPhone) {
+      alert("Please fill in your name, email, and phone number to schedule a reminder.");
+      return;
+    }
+
+    if (!isValidName(customerName)) {
+      alert("Please enter a valid name (at least 2 letters).");
+      return;
+    }
+    if (!isValidEmail(customerEmail)) {
+      alert("Please enter a valid email address (e.g. name@domain.com).");
+      return;
+    }
+    if (!isValidMobileNumber(customerPhone)) {
+      alert("Please enter a valid 10-digit WhatsApp/mobile number.");
+      return;
+    }
+
     setSubmittingReminder(true);
     try {
       const response = await fetch("/api/checkout/reminder", {
@@ -579,10 +612,6 @@ export default function CheckoutPage() {
                       {referralSuccessMsg}
                     </div>
                   )}
-
-                  <div style={{ fontSize: "0.72rem", color: "var(--muted)", marginTop: "8px" }}>
-                    Use <strong>WELCOME10</strong> or <strong>PREM15</strong> to apply standard discount rates.
-                  </div>
                 </div>
 
                 {/* Price Breakdown */}

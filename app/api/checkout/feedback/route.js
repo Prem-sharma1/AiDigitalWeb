@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { pool } from "../../../../lib/db";
 import { sendWhatsAppMessage } from "../../../../lib/whatsapp";
 import { sendEmail } from "../../../../lib/email";
+import { isValidEmail, isValidMobileNumber, isValidName } from "../../../../lib/validation";
 
 // Auto-initialize the checkout_exit_feedback table if it does not exist
 async function ensureFeedbackTable() {
@@ -44,6 +45,22 @@ export async function POST(req) {
       wantsContact,
       additionalNotes
     } = body;
+
+    if (!name || !email || !phone) {
+      return NextResponse.json({ error: "Missing required contact fields." }, { status: 400 });
+    }
+
+    if (!isValidName(name)) {
+      return NextResponse.json({ error: "Please enter a valid name (at least 2 letters)." }, { status: 400 });
+    }
+
+    if (!isValidEmail(email)) {
+      return NextResponse.json({ error: "Please enter a valid email address with a domain suffix (e.g. name@domain.com)." }, { status: 400 });
+    }
+
+    if (!isValidMobileNumber(phone)) {
+      return NextResponse.json({ error: "Please enter a valid 10-digit WhatsApp/mobile number." }, { status: 400 });
+    }
 
     const feedbackId = Math.random().toString(36).substring(2, 15);
 

@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { isValidEmail, isValidMobileNumber, isValidName } from "../../lib/validation";
 
 export default function ContactForm() {
   const [formData, setFormData] = useState({
@@ -20,6 +21,24 @@ export default function ContactForm() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Client-side validations
+    if (!isValidName(formData.name)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid name (at least 2 letters).");
+      return;
+    }
+    if (!isValidEmail(formData.email)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid email address with a domain (e.g. user@domain.com).");
+      return;
+    }
+    if (!isValidMobileNumber(formData.phone)) {
+      setStatus("error");
+      setErrorMessage("Please enter a valid 10-digit WhatsApp mobile number.");
+      return;
+    }
+
     setStatus("submitting");
     setErrorMessage("");
 

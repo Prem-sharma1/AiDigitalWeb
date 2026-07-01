@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
+import { isValidEmail, isValidMobileNumber } from "../../lib/validation";
 
 function Icon({ name, className = "" }) {
   return (
@@ -236,6 +237,10 @@ export default function AdminPage() {
   const handleLogin = async (e) => {
     e.preventDefault();
     setAuthError("");
+    if (!isValidEmail(email)) {
+      setAuthError("Please enter a valid email address with a domain (e.g. admin@aidigital.com).");
+      return;
+    }
     try {
       const res = await fetch("/api/admin/auth", {
         method: "POST",
@@ -2105,6 +2110,10 @@ export default function AdminPage() {
                       onClick={async () => {
                         if (!testRecipient || !testMessage) {
                           showToast("Please fill in all manual test fields.", "error");
+                          return;
+                        }
+                        if (!isValidMobileNumber(testRecipient)) {
+                          showToast("Please enter a valid 10-digit recipient phone number.", "error");
                           return;
                         }
                         setIsTestSending(true);

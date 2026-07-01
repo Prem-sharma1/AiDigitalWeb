@@ -3,6 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import pool from "../../../../lib/db";
 import { sendWhatsAppMessage } from "../../../../lib/whatsapp";
+import { isValidMobileNumber } from "../../../../lib/validation";
 
 function checkAuth(req) {
   const session = req.cookies.get("admin_session");
@@ -72,9 +73,13 @@ export async function POST(req) {
     }
 
     const { recipient, message } = await req.json();
-
+    
     if (!recipient || !message) {
       return NextResponse.json({ error: "Recipient and message fields are required." }, { status: 400 });
+    }
+
+    if (!isValidMobileNumber(recipient)) {
+      return NextResponse.json({ error: "Please enter a valid 10-digit recipient phone number." }, { status: 400 });
     }
 
     const result = await sendWhatsAppMessage({ to: recipient, message });

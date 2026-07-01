@@ -1,6 +1,7 @@
 import { NextResponse } from "next/server";
 import { google } from "googleapis";
 import { sendWhatsAppMessage } from "../../../lib/whatsapp";
+import { isValidEmail, isValidMobileNumber, isValidName } from "../../../lib/validation";
 
 export async function POST(req) {
   try {
@@ -10,6 +11,27 @@ export async function POST(req) {
     if (!name || !email || !phone || !service || !message) {
       return NextResponse.json(
         { error: "All form fields are required." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidName(name)) {
+      return NextResponse.json(
+        { error: "Please enter a valid name (at least 2 letters)." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidEmail(email)) {
+      return NextResponse.json(
+        { error: "Please enter a valid email address with a domain (e.g. user@domain.com)." },
+        { status: 400 }
+      );
+    }
+
+    if (!isValidMobileNumber(phone)) {
+      return NextResponse.json(
+        { error: "Please enter a valid 10-digit mobile phone number." },
         { status: 400 }
       );
     }
