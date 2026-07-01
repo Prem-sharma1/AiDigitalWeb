@@ -149,32 +149,17 @@ export async function GET() {
       await ensurePricingTable(connection);
 
       const [rows] = await connection.query("SELECT * FROM pricing_plans");
-      const jsonPricing = getJsonFallback();
+      const formatted = formatAndSortPricing(rows);
+      const fallback = getJsonFallback();
 
-      // Check count to see if database needs sync
-      let dbCount = rows.length;
-      let jsonCount = 0;
+      // Merge fallback data for any category that is empty in the database
       const planCategories = ["googlePlans", "facebookPlans", "combinePlans", "websitePlans", "creativePacks", "aiVideoPlans"];
       planCategories.forEach(cat => {
-        if (jsonPricing[cat]) jsonCount += jsonPricing[cat].length;
+        if (!formatted[cat] || formatted[cat].length === 0) {
+          formatted[cat] = fallback[cat] || [];
+        }
       });
 
-      // Synchronize database if empty or out of sync with JSON config
-      if ((dbCount === 0 && jsonCount > 0) || dbCount !== jsonCount) {
-        console.log(`Pricing out of sync. Syncing JSON data to database (DB count: ${dbCount}, JSON count: ${jsonCount})...`);
-        await syncPricingToDb(connection, jsonPricing);
-        const [refetchedRows] = await connection.query("SELECT * FROM pricing_plans");
-        const formatted = formatAndSortPricing(refetchedRows);
-        return NextResponse.json(formatted, {
-          headers: {
-            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0"
-          }
-        });
-      }
-
-      const formatted = formatAndSortPricing(rows);
       return NextResponse.json(formatted, {
         headers: {
           "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
@@ -186,12 +171,14 @@ export async function GET() {
       connection.release();
     }
   } catch (error) {
-    console.warn("MySQL database pricing fetch or sync failed. Using local JSON fallback. Error:", error.message);
+    console.warn("MySQL database pricing fetch failed. Using local JSON fallback. Error:", error.message);
     const fallback = getJsonFallback();
     
     const getPriceVal = (price) => Number(String(price).replace(/,/g, "")) || 0;
     Object.keys(fallback).forEach((cat) => {
-      fallback[cat].sort((a, b) => getPriceVal(a.price) - getPriceVal(b.price));
+      if (fallback[cat] && Array.isArray(fallback[cat])) {
+        fallback[cat].sort((a, b) => getPriceVal(a.price) - getPriceVal(b.price));
+      }
     });
 
     return NextResponse.json(fallback, {

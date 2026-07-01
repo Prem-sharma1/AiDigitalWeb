@@ -213,41 +213,17 @@ export async function GET() {
       await ensurePortfolioTable(connection);
 
       const [rows] = await connection.query("SELECT * FROM portfolio_items");
-      const jsonPortfolio = getJsonFallback();
-
-      // Check counts to see if database needs sync
-      let dbCount = rows.length;
-      let jsonCount = 0;
-
-      if (jsonPortfolio.showcaseProjects) jsonCount += jsonPortfolio.showcaseProjects.length;
-      if (jsonPortfolio.industries) {
-        jsonPortfolio.industries.forEach(ind => {
-          if (ind.projects) jsonCount += ind.projects.length;
-        });
-      }
-      if (jsonPortfolio.otherProjects) jsonCount += jsonPortfolio.otherProjects.length;
-      if (jsonPortfolio.creativeGroups) {
-        jsonPortfolio.creativeGroups.forEach(grp => {
-          if (grp.images) jsonCount += grp.images.length;
-        });
-      }
-
-      // Synchronize database if empty or out of sync with JSON config
-      if ((dbCount === 0 && jsonCount > 0) || dbCount !== jsonCount) {
-        console.log(`Portfolio out of sync. Syncing JSON data to database (DB count: ${dbCount}, JSON count: ${jsonCount})...`);
-        await syncPortfolioToDb(connection, jsonPortfolio);
-        const [refetchedRows] = await connection.query("SELECT * FROM portfolio_items");
-        const formatted = formatAndSortPortfolio(refetchedRows);
-        return NextResponse.json(formatted, {
-          headers: {
-            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-            "Pragma": "no-cache",
-            "Expires": "0"
-          }
-        });
-      }
-
       const formatted = formatAndSortPortfolio(rows);
+      const fallback = getJsonFallback();
+
+      // Merge fallback data for any category that is empty in the database
+      const portfolioCategories = ["showcaseProjects", "industries", "otherProjects", "creativeGroups"];
+      portfolioCategories.forEach(cat => {
+        if (!formatted[cat] || formatted[cat].length === 0) {
+          formatted[cat] = fallback[cat] || [];
+        }
+      });
+
       return NextResponse.json(formatted, {
         headers: {
           "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
@@ -259,7 +235,7 @@ export async function GET() {
       connection.release();
     }
   } catch (error) {
-    console.warn("MySQL database portfolio fetch or sync failed. Using local JSON fallback. Error:", error.message);
+    console.warn("MySQL database portfolio fetch failed. Using local JSON fallback. Error:", error.message);
     const fallback = getJsonFallback();
     return NextResponse.json(fallback, {
       headers: {
