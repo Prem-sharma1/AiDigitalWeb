@@ -95,7 +95,7 @@ export default function PricingClientPage() {
           <div className="section-title-underline" />
         </div>
 
-        <div className="ads-pricing-grid" style={{ gridTemplateColumns: facebookPlansState.length < 4 ? `repeat(${facebookPlansState.length}, 1fr)` : undefined, maxWidth: facebookPlansState.length < 4 ? `${facebookPlansState.length * 300 + 30}px` : undefined }}>
+        <div className="ads-pricing-grid" style={{ "--grid-cols": facebookPlansState.length }}>
           {facebookPlansState.map((plan, index) => (
             <div
               key={index}
@@ -142,7 +142,7 @@ export default function PricingClientPage() {
           <div className="section-title-underline" />
         </div>
 
-        <div className="ads-pricing-grid" style={{ gridTemplateColumns: googlePlansState.length < 4 ? `repeat(${googlePlansState.length}, 1fr)` : undefined, maxWidth: googlePlansState.length < 4 ? `${googlePlansState.length * 300 + 30}px` : undefined }}>
+        <div className="ads-pricing-grid" style={{ "--grid-cols": googlePlansState.length }}>
           {googlePlansState.map((plan, index) => (
             <div
               key={index}
@@ -189,7 +189,7 @@ export default function PricingClientPage() {
           <div className="section-title-underline" />
         </div>
 
-        <div className="ads-pricing-grid" style={{ gridTemplateColumns: combinePlansState.length < 4 ? `repeat(${combinePlansState.length}, 1fr)` : undefined, maxWidth: combinePlansState.length < 4 ? `${combinePlansState.length * 300 + 30}px` : undefined }}>
+        <div className="ads-pricing-grid" style={{ "--grid-cols": combinePlansState.length }}>
           {combinePlansState.map((plan, index) => (
             <div
               key={index}
@@ -370,8 +370,8 @@ export default function PricingClientPage() {
         {/* Mobile Slider (Visible only on mobile) */}
         <div className="mobile-creative-packs-slider">
           <div className="mobile-slider-wrapper">
-            <button 
-              className="mobile-slider-arrow-btn left" 
+            <button
+              className="mobile-slider-arrow-btn left"
               onClick={prevCreative}
               aria-label="Previous pack"
             >
@@ -437,8 +437,8 @@ export default function PricingClientPage() {
               })}
             </div>
 
-            <button 
-              className="mobile-slider-arrow-btn right" 
+            <button
+              className="mobile-slider-arrow-btn right"
               onClick={nextCreative}
               aria-label="Next pack"
             >

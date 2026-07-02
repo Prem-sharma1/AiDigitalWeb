@@ -180,7 +180,7 @@ export default function PricingPopup({ dialogRef }) {
                     {/* Combine Plan */}
                     <div className="plan-card">
                             <div className="plan-header-row">
-                                <span className="plan-name">Combine Plan</span>
+                                <span className="plan-name">Combine(meta+google) Plan</span>
                             </div>
                             <div className="plan-price-area">
                                 <span className="price-amount">₹{popupPlans.combine.price}</span>

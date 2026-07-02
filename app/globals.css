@@ -3337,9 +3337,9 @@ p {
 /* Ads Pricing Cards */
 .ads-pricing-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(var(--grid-cols, 4), 1fr);
   gap: 14px;
-  max-width: 1240px;
+  max-width: calc(var(--grid-cols, 4) * 300px + 30px);
   margin: 0 auto;
 }
 
@@ -4024,6 +4024,7 @@ p {
   .ads-pricing-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 16px;
+    max-width: 630px;
   }
 
   .websites-layout-grid {

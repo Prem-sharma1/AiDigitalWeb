@@ -36,8 +36,8 @@ INSERT INTO `pricing_plans` VALUES
 ('g_premium', 'googlePlans', 'Google Ads', 'gg-badge', 'Premium Plan', 'premium-pill', '23999', '/6 months', '["Google Ads","Creative - 18","AI Video - 6","Reels/Shorts - 6","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Google Ads - Premium (₹23999/6mo)', NULL, 0, NULL),
 ('fb_basic', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Basic', 'basic-pill', '2499', '/month', '["Meta Ads","Creative - 3","AI Video - 1","Reels/Shorts - 1","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Basic (₹2499/mo)', NULL, 0, NULL),
 ('fb_standard_monthly', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Standard (Monthly)', 'standard-pill', '3999', '/month', '["Meta Ads","Creative - 5","AI Video - 2","Reels/Shorts - 3","Weekly Report"]', 'Select Plan', 1, 'Performance Marketing', 'Meta Ads - Standard Monthly (₹3999/mo)', NULL, 0, NULL),
-('fb_standard', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Standard (3-Month)', 'standard-pill', '6899', '/3 months', '["Meta Ads","Creative - 9","AI Video - 3","Reels/Shorts - 3","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Standard (₹6899/3mo)', NULL, 0, NULL),
-('fb_premium', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Premium', 'premium-pill', '12599', '/6 months', '["Meta Ads","Creative - 18","AI Video - 6","Reels/Shorts - 6","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Premium (₹12599/6mo)', NULL, 0, NULL),
+('fb_standard', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Premium (3-Month)', 'standard-pill', '6899', '/3 months', '["Meta Ads","Creative - 9","AI Video - 3","Reels/Shorts - 3","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Premium (₹6899/3mo)', NULL, 0, NULL),
+('fb_premium', 'facebookPlans', 'Meta Ads', 'fb-badge', 'Platinum', 'premium-pill', '12599', '/6 months', '["Meta Ads","Creative - 18","AI Video - 6","Reels/Shorts - 6","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Meta Ads - Platinum (₹12599/6mo)', NULL, 0, NULL),
 ('comb_basic', 'combinePlans', 'Meta + Google Ads', 'multi-badge', 'Basic', 'basic-pill', '6999', '/month', '["Meta Ads + Google Ads","Creative - 7","AI Video - 2","Reels/Shorts - 5","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Combine - Basic (₹6999/mo)', NULL, 0, NULL),
 ('comb_standard', 'combinePlans', 'Meta + Google Ads', 'multi-badge', 'Standard', 'standard-pill', '19499', '/3 months', '["Meta Ads + Google Ads","Creative - 21","AI Video - 6","Reels/Shorts - 15","Weekly Report"]', 'Select Plan', 1, 'Performance Marketing', 'Combine - Standard (₹19499/3mo)', NULL, 0, NULL),
 ('comb_premium', 'combinePlans', 'Meta + Google Ads', 'multi-badge', 'Premium', 'premium-pill', '35999', '/6 months', '["Meta Ads + Google Ads","Creative - 42","AI Video - 6","Reels/Shorts - 30","Weekly Report"]', 'Select Plan', 0, 'Performance Marketing', 'Combine - Premium (₹35999/6mo)', NULL, 0, NULL),
@@ -184,6 +184,22 @@ CREATE TABLE `whatsapp_logs` (
   `provider` VARCHAR(50) NOT NULL,
   `status` VARCHAR(20) NOT NULL,
   `error` TEXT DEFAULT NULL,
+  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+-- --------------------------------------------------------
+-- Table structure for table `users`
+-- --------------------------------------------------------
+
+DROP TABLE IF EXISTS `users`;
+CREATE TABLE `users` (
+  `id` INT AUTO_INCREMENT,
+  `name` VARCHAR(100) DEFAULT NULL,
+  `email` VARCHAR(150) UNIQUE NOT NULL,
+  `google_id` VARCHAR(100) DEFAULT NULL,
+  `phone` VARCHAR(20) UNIQUE DEFAULT NULL,
+  `phone_verified` BOOLEAN DEFAULT FALSE,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

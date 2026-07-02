@@ -76,7 +76,7 @@ export const facebookPlans = [
     id: "fb_standard",
     platform: "Meta Ads",
     badgeClass: "fb-badge",
-    level: "Standard (3-Month)",
+    level: "Premium (3-Month)",
     pillClass: "standard-pill",
     price: 6899,
     period: "/3 months",
@@ -84,13 +84,13 @@ export const facebookPlans = [
     buttonText: "Select Plan",
     isPopular: true,
     serviceName: "Performance Marketing",
-    planParameter: "Meta Ads - Standard (₹6899/3mo)"
+    planParameter: "Meta Ads - Premium (₹6899/3mo)"
   },
   {
     id: "fb_premium",
     platform: "Meta Ads",
     badgeClass: "fb-badge",
-    level: "Premium",
+    level: "Platinum",
     pillClass: "premium-pill",
     price: 12599,
     period: "/6 months",
@@ -98,7 +98,7 @@ export const facebookPlans = [
     buttonText: "Select Plan",
     isPopular: false,
     serviceName: "Performance Marketing",
-    planParameter: "Meta Ads - Premium (₹12599/6mo)"
+    planParameter: "Meta Ads - Platinum (₹12599/6mo)"
   }
 ];
 

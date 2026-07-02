@@ -38,6 +38,32 @@ export default function CheckoutPage() {
   const [submittingReminder, setSubmittingReminder] = useState(false);
   const [reminderSuccess, setReminderSuccess] = useState(false);
 
+  // GST States
+  const [hasGst, setHasGst] = useState(false);
+  const [gstNumber, setGstNumber] = useState("");
+
+  // ─── OTP VERIFICATION (DISABLED FOR NOW — RE-ENABLE IN FUTURE) ──────────────
+  // To re-enable: uncomment all lines below and restore OTP UI in the form.
+  // const [isPhoneVerified, setIsPhoneVerified] = useState(false);
+  // const [phoneOtpSent, setPhoneOtpSent] = useState(false);
+  // const [phoneOtpInput, setPhoneOtpInput] = useState("");
+  // const [phoneOtpError, setPhoneOtpError] = useState("");
+  // const [isEmailVerified, setIsEmailVerified] = useState(false);
+  // const [emailOtpSent, setEmailOtpSent] = useState(false);
+  // const [emailOtpInput, setEmailOtpInput] = useState("");
+  // const [emailOtpError, setEmailOtpError] = useState("");
+  // const [isRegisteredInDb, setIsRegisteredInDb] = useState(false);
+  // ─────────────────────────────────────────────────────────────────────────────
+
+  // Bypass flags — set to true while OTP is disabled
+  const isEmailVerified = true;
+  const isPhoneVerified = true;
+  const isRegisteredInDb = true;
+
+
+  // ─── OTP HANDLERS (DISABLED — PRESERVED FOR FUTURE USE) ─────────────────────
+  // To re-activate: restore Twilio/SMTP credentials in .env and uncomment below.
+  // ─────────────────────────────────────────────────────────────────────────────
 
   useEffect(() => {
     setMounted(true);
@@ -99,11 +125,22 @@ export default function CheckoutPage() {
 
   // Calculated Rates
   const discountAmount = Math.round((itemPrice * discountPercent) / 100);
-  const finalTotal = Math.max(0, itemPrice - discountAmount);
+  const netAmount = Math.max(0, itemPrice - discountAmount);
+  const gstAmount = hasGst ? Math.round(netAmount * 0.18) : 0;
+  const finalTotal = netAmount + gstAmount;
 
   const handleCheckout = async (e) => {
     e.preventDefault();
     if (!selectedItem) return;
+
+    // OTP verification gates disabled — re-enable when Twilio/SMTP is configured
+    // if (!isEmailVerified) { alert("Please verify your Email Address via OTP..."); return; }
+    // if (!isPhoneVerified || !isRegisteredInDb) { alert("Please verify WhatsApp OTP..."); return; }
+
+    if (hasGst && (!gstNumber || gstNumber.trim().length !== 15)) {
+      alert("Please enter a valid 15-character GSTIN number.");
+      return;
+    }
 
     if (!customerName || !customerEmail || !customerPhone) {
       alert("Please fill in your name, email, and phone number to proceed.");
@@ -139,7 +176,8 @@ export default function CheckoutPage() {
         body: JSON.stringify({
           amount: finalTotal,
           planName: selectedItem.name,
-          referralCode: appliedCode || "None"
+          referralCode: appliedCode || "None",
+          gstNumber: hasGst ? gstNumber : "None"
         }),
       });
       const data = await response.json();
@@ -196,6 +234,7 @@ export default function CheckoutPage() {
           companyName: companyName || "N/A",
           businessCategory: businessCategory || "N/A",
           appliedReferralCode: appliedCode || "None",
+          gstNumber: hasGst ? gstNumber : "None",
           extraDetails: notesDescription
         },
         theme: {
@@ -391,7 +430,8 @@ export default function CheckoutPage() {
                           borderRadius: "10px",
                           border: "1px solid var(--line)",
                           fontSize: "0.95rem",
-                          outline: "none"
+                          outline: "none",
+                          transition: "border-color 0.2s ease"
                         }}
                       />
                     </div>
@@ -403,18 +443,34 @@ export default function CheckoutPage() {
                       <input
                         type="tel"
                         required
-                        placeholder="e.g. +91 90960 90701"
+                        placeholder="e.g. 9096090701 (10 digits)"
                         value={customerPhone}
+                        maxLength={15}
                         onChange={(e) => setCustomerPhone(e.target.value)}
                         style={{
                           width: "100%",
                           padding: "12px 16px",
                           borderRadius: "10px",
-                          border: "1px solid var(--line)",
+                          border: customerPhone
+                            ? isValidMobileNumber(customerPhone)
+                              ? "1.5px solid #2E7D32"
+                              : "1.5px solid #D32F2F"
+                            : "1px solid var(--line)",
                           fontSize: "0.95rem",
-                          outline: "none"
+                          outline: "none",
+                          transition: "border-color 0.2s ease"
                         }}
                       />
+                      {customerPhone && !isValidMobileNumber(customerPhone) && (
+                        <div style={{ color: "#D32F2F", fontSize: "0.78rem", marginTop: "5px", fontWeight: "600" }}>
+                          ⚠ Please enter a valid 10-digit WhatsApp number (e.g. 9096090701)
+                        </div>
+                      )}
+                      {customerPhone && isValidMobileNumber(customerPhone) && (
+                        <div style={{ color: "#2E7D32", fontSize: "0.78rem", marginTop: "5px", fontWeight: "600" }}>
+                          ✓ Valid phone number
+                        </div>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -549,7 +605,7 @@ export default function CheckoutPage() {
                     <div style={{ display: "flex", gap: "10px" }}>
                       <input
                         type="text"
-                        placeholder="e.g. WELCOME10"
+                        placeholder="Enter promo code"
                         value={referralInput}
                         onChange={(e) => setReferralInput(e.target.value)}
                         style={{
@@ -632,6 +688,51 @@ export default function CheckoutPage() {
                     <span style={{ color: "var(--muted)" }}>Setup Fees</span>
                     <span style={{ fontWeight: "600", color: "#10b981" }}>FREE</span>
                   </div>
+
+                  {/* GST Checkbox Toggle */}
+                  <div style={{ margin: "14px 0", padding: "10px 0", borderTop: "1px dashed var(--line-soft)", borderBottom: "1px dashed var(--line-soft)" }}>
+                    <label style={{ display: "flex", alignItems: "center", gap: "10px", fontSize: "0.9rem", fontWeight: "600", cursor: "pointer", color: "var(--text)" }}>
+                      <input
+                        type="checkbox"
+                        checked={hasGst}
+                        onChange={(e) => {
+                          setHasGst(e.target.checked);
+                          if (!e.target.checked) setGstNumber("");
+                        }}
+                        style={{ width: "16px", height: "16px", accentColor: "var(--orange)", cursor: "pointer" }}
+                      />
+                      Add 18% GST (Business Invoice)
+                    </label>
+
+                    {hasGst && (
+                      <div style={{ marginTop: "10px" }}>
+                        <input
+                          type="text"
+                          placeholder="ENTER 15-DIGIT GSTIN"
+                          value={gstNumber}
+                          onChange={(e) => setGstNumber(e.target.value.toUpperCase())}
+                          maxLength={15}
+                          style={{
+                            width: "100%",
+                            padding: "8px 12px",
+                            borderRadius: "6px",
+                            border: "1px solid var(--line)",
+                            fontSize: "0.82rem",
+                            outline: "none",
+                            textTransform: "uppercase"
+                          }}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Conditional GST line */}
+                  {hasGst && (
+                    <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "8px", fontSize: "0.92rem" }}>
+                      <span style={{ color: "var(--muted)" }}>GST (18%)</span>
+                      <span style={{ fontWeight: "600", color: "var(--text)" }}>₹{gstAmount}</span>
+                    </div>
+                  )}
 
                   <div style={{ display: "flex", justifyContent: "space-between", fontSize: "1.4rem", fontWeight: "800", borderTop: "1px solid var(--line-soft)", paddingTop: "14px", marginTop: "14px" }}>
                     <span>Total Amount</span>

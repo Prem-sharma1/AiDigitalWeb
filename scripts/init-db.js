@@ -113,7 +113,19 @@ async function main() {
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
-  console.log('Table "whatsapp_logs" verified.');
+  // Create users table for verified checkouts
+  await db.query(`
+    CREATE TABLE IF NOT EXISTS users (
+      id INT AUTO_INCREMENT PRIMARY KEY,
+      name VARCHAR(100),
+      email VARCHAR(150) UNIQUE,
+      google_id VARCHAR(100),
+      phone VARCHAR(20) UNIQUE,
+      phone_verified BOOLEAN DEFAULT FALSE,
+      created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `);
+  console.log('Table "users" verified.');
 
   // 4. Seed pricing_plans
   const pricingPath = path.join(process.cwd(), "data", "pricingData.json");
