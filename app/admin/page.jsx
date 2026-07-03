@@ -62,6 +62,86 @@ export default function AdminPage() {
   // Payment Reminders State
   const [remindersData, setRemindersData] = useState([]);
 
+  // Promo Codes State
+  const [promosData, setPromosData] = useState([]);
+  const [promoForm, setPromoForm] = useState({
+    code: "",
+    discount_percent: "",
+    min_order_amount: "",
+    description: "",
+    is_active: true
+  });
+
+  const loadPromoData = async () => {
+    try {
+      const res = await fetch("/api/admin/promo?t=" + Date.now(), { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setPromosData(data.promoCodes || []);
+      }
+    } catch (err) {
+      console.warn("Failed to load promo codes:", err);
+    }
+  };
+
+  const handleSavePromo = async (e) => {
+    e.preventDefault();
+    if (!promoForm.discount_percent || promoForm.min_order_amount === "") {
+      showToast("Please fill in discount percentage and minimum order amount.", "error");
+      return;
+    }
+    try {
+      const res = await fetch("/api/admin/promo", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(promoForm)
+      });
+      const data = await res.json();
+      if (data.success) {
+        showToast(data.message || "Promo code saved!");
+        setPromoForm({ code: "", discount_percent: "", min_order_amount: "", description: "", is_active: true });
+        loadPromoData();
+      } else {
+        showToast(data.error || "Failed to save promo code", "error");
+      }
+    } catch (err) {
+      showToast("Network error saving promo code", "error");
+    }
+  };
+
+  const handleTogglePromoStatus = async (id, currentStatus) => {
+    try {
+      const res = await fetch("/api/admin/promo", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, is_active: !currentStatus })
+      });
+      if (res.ok) {
+        showToast("Promo status updated!");
+        loadPromoData();
+      } else {
+        showToast("Failed to update status", "error");
+      }
+    } catch (err) {
+      showToast("Network error updating status", "error");
+    }
+  };
+
+  const handleDeletePromo = async (id) => {
+    if (!confirm("Are you sure you want to delete this promo code?")) return;
+    try {
+      const res = await fetch(`/api/admin/promo?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        showToast("Promo code deleted!");
+        loadPromoData();
+      } else {
+        showToast("Failed to delete promo code", "error");
+      }
+    } catch (err) {
+      showToast("Network error deleting promo code", "error");
+    }
+  };
+
   // Auth checking on mount disabled to force manual login
   useEffect(() => {
     // Explicit email/password input is required to access the admin panel.
@@ -176,6 +256,7 @@ export default function AdminPage() {
       loadWhatsAppInfo();
       loadOnboardingData();
       loadRemindersData();
+      loadPromoData();
     } catch (err) {
       showToast("Failed to load configuration data", "error");
     }
@@ -929,6 +1010,12 @@ export default function AdminPage() {
             style={{ ...styles.sidebarBtn, ...(activeTab === "reminders" ? styles.sidebarBtnActive : {}) }}
           >
             <Icon name="alarm" /> Payment Reminders
+          </button>
+          <button
+            onClick={() => { setActiveTab("promos"); setEditingBlog(null); loadPromoData(); }}
+            style={{ ...styles.sidebarBtn, ...(activeTab === "promos" ? styles.sidebarBtnActive : {}) }}
+          >
+            <Icon name="sell" /> Promo Codes
           </button>
         </aside>
 
@@ -2063,12 +2150,6 @@ export default function AdminPage() {
                         {whatsappData.config?.meta?.configured ? "Configured" : "Not Set"}
                       </span>
                     </div>
-                    <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
-                      <span style={{ color: "#94a3b8" }}>Twilio WhatsApp status:</span>
-                      <span style={{ fontWeight: "600", color: whatsappData.config?.twilio?.configured ? "#10B981" : "#ef4444" }}>
-                        {whatsappData.config?.twilio?.configured ? `Configured (From: ${whatsappData.config.twilio.from})` : "Not Set"}
-                      </span>
-                    </div>
                     <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
                       <span style={{ color: "#94a3b8" }}>UltraMsg HTTP status:</span>
                       <span style={{ fontWeight: "600", color: whatsappData.config?.ultramsg?.configured ? "#10B981" : "#ef4444" }}>
@@ -2274,6 +2355,25 @@ export default function AdminPage() {
                                 GSTIN: {client.gstin}
                               </div>
                             )}
+                            {client.promo_code && client.promo_code !== "None" && (
+                              <div style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                marginTop: "4px",
+                                padding: "2px 6px",
+                                borderRadius: "4px",
+                                fontSize: "10px",
+                                fontWeight: "700",
+                                backgroundColor: "rgba(16, 185, 129, 0.15)",
+                                color: "#10B981",
+                                border: "1px solid rgba(16, 185, 129, 0.3)",
+                                marginLeft: "6px"
+                              }}>
+                                <Icon name="sell" style={{ fontSize: "11px" }} />
+                                {client.promo_code}
+                              </div>
+                            )}
                           </td>
                           {/* Address */}
                           <td style={{ padding: "14px 8px", maxWidth: "220px" }}>
@@ -2444,6 +2544,181 @@ export default function AdminPage() {
                     )}
                   </tbody>
                 </table>
+              </div>
+            </div>
+          )}
+
+          {/* ===== PROMO CODES MANAGEMENT TAB ===== */}
+          {activeTab === "promos" && (
+            <div>
+              <div style={styles.contentHeader}>
+                <div>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", margin: 0 }}>Promo Codes</h2>
+                  <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>Create, manage, and track promotional discount codes</p>
+                </div>
+                <button onClick={loadPromoData} style={styles.refreshBtn}>
+                  <Icon name="refresh" /> Refresh
+                </button>
+              </div>
+
+              {/* Create New Promo Code Form */}
+              <div style={styles.statusCard}>
+                <div style={styles.cardHeader}>
+                  <h3 style={{ margin: 0, fontSize: "18px" }}><Icon name="add_circle" /> Create New Promo Code</h3>
+                </div>
+                <form onSubmit={handleSavePromo} style={{ display: "flex", flexDirection: "column", gap: "14px", marginTop: "14px" }}>
+                  <div style={{ display: "flex", gap: "12px", flexWrap: "wrap" }}>
+                    <div style={{ flex: 1, minWidth: "180px" }}>
+                      <label style={styles.labelSmall}>Promo Code (auto-generated if blank)</label>
+                      <input
+                        type="text"
+                        value={promoForm.code}
+                        onChange={(e) => setPromoForm({ ...promoForm, code: e.target.value.toUpperCase() })}
+                        placeholder="e.g. SAVE5"
+                        style={styles.inputSmall}
+                      />
+                    </div>
+                    <div style={{ flex: 1, minWidth: "140px" }}>
+                      <label style={styles.labelSmall}>Discount %</label>
+                      <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        value={promoForm.discount_percent}
+                        onChange={(e) => setPromoForm({ ...promoForm, discount_percent: e.target.value })}
+                        placeholder="e.g. 10"
+                        style={styles.inputSmall}
+                        required
+                      />
+                    </div>
+                    <div style={{ flex: 1, minWidth: "160px" }}>
+                      <label style={styles.labelSmall}>Min Order Amount (₹)</label>
+                      <input
+                        type="number"
+                        min="0"
+                        value={promoForm.min_order_amount}
+                        onChange={(e) => setPromoForm({ ...promoForm, min_order_amount: e.target.value })}
+                        placeholder="e.g. 3000"
+                        style={styles.inputSmall}
+                        required
+                      />
+                    </div>
+                  </div>
+                  <div>
+                    <label style={styles.labelSmall}>Description (optional)</label>
+                    <input
+                      type="text"
+                      value={promoForm.description}
+                      onChange={(e) => setPromoForm({ ...promoForm, description: e.target.value })}
+                      placeholder="e.g. 5% OFF on orders of ₹3,000+"
+                      style={styles.inputSmall}
+                    />
+                  </div>
+                  <button type="submit" style={{ ...styles.actionBtn, backgroundColor: "#FD7E14", color: "#fff", border: "none", alignSelf: "flex-start", padding: "10px 24px" }}>
+                    <Icon name="add" /> Create Promo Code
+                  </button>
+                </form>
+              </div>
+
+              {/* Existing Promo Codes Table */}
+              <div style={{ overflowX: "auto", marginTop: "20px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.08)" }}>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Code</th>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Discount</th>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Min Order</th>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Description</th>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Used</th>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Status</th>
+                      <th style={{ textAlign: "left", padding: "12px 8px", color: "#94a3b8", fontWeight: "700", fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.05em" }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {promosData.length > 0 ? (
+                      promosData.map((promo) => (
+                        <tr key={promo.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)" }}>
+                          <td style={{ padding: "14px 8px" }}>
+                            <span style={{
+                              display: "inline-block",
+                              padding: "4px 12px",
+                              borderRadius: "6px",
+                              fontSize: "13px",
+                              fontWeight: "800",
+                              letterSpacing: "0.04em",
+                              background: "linear-gradient(135deg, rgba(253,126,20,0.2), rgba(253,126,20,0.08))",
+                              color: "#FD7E14",
+                              border: "1px solid rgba(253,126,20,0.3)"
+                            }}>
+                              {promo.code}
+                            </span>
+                          </td>
+                          <td style={{ padding: "14px 8px", fontWeight: "700", color: "#10B981" }}>{promo.discount_percent}%</td>
+                          <td style={{ padding: "14px 8px", fontWeight: "600" }}>₹{Number(promo.min_order_amount).toLocaleString("en-IN")}</td>
+                          <td style={{ padding: "14px 8px", color: "#94a3b8", maxWidth: "200px" }}>{promo.description || "—"}</td>
+                          <td style={{ padding: "14px 8px", fontWeight: "600" }}>{promo.times_used || 0}</td>
+                          <td style={{ padding: "14px 8px" }}>
+                            <span
+                              onClick={() => handleTogglePromoStatus(promo.id, promo.is_active)}
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                gap: "4px",
+                                padding: "4px 10px",
+                                borderRadius: "8px",
+                                fontSize: "12px",
+                                fontWeight: "700",
+                                cursor: "pointer",
+                                backgroundColor: promo.is_active ? "rgba(16, 185, 129, 0.15)" : "rgba(239, 68, 68, 0.15)",
+                                color: promo.is_active ? "#10B981" : "#EF4444",
+                                border: `1px solid ${promo.is_active ? "rgba(16,185,129,0.3)" : "rgba(239,68,68,0.3)"}`
+                              }}
+                            >
+                              <Icon name={promo.is_active ? "toggle_on" : "toggle_off"} />
+                              {promo.is_active ? "Active" : "Inactive"}
+                            </span>
+                          </td>
+                          <td style={{ padding: "14px 8px" }}>
+                            <button
+                              onClick={() => handleDeletePromo(promo.id)}
+                              style={styles.deleteBtnIconOnly}
+                              title="Delete Promo Code"
+                            >
+                              <Icon name="delete" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={7} style={{ padding: "30px 8px", textAlign: "center", color: "#94a3b8" }}>
+                          No promo codes found. Default codes will be auto-created on first checkout.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+
+              {/* Quick Reference Card */}
+              <div style={{ ...styles.statusCard, marginTop: "20px" }}>
+                <div style={styles.cardHeader}>
+                  <h3 style={{ margin: 0, fontSize: "16px" }}><Icon name="info" /> Default Promo Rules</h3>
+                </div>
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "12px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                    <span style={{ color: "#94a3b8" }}>SAVE5</span>
+                    <span style={{ fontWeight: "600", color: "#10B981" }}>5% OFF → Min ₹3,000</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px", borderBottom: "1px solid rgba(255,255,255,0.05)", paddingBottom: "8px" }}>
+                    <span style={{ color: "#94a3b8" }}>GROWTH10</span>
+                    <span style={{ fontWeight: "600", color: "#10B981" }}>10% OFF → Min ₹8,000</span>
+                  </div>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "13px" }}>
+                    <span style={{ color: "#94a3b8" }}>SCALE15</span>
+                    <span style={{ fontWeight: "600", color: "#10B981" }}>15% OFF → Min ₹15,000</span>
+                  </div>
+                </div>
               </div>
             </div>
           )}

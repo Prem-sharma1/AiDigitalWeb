@@ -16,6 +16,17 @@ const REFERRAL_CODES = {
 export default function CheckoutPage() {
   const { items, clearCart } = useCart();
   const [mounted, setMounted] = useState(false);
+
+  // Get the single item (plan) to check out
+  const selectedItem = items && items.length > 0 ? items[0] : null;
+
+  // Clean price value
+  const itemPrice = selectedItem
+    ? typeof selectedItem.price === "string"
+      ? parseInt(selectedItem.price.replace(/,/g, ""), 10)
+      : selectedItem.price
+    : 0;
+
   const [loading, setLoading] = useState(false);
 
   // Onboarding details
@@ -42,32 +53,34 @@ export default function CheckoutPage() {
   const [hasGst, setHasGst] = useState(false);
   const [gstNumber, setGstNumber] = useState("");
 
-  // ─── OTP VERIFICATION (DISABLED FOR NOW — RE-ENABLE IN FUTURE) ──────────────
-  // To re-enable: uncomment all lines below and restore OTP UI in the form.
-  // const [isPhoneVerified, setIsPhoneVerified] = useState(false);
-  // const [phoneOtpSent, setPhoneOtpSent] = useState(false);
-  // const [phoneOtpInput, setPhoneOtpInput] = useState("");
-  // const [phoneOtpError, setPhoneOtpError] = useState("");
-  // const [isEmailVerified, setIsEmailVerified] = useState(false);
-  // const [emailOtpSent, setEmailOtpSent] = useState(false);
-  // const [emailOtpInput, setEmailOtpInput] = useState("");
-  // const [emailOtpError, setEmailOtpError] = useState("");
-  // const [isRegisteredInDb, setIsRegisteredInDb] = useState(false);
-  // ─────────────────────────────────────────────────────────────────────────────
-
-  // Bypass flags — set to true while OTP is disabled
+  // Email + DB remain bypassed
   const isEmailVerified = true;
-  const isPhoneVerified = true;
   const isRegisteredInDb = true;
-
-
-  // ─── OTP HANDLERS (DISABLED — PRESERVED FOR FUTURE USE) ─────────────────────
-  // To re-activate: restore Twilio/SMTP credentials in .env and uncomment below.
-  // ─────────────────────────────────────────────────────────────────────────────
 
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  // Auto-apply promo code based on item price tier
+  useEffect(() => {
+    if (itemPrice >= 15000) {
+      setAppliedCode("SCALE15");
+      setDiscountPercent(15);
+      setReferralSuccessMsg("Auto-applied: SCALE15 (15% OFF for orders ₹15,000+)");
+    } else if (itemPrice >= 8000) {
+      setAppliedCode("GROWTH10");
+      setDiscountPercent(10);
+      setReferralSuccessMsg("Auto-applied: GROWTH10 (10% OFF for orders ₹8,000+)");
+    } else if (itemPrice >= 3000) {
+      setAppliedCode("SAVE5");
+      setDiscountPercent(5);
+      setReferralSuccessMsg("Auto-applied: SAVE5 (5% OFF for orders ₹3,000+)");
+    } else {
+      setAppliedCode("");
+      setDiscountPercent(0);
+      setReferralSuccessMsg("");
+    }
+  }, [itemPrice]);
 
   const loadRazorpayScript = () => {
     return new Promise((resolve) => {
@@ -83,26 +96,38 @@ export default function CheckoutPage() {
     });
   };
 
-  // Referral Code Application Logic
-  const handleApplyReferral = () => {
+  // Promo / Referral Code Application Logic (MySQL DB Backed)
+  const handleApplyReferral = async () => {
     setReferralErrorMsg("");
     setReferralSuccessMsg("");
 
     const formattedCode = referralInput.trim().toUpperCase();
 
     if (!formattedCode) {
-      setReferralErrorMsg("Please enter a code.");
+      setReferralErrorMsg("Please enter a promo code.");
       return;
     }
 
-    if (REFERRAL_CODES[formattedCode]) {
-      const codeDetails = REFERRAL_CODES[formattedCode];
-      setAppliedCode(formattedCode);
-      setDiscountPercent(codeDetails.discount);
-      setReferralSuccessMsg(`Code "${formattedCode}" applied successfully! (${codeDetails.label})`);
-      setReferralInput("");
-    } else {
-      setReferralErrorMsg("Invalid referral or promo code. Please check and try again.");
+    try {
+      const res = await fetch("/api/promo/validate", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ code: formattedCode, amount: itemPrice })
+      });
+
+      const data = await res.json();
+
+      if (data.success) {
+        setAppliedCode(data.code);
+        setDiscountPercent(data.discountPercent);
+        setReferralSuccessMsg(data.message || `Code "${data.code}" applied successfully!`);
+        setReferralInput("");
+      } else {
+        setReferralErrorMsg(data.error || "Invalid promo code.");
+      }
+    } catch (err) {
+      console.error("Promo error:", err);
+      setReferralErrorMsg("Failed to validate promo code. Please try again.");
     }
   };
 
@@ -113,16 +138,6 @@ export default function CheckoutPage() {
     setReferralErrorMsg("");
   };
 
-  // Get the single item (plan) to check out
-  const selectedItem = items && items.length > 0 ? items[0] : null;
-
-  // Clean price value
-  const itemPrice = selectedItem
-    ? typeof selectedItem.price === "string"
-      ? parseInt(selectedItem.price.replace(/,/g, ""), 10)
-      : selectedItem.price
-    : 0;
-
   // Calculated Rates
   const discountAmount = Math.round((itemPrice * discountPercent) / 100);
   const netAmount = Math.max(0, itemPrice - discountAmount);
@@ -132,10 +147,6 @@ export default function CheckoutPage() {
   const handleCheckout = async (e) => {
     e.preventDefault();
     if (!selectedItem) return;
-
-    // OTP verification gates disabled — re-enable when Twilio/SMTP is configured
-    // if (!isEmailVerified) { alert("Please verify your Email Address via OTP..."); return; }
-    // if (!isPhoneVerified || !isRegisteredInDb) { alert("Please verify WhatsApp OTP..."); return; }
 
     if (hasGst && (!gstNumber || gstNumber.trim().length !== 15)) {
       alert("Please enter a valid 15-character GSTIN number.");
@@ -214,7 +225,7 @@ export default function CheckoutPage() {
             if (verifyData.success) {
               alert(`Payment Successful!\nPayment ID: ${paymentResponse.razorpay_payment_id}`);
               clearCart();
-              window.location.href = `/payment-success?payment_id=${paymentResponse.razorpay_payment_id}&amount=${finalTotal}&plans=${encodeURIComponent(selectedItem.name)}&phone=${encodeURIComponent(customerPhone)}`;
+              window.location.href = `/payment-success?payment_id=${paymentResponse.razorpay_payment_id}&amount=${finalTotal}&plans=${encodeURIComponent(selectedItem.name)}&phone=${encodeURIComponent(customerPhone)}&promo_code=${encodeURIComponent(appliedCode || "None")}`;
             } else {
               alert("Payment verification failed.");
             }
@@ -400,7 +411,10 @@ export default function CheckoutPage() {
                       required
                       placeholder="Enter your name"
                       value={customerName}
-                      onChange={(e) => setCustomerName(e.target.value)}
+                      onChange={(e) => {
+                        const cleaned = e.target.value.replace(/[^a-zA-Z\s]/g, "");
+                        setCustomerName(cleaned);
+                      }}
                       style={{
                         width: "100%",
                         padding: "12px 16px",
@@ -440,36 +454,38 @@ export default function CheckoutPage() {
                       <label style={{ display: "block", fontSize: "0.85rem", fontWeight: "700", color: "var(--text)", marginBottom: "8px" }}>
                         WhatsApp Phone Number *
                       </label>
-                      <input
-                        type="tel"
-                        required
-                        placeholder="e.g. 9096090701 (10 digits)"
-                        value={customerPhone}
-                        maxLength={15}
-                        onChange={(e) => setCustomerPhone(e.target.value)}
-                        style={{
-                          width: "100%",
-                          padding: "12px 16px",
-                          borderRadius: "10px",
-                          border: customerPhone
-                            ? isValidMobileNumber(customerPhone)
-                              ? "1.5px solid #2E7D32"
-                              : "1.5px solid #D32F2F"
-                            : "1px solid var(--line)",
-                          fontSize: "0.95rem",
-                          outline: "none",
-                          transition: "border-color 0.2s ease"
-                        }}
-                      />
+                      <div style={{ position: "relative" }}>
+                        <span style={{ position: "absolute", left: "14px", top: "50%", transform: "translateY(-50%)", fontSize: "0.9rem", color: "var(--muted)", fontWeight: "600", pointerEvents: "none", zIndex: 1 }}>+91</span>
+                        <input
+                          type="tel"
+                          required
+                          placeholder="9096090701 (10 digits)"
+                          value={customerPhone}
+                          maxLength={10}
+                          onChange={(e) => {
+                            setCustomerPhone(e.target.value.replace(/\D/g, ''));
+                          }}
+                          style={{
+                            width: "100%",
+                            padding: "12px 16px 12px 46px",
+                            borderRadius: "10px",
+                            border: customerPhone
+                              ? isValidMobileNumber(customerPhone)
+                                ? "1.5px solid #1565C0"
+                                : "1.5px solid #D32F2F"
+                              : "1px solid var(--line)",
+                            fontSize: "0.95rem",
+                            outline: "none",
+                            background: "var(--bg)",
+                            color: "var(--text)",
+                            transition: "border-color 0.2s ease"
+                          }}
+                        />
+                      </div>
                       {customerPhone && !isValidMobileNumber(customerPhone) && (
-                        <div style={{ color: "#D32F2F", fontSize: "0.78rem", marginTop: "5px", fontWeight: "600" }}>
-                          ⚠ Please enter a valid 10-digit WhatsApp number (e.g. 9096090701)
-                        </div>
-                      )}
-                      {customerPhone && isValidMobileNumber(customerPhone) && (
-                        <div style={{ color: "#2E7D32", fontSize: "0.78rem", marginTop: "5px", fontWeight: "600" }}>
-                          ✓ Valid phone number
-                        </div>
+                        <p style={{ color: "#D32F2F", fontSize: "0.78rem", margin: "5px 0 0", fontWeight: "600" }}>
+                          ⚠ Please enter a valid 10-digit number starting with 6, 7, 8, or 9
+                        </p>
                       )}
                     </div>
                   </div>
@@ -740,8 +756,8 @@ export default function CheckoutPage() {
                   </div>
                 </div>
 
-                {/* Submit Checkout Button */}
                 <button
+                  id="btn-pay-securely"
                   onClick={handleCheckout}
                   disabled={loading}
                   className="nav-button"
@@ -754,13 +770,13 @@ export default function CheckoutPage() {
                     color: "#ffffff",
                     border: "none",
                     borderRadius: "999px",
-                    cursor: "pointer",
+                    cursor: loading ? "not-allowed" : "pointer",
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
                     gap: "8px",
                     boxShadow: "0 6px 20px rgba(229, 96, 48, 0.35)",
-                    transition: "all 0.2s ease",
+                    transition: "all 0.3s ease",
                     marginTop: "20px"
                   }}
                 >
@@ -768,7 +784,7 @@ export default function CheckoutPage() {
                     "Initializing Checkout..."
                   ) : (
                     <>
-                      <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>lock</span>
+                      <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>lock_open</span>
                       Pay Securely via Razorpay
                     </>
                   )}

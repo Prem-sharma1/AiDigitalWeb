@@ -16,7 +16,12 @@ export default function ContactForm() {
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    if (name === "name") {
+      const cleaned = value.replace(/[^a-zA-Z\s]/g, "");
+      setFormData((prev) => ({ ...prev, [name]: cleaned }));
+    } else {
+      setFormData((prev) => ({ ...prev, [name]: value }));
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -35,7 +40,7 @@ export default function ContactForm() {
     }
     if (!isValidMobileNumber(formData.phone)) {
       setStatus("error");
-      setErrorMessage("Please enter a valid 10-digit WhatsApp mobile number.");
+      setErrorMessage("Please enter a valid 10-digit mobile number starting with 6, 7, 8, or 9.");
       return;
     }
 

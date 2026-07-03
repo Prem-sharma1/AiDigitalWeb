@@ -22,6 +22,7 @@ async function ensureOnboardingTable() {
       scheduled_date VARCHAR(100) DEFAULT NULL,
       scheduled_time VARCHAR(50) DEFAULT NULL,
       status VARCHAR(50) DEFAULT 'Pending',
+      promo_code VARCHAR(100) DEFAULT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
       updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
       PRIMARY KEY (id),
@@ -30,6 +31,8 @@ async function ensureOnboardingTable() {
   `;
   try {
     await pool.query(query);
+    // Ensure column exists for existing tables
+    await pool.query("ALTER TABLE onboarding_details ADD COLUMN IF NOT EXISTS promo_code VARCHAR(100) DEFAULT NULL");
   } catch (err) {
     console.error("Failed to auto-create onboarding_details table:", err.message);
   }
@@ -55,7 +58,8 @@ export async function POST(req) {
       request_callback,
       scheduled_date,
       scheduled_time,
-      status
+      status,
+      promo_code
     } = body;
 
     // Server-side input validations
@@ -103,6 +107,7 @@ export async function POST(req) {
       if (scheduled_date !== undefined) { updateFields.push("scheduled_date = ?"); queryParams.push(scheduled_date); }
       if (scheduled_time !== undefined) { updateFields.push("scheduled_time = ?"); queryParams.push(scheduled_time); }
       if (status !== undefined) { updateFields.push("status = ?"); queryParams.push(status); }
+      if (promo_code !== undefined) { updateFields.push("promo_code = ?"); queryParams.push(promo_code); }
 
       if (updateFields.length > 0) {
         queryParams.push(payment_id);
@@ -115,8 +120,8 @@ export async function POST(req) {
       // Insert new record
       await pool.query(
         `INSERT INTO onboarding_details 
-          (id, payment_id, plans, contact_name, alt_phone, business_type, gstin, address_line1, address_line2, city, state_name, pin_code, request_callback, scheduled_date, scheduled_time, status)
-         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+          (id, payment_id, plans, contact_name, alt_phone, business_type, gstin, address_line1, address_line2, city, state_name, pin_code, request_callback, scheduled_date, scheduled_time, status, promo_code)
+         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
         [
           recordId,
           payment_id,
@@ -133,7 +138,8 @@ export async function POST(req) {
           request_callback ? 1 : 0,
           scheduled_date || null,
           scheduled_time || null,
-          status || "Pending"
+          status || "Pending",
+          promo_code || null
         ]
       );
     }

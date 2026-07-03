@@ -23,10 +23,6 @@ export async function GET(req) {
     const configStatus = {
       provider,
       adminNumber,
-      twilio: {
-        configured: !!(process.env.TWILIO_ACCOUNT_SID && process.env.TWILIO_AUTH_TOKEN),
-        from: process.env.TWILIO_WHATSAPP_FROM || ""
-      },
       meta: {
         configured: !!(process.env.META_PHONE_NUMBER_ID && process.env.META_WHATSAPP_ACCESS_TOKEN)
       },
