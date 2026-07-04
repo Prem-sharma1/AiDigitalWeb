@@ -208,35 +208,27 @@ function formatAndSortPortfolio(rows) {
 
 export async function GET() {
   try {
+    // 1. Prioritize local JSON backup (contains valid YouTube URLs and expanded image list)
+    const fallback = getJsonFallback();
+    const hasData = fallback && fallback.creativeGroups && fallback.creativeGroups.length > 0;
+    
+    if (hasData) {
+      return NextResponse.json(fallback, {
+        headers: {
+          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+          "Pragma": "no-cache",
+          "Expires": "0"
+        }
+      });
+    }
+
+    // 2. Fallback to MySQL Database only if JSON file is empty or missing
     const connection = await pool.getConnection();
     try {
       await ensurePortfolioTable(connection);
-
       const [rows] = await connection.query("SELECT * FROM portfolio_items");
       const formatted = formatAndSortPortfolio(rows);
-      const fallback = getJsonFallback();
-
-      // Merge: prefer whichever source (DB or JSON) has MORE data.
-      // This prevents stale/test DB entries from hiding real JSON content.
-      const portfolioCategories = ["showcaseProjects", "industries", "otherProjects", "creativeGroups"];
-      portfolioCategories.forEach(cat => {
-        const dbData = formatted[cat] || [];
-        const jsonData = (fallback[cat]) || [];
-
-        if (cat === "creativeGroups") {
-          // Count total media items across all groups
-          const dbTotal = dbData.reduce((sum, g) => sum + (g.images ? g.images.length : 0), 0);
-          const jsonTotal = jsonData.reduce((sum, g) => sum + (g.images ? g.images.length : 0), 0);
-          if (jsonTotal > dbTotal) {
-            formatted[cat] = jsonData;
-          }
-        } else {
-          if (jsonData.length > dbData.length) {
-            formatted[cat] = jsonData;
-          }
-        }
-      });
-
+      
       return NextResponse.json(formatted, {
         headers: {
           "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
@@ -248,7 +240,7 @@ export async function GET() {
       connection.release();
     }
   } catch (error) {
-    console.warn("MySQL database portfolio fetch failed. Using local JSON fallback. Error:", error.message);
+    console.warn("Portfolio fetch fallback error. Querying JSON directly:", error.message);
     const fallback = getJsonFallback();
     return NextResponse.json(fallback, {
       headers: {

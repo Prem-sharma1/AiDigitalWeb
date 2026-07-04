@@ -53,7 +53,7 @@ export default function PortfolioShowcase() {
         throw new Error("Failed to load portfolio");
       })
       .then((data) => {
-        if (data.showcaseProjects) {
+        if (data.showcaseProjects && data.showcaseProjects.length > 0) {
           setShowcaseProjectsState(data.showcaseProjects);
         }
       })

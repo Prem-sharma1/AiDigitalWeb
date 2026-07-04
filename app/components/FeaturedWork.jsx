@@ -135,8 +135,13 @@ export default function FeaturedWork() {
         throw new Error("Failed to load portfolio data");
       })
       .then((data) => {
-        if (data.industries) setIndustriesState(data.industries);
-        if (data.otherProjects) setOtherProjectsState(data.otherProjects);
+        if (data.industries && data.industries.length > 0) {
+          const hasProjects = data.industries.some((ind) => ind.projects && ind.projects.length > 0);
+          if (hasProjects) setIndustriesState(data.industries);
+        }
+        if (data.otherProjects && data.otherProjects.length > 0) {
+          setOtherProjectsState(data.otherProjects);
+        }
       })
       .catch((err) => console.warn("Using fallback static industries/other projects:", err));
   }, []);

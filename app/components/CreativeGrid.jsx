@@ -170,8 +170,11 @@ export default function CreativeGrid({ activeFilter = "All" }) {
         throw new Error("Failed to load portfolio");
       })
       .then((data) => {
-        if (data.creativeGroups) {
-          setCreativeGroupsState(data.creativeGroups);
+        if (data.creativeGroups && data.creativeGroups.length > 0) {
+          const hasImages = data.creativeGroups.some((g) => g.images && g.images.length > 0);
+          if (hasImages) {
+            setCreativeGroupsState(data.creativeGroups);
+          }
         }
       })
       .catch((err) => console.warn("Using static fallback creative groups:", err));
