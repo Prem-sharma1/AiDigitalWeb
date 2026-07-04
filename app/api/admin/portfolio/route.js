@@ -208,41 +208,18 @@ function formatAndSortPortfolio(rows) {
 
 export async function GET() {
   try {
-    // 1. Prioritize local JSON backup (contains valid YouTube URLs and expanded image list)
-    const fallback = getJsonFallback();
-    const hasData = fallback && fallback.creativeGroups && fallback.creativeGroups.length > 0;
-    
-    if (hasData) {
-      return NextResponse.json(fallback, {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0"
-        }
-      });
-    }
-
-    // 2. Fallback to MySQL Database only if JSON file is empty or missing
-    const connection = await pool.getConnection();
-    try {
-      await ensurePortfolioTable(connection);
-      const [rows] = await connection.query("SELECT * FROM portfolio_items");
-      const formatted = formatAndSortPortfolio(rows);
-      
-      return NextResponse.json(formatted, {
-        headers: {
-          "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
-          "Pragma": "no-cache",
-          "Expires": "0"
-        }
-      });
-    } finally {
-      connection.release();
-    }
+    // Read exclusively from local JSON (the single source of truth)
+    const data = getJsonFallback();
+    return NextResponse.json(data, {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+        "Pragma": "no-cache",
+        "Expires": "0"
+      }
+    });
   } catch (error) {
-    console.warn("Portfolio fetch fallback error. Querying JSON directly:", error.message);
-    const fallback = getJsonFallback();
-    return NextResponse.json(fallback, {
+    console.error("Failed to load portfolio JSON data:", error);
+    return NextResponse.json({ showcaseProjects: [], industries: [], otherProjects: [], creativeGroups: [] }, {
       headers: {
         "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
         "Pragma": "no-cache",
