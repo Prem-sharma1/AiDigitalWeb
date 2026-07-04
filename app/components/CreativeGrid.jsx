@@ -161,6 +161,7 @@ export default function CreativeGrid({ activeFilter = "All" }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
   const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
+  const [videoErrors, setVideoErrors] = useState({});
 
   useEffect(() => {
     fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
@@ -399,6 +400,32 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                       const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
 
                       if (playerType === "video") {
+                        if (videoErrors[img.src]) {
+                          return (
+                            <div 
+                              className="creative-img-fallback"
+                              style={{ 
+                                width: "100%", 
+                                height: "100%", 
+                                display: "flex", 
+                                flexDirection: "column", 
+                                alignItems: "center", 
+                                justifyContent: "center", 
+                                background: "linear-gradient(135deg, #1f2937, #111827)", 
+                                color: "#9ca3af",
+                                padding: "16px",
+                                textAlign: "center"
+                              }}
+                            >
+                              <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#e56030", marginBottom: "8px" }}>
+                                videocam_off
+                              </span>
+                              <span style={{ fontSize: "11px", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                Video Unavailable
+                              </span>
+                            </div>
+                          );
+                        }
                         return (
                           <video
                             src={img.src}
@@ -409,6 +436,9 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                             loop
                             onMouseOver={(e) => e.target.play()}
                             onMouseOut={(e) => e.target.pause()}
+                            onError={() => {
+                              setVideoErrors((prev) => ({ ...prev, [img.src]: true }));
+                            }}
                           />
                         );
                       }
@@ -531,6 +561,35 @@ export default function CreativeGrid({ activeFilter = "All" }) {
               {(() => {
                 const playerType = getPlayerType(activeImage.src, activeImage.type);
                 if (playerType === "video") {
+                  if (videoErrors[activeImage.src]) {
+                    return (
+                      <div 
+                        style={{ 
+                          width: "80vw",
+                          height: "50vh",
+                          maxWidth: "600px",
+                          display: "flex", 
+                          flexDirection: "column", 
+                          alignItems: "center", 
+                          justifyContent: "center", 
+                          background: "linear-gradient(135deg, #1f2937, #111827)", 
+                          color: "#9ca3af",
+                          borderRadius: "12px",
+                          border: "1px solid #374151",
+                          textAlign: "center",
+                          padding: "24px"
+                        }}
+                      >
+                        <span className="material-symbols-outlined" style={{ fontSize: "64px", color: "#e56030", marginBottom: "16px" }}>
+                          videocam_off
+                        </span>
+                        <h4 style={{ color: "#fff", marginBottom: "8px" }}>Video file not found locally</h4>
+                        <p style={{ fontSize: "14px", maxWidth: "400px", margin: "0 auto", color: "#9ca3af" }}>
+                          The video file <strong>{activeImage.src.split('/').pop()}</strong> is ignored in Git and needs to be placed under <code>public/ai_videos/</code>.
+                        </p>
+                      </div>
+                    );
+                  }
                   return (
                     <video
                       src={activeImage.src}
@@ -538,6 +597,9 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                       autoPlay
                       className="lightbox-image"
                       style={{ maxHeight: "80vh", maxWidth: "100%", borderRadius: "8px", objectFit: "contain" }}
+                      onError={() => {
+                        setVideoErrors((prev) => ({ ...prev, [activeImage.src]: true }));
+                      }}
                     />
                   );
                 } else if (playerType === "youtube" || playerType === "instagram" || playerType === "iframe") {
