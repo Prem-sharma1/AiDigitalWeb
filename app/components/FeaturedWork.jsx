@@ -193,7 +193,7 @@ export default function FeaturedWork() {
       )}
 
       <div className="industry-list">
-        {activeFilter === "Creative Content" || activeFilter === "AI Videos" || activeFilter === "Reels" || activeFilter === "Website & SEO" || activeFilter === "All" ? (
+        {activeFilter === "Creative Content" || activeFilter === "AI Videos" || activeFilter === "Reels" || activeFilter === "Website & SEO" || activeFilter === "All" || activeFilter === "Campaigns" ? (
           <CreativeGrid activeFilter={activeFilter} />
         ) : (
           <>

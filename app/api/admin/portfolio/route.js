@@ -216,11 +216,24 @@ export async function GET() {
       const formatted = formatAndSortPortfolio(rows);
       const fallback = getJsonFallback();
 
-      // Merge fallback data for any category that is empty in the database
+      // Merge: prefer whichever source (DB or JSON) has MORE data.
+      // This prevents stale/test DB entries from hiding real JSON content.
       const portfolioCategories = ["showcaseProjects", "industries", "otherProjects", "creativeGroups"];
       portfolioCategories.forEach(cat => {
-        if (!formatted[cat] || formatted[cat].length === 0) {
-          formatted[cat] = fallback[cat] || [];
+        const dbData = formatted[cat] || [];
+        const jsonData = (fallback[cat]) || [];
+
+        if (cat === "creativeGroups") {
+          // Count total media items across all groups
+          const dbTotal = dbData.reduce((sum, g) => sum + (g.images ? g.images.length : 0), 0);
+          const jsonTotal = jsonData.reduce((sum, g) => sum + (g.images ? g.images.length : 0), 0);
+          if (jsonTotal > dbTotal) {
+            formatted[cat] = jsonData;
+          }
+        } else {
+          if (jsonData.length > dbData.length) {
+            formatted[cat] = jsonData;
+          }
         }
       });
 

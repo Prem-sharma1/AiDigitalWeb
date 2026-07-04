@@ -1261,7 +1261,7 @@ export default function AdminPage() {
 
           {activeTab === "portfolio" && portfolioData && (() => {
             const getMediaTypeAdmin = (type, src, category) => {
-              if (category === "image" || category === "video" || category === "reel" || category === "website") return category;
+              if (category === "image" || category === "video" || category === "reel" || category === "website" || category === "campaign") return category;
               let resolvedType = type;
               if (!resolvedType && src) {
                 const url = src.toLowerCase();
@@ -1269,11 +1269,13 @@ export default function AdminPage() {
                 else if (url.includes("instagram.com/reel") || url.includes("instagram.com/p")) resolvedType = "instagram";
                 else if (url.endsWith(".mp4") || url.endsWith(".webm") || url.endsWith(".ogg") || url.endsWith(".mov")) resolvedType = "video";
                 else if (url.startsWith("http")) resolvedType = "website";
+                else if (url.includes("/campaign/")) resolvedType = "campaign";
                 else resolvedType = "image";
               }
               if (resolvedType === "youtube" || resolvedType === "iframe" || resolvedType === "video") return "video";
               if (resolvedType === "instagram" || resolvedType === "reel") return "reel";
               if (resolvedType === "website") return "website";
+              if (resolvedType === "campaign") return "campaign";
               return "image";
             };
 
@@ -1578,7 +1580,7 @@ export default function AdminPage() {
 
                 {/* 4. CREATIVE MEDIA GRID GROUPS */}
                 {(() => {
-                  const isCreativeFilterActive = portfolioFilter === "All" || portfolioFilter === "Creative Content" || portfolioFilter === "AI Videos" || portfolioFilter === "Reels" || portfolioFilter === "Website & SEO";
+                  const isCreativeFilterActive = portfolioFilter === "All" || portfolioFilter === "Creative Content" || portfolioFilter === "AI Videos" || portfolioFilter === "Reels" || portfolioFilter === "Website & SEO" || portfolioFilter === "Campaigns";
                   if (!isCreativeFilterActive) return null;
 
                   const hasVisibleCreative = portfolioData.creativeGroups.some(group =>
@@ -1589,6 +1591,7 @@ export default function AdminPage() {
                       if (portfolioFilter === "AI Videos") return type === "video";
                       if (portfolioFilter === "Reels") return type === "reel";
                       if (portfolioFilter === "Website & SEO") return type === "website";
+                      if (portfolioFilter === "Campaigns") return type === "campaign";
                       return false;
                     })
                   );
@@ -1609,6 +1612,7 @@ export default function AdminPage() {
                           if (portfolioFilter === "AI Videos") return type === "video";
                           if (portfolioFilter === "Reels") return type === "reel";
                           if (portfolioFilter === "Website & SEO") return type === "website";
+                          if (portfolioFilter === "Campaigns") return type === "campaign";
                           return false;
                         });
 
@@ -1636,6 +1640,7 @@ export default function AdminPage() {
                                 if (portfolioFilter === "AI Videos" && type !== "video") isVisible = false;
                                 if (portfolioFilter === "Reels" && type !== "reel") isVisible = false;
                                 if (portfolioFilter === "Website & SEO" && type !== "website") isVisible = false;
+                                if (portfolioFilter === "Campaigns" && type !== "campaign") isVisible = false;
 
                                 if (!isVisible) return null;
 
@@ -1677,6 +1682,7 @@ export default function AdminPage() {
                                         style={styles.selectSmall}
                                       >
                                         <option value="image">Image</option>
+                                        <option value="campaign">Campaign Image</option>
                                         <option value="video">Direct MP4 Video</option>
                                         <option value="reel">Direct MP4 Reel</option>
                                         <option value="youtube">YouTube (Video/Shorts)</option>

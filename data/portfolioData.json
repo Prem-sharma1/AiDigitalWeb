@@ -8,11 +8,7 @@
       "metric": "3.8x",
       "metricLabel": "Ad return",
       "description": "AI-assisted property video concepting and short-form creative built for paid and organic distribution.",
-      "tags": [
-        "AI Video",
-        "Reels",
-        "Paid Ads"
-      ],
+      "tags": ["AI Video", "Reels", "Paid Ads"],
       "accent": "orange",
       "icon": "movie"
     },
@@ -24,11 +20,7 @@
       "metric": "+142%",
       "metricLabel": "Organic traffic",
       "description": "A conversion-focused property portal with SEO pages, lead capture, and campaign-ready landing sections.",
-      "tags": [
-        "Static Website",
-        "Local SEO",
-        "Lead Forms"
-      ],
+      "tags": ["Static Website", "Local SEO", "Lead Forms"],
       "accent": "blue",
       "icon": "language"
     },
@@ -40,11 +32,7 @@
       "metric": "+78%",
       "metricLabel": "Qualified leads",
       "description": "A modern dashboard-style web experience for finance education, investor trust, and measurable inquiries.",
-      "tags": [
-        "Dashboard UI",
-        "Content SEO",
-        "Analytics"
-      ],
+      "tags": ["Dashboard UI", "Content SEO", "Analytics"],
       "accent": "blue",
       "icon": "query_stats"
     }
@@ -54,465 +42,229 @@
       "name": "Finance",
       "description": "Finance dashboards, investment campaigns, branding creatives, and educational reels.",
       "projects": [
-        {
-          "title": "Finance Awareness Reel",
-          "type": "Reels"
-        },
-        {
-          "title": "RR Capital Promo",
-          "type": "AI Videos"
-        },
-        {
-          "title": "Finance Social Creative",
-          "type": "Creative Content"
-        },
-        {
-          "title": "TaxClair AI Promo",
-          "type": "AI Videos"
-        },
-        {
-          "title": "Investment Campaign",
-          "type": "Campaigns"
-        },
-        {
-          "title": "Finance Dashboard",
-          "type": "Website & SEO"
-        }
+        { "title": "Finance Awareness Reel", "type": "Reels" },
+        { "title": "RR Capital Promo", "type": "AI Videos" },
+        { "title": "Finance Social Creative", "type": "Creative Content" },
+        { "title": "TaxClair AI Promo", "type": "AI Videos" },
+        { "title": "Investment Campaign", "type": "Campaigns" },
+        { "title": "Finance Dashboard", "type": "Website & SEO" }
       ]
     },
     {
       "name": "Education",
       "description": "Educational websites, admission campaigns, student-focused creatives, and promotional reels.",
       "projects": [
-        {
-          "title": "Admission Campaign",
-          "type": "Campaigns"
-        },
-        {
-          "title": "Educational AI Video",
-          "type": "AI Videos"
-        },
-        {
-          "title": "Student Awareness Reel",
-          "type": "Reels"
-        },
-        {
-          "title": "School Website",
-          "type": "Website & SEO"
-        }
+        { "title": "Admission Campaign", "type": "Campaigns" },
+        { "title": "Educational AI Video", "type": "AI Videos" },
+        { "title": "Student Awareness Reel", "type": "Reels" },
+        { "title": "School Website", "type": "Website & SEO" }
       ]
     },
     {
       "name": "Hospitality",
       "description": "Hotel booking platforms, restaurant campaigns, AI hospitality promos, and social media reels.",
       "projects": [
-        {
-          "title": "Restaurant Campaign",
-          "type": "Campaigns"
-        },
-        {
-          "title": "Hospitality Reel",
-          "type": "Reels"
-        },
-        {
-          "title": "Hotel Booking Website",
-          "type": "Website & SEO"
-        },
-        {
-          "title": "AI Hotel Promo",
-          "type": "AI Videos"
-        }
+        { "title": "Restaurant Campaign", "type": "Campaigns" },
+        { "title": "Hospitality Reel", "type": "Reels" },
+        { "title": "Hotel Booking Website", "type": "Website & SEO" },
+        { "title": "AI Hotel Promo", "type": "AI Videos" }
       ]
     },
     {
       "name": "Solar",
       "description": "Solar websites, green energy campaigns, AI solar videos, and promotional clean energy reels.",
       "projects": [
-        {
-          "title": "Solar Landing Page",
-          "type": "Website & SEO"
-        },
-        {
-          "title": "Green Energy ",
-          "type": "Campaigns"
-        },
-        {
-          "title": "KwikM Solar Promo",
-          "type": "AI Videos"
-        }
+        { "title": "Solar Landing Page", "type": "Website & SEO" },
+        { "title": "Green Energy Campaign", "type": "Campaigns" },
+        { "title": "KwikM Solar Promo", "type": "AI Videos" }
       ]
     },
     {
       "name": "Agriculture",
       "description": "Agricultural websites, farming campaigns, AI agro videos, and promotional sustainable agriculture reels.",
       "projects": [
-        {
-          "title": "Mack Agro Promo",
-          "type": "AI Videos"
-        },
-        {
-          "title": "Agricultural Landing Page",
-          "type": "Website & SEO"
-        },
-        {
-          "title": "Sustainable Farm Campaign",
-          "type": "Campaigns"
-        }
+        { "title": "Mack Agro Promo", "type": "AI Videos" },
+        { "title": "Agricultural Landing Page", "type": "Website & SEO" },
+        { "title": "Sustainable Farm Campaign", "type": "Campaigns" }
       ]
     },
     {
       "name": "Healthcare",
       "description": "Healthcare websites, awareness campaigns, AI medical videos, and promotional content.",
       "projects": [
-        {
-          "title": "Dr. Ritesh Gupta Promo",
-          "type": "AI Videos"
-        },
-        {
-          "title": "Healthcare Campaign",
-          "type": "Campaigns"
-        },
-        {
-          "title": "AI Medical Promo",
-          "type": "AI Videos"
-        },
-        {
-          "title": "Healthcare Branding Creative",
-          "type": "Creative Content"
-        },
-        {
-          "title": "Hospital Website",
-          "type": "Website & SEO"
-        }
+        { "title": "Dr. Ritesh Gupta Promo", "type": "AI Videos" },
+        { "title": "Healthcare Campaign", "type": "Campaigns" },
+        { "title": "AI Medical Promo", "type": "AI Videos" },
+        { "title": "Healthcare Branding Creative", "type": "Creative Content" },
+        { "title": "Hospital Website", "type": "Website & SEO" }
       ]
     },
     {
       "name": "Construction",
       "description": "All-in-one Construction ERP & Project Management software showcase, web portal, and local SEO campaign.",
       "projects": [
-        {
-          "title": "Hitoffice Construction ERP",
-          "type": "Website & SEO"
-        }
+        { "title": "Hitoffice Construction ERP", "type": "Website & SEO" }
       ]
     }
   ],
   "otherProjects": [
-    {
-      "title": "Custom Dashboard Integration",
-      "type": "Website & SEO"
-    },
-    {
-      "title": "Product Launch Promotional Reel",
-      "type": "Reels"
-    },
-    {
-      "title": "Corporate Identity Redesign",
-      "type": "Creative Content"
-    },
-    {
-      "title": "AI Voice Agent Demo Video",
-      "type": "AI Videos"
-    },
-    {
-      "title": "SaaS Platform Launch Campaign",
-      "type": "Campaigns"
-    },
-    {
-      "title": "E-commerce Store Development",
-      "type": "Website & SEO"
-    }
+    { "title": "Custom Dashboard Integration", "type": "Website & SEO" },
+    { "title": "Product Launch Promotional Reel", "type": "Reels" },
+    { "title": "Corporate Identity Redesign", "type": "Creative Content" },
+    { "title": "AI Voice Agent Demo Video", "type": "AI Videos" },
+    { "title": "SaaS Platform Launch Campaign", "type": "Campaigns" },
+    { "title": "E-commerce Store Development", "type": "Website & SEO" }
   ],
   "creativeGroups": [
     {
-      "industry": "Healthcare",
-      "description": "AI-assisted promotional video for orthopedic surgery consultations and specialist healthcare services.",
+      "industry": "Real Estate",
+      "description": "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
       "images": [
-        {
-          "src": "/ai_videos/Dr Ritesh Gupta-Orthopedic Surgeon Gorakhpur.mp4",
-          "title": "Dr. Ritesh Gupta",
-          "description": "AI-assisted promotional video for orthopedic surgery consultations and specialist healthcare services.",
-          "globalIndex": 24,
-          "type": "video"
-        },
-        {
-          "src": "/creative_content/Creative2.jpeg",
-          "title": "Healthcare Lead Campaign",
-          "description": "Digital marketing campaign designed to help doctors, clinics, and hospitals generate quality leads.",
-          "globalIndex": 1,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative5.jpeg",
-          "title": "Healthcare Digital Marketing Campaign",
-          "description": "An ad creative and landing page concept designed for B2B lead generation targeting doctors and clinics, highlighting social media marketing, SEO, and paid ad management services.",
-          "globalIndex": 4,
-          "type": "image"
-        },
-        {
-          "src": "/ai_videos/Mankikar Hospital.mp4",
-          "title": "Mankikar Hospital",
-          "description": "AI-assisted marketing video showcasing hospital infrastructure, doctor panels, and patient care services.",
-          "globalIndex": 16,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/AiVideo1.mp4",
-          "title": "Healthcare AI Video",
-          "description": "AI-assisted healthcare promotional video showcasing modern clinic solutions.",
-          "globalIndex": 10,
-          "type": "video"
-        }
-      ]
-    },
-    {
-      "industry": "Finance",
-      "description": "AI-assisted marketing video highlighting financial solutions and business planning advice.",
-      "images": [
-        {
-          "src": "/ai_videos/mana das 2 .mp4",
-          "title": "Mana Das 2",
-          "description": "AI-assisted marketing video highlighting financial solutions and business planning advice.",
-          "globalIndex": 19,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/VIYOM FINANCE SERVICES.mp4",
-          "title": "Viyom Finance Services",
-          "description": "AI-assisted promotional video highlighting financial growth and wealth management services.",
-          "globalIndex": 11,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/mana  das.mp4",
-          "title": "Mana Das 1",
-          "description": "AI-assisted promotional video for financial coaching and wealth advisory services.",
-          "globalIndex": 18,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/Final SM MULTI FLEET .mp4",
-          "title": "SM Multi Fleet",
-          "description": "AI-assisted promotional video illustrating fleet management financing, logistics investment, and corporate asset planning.",
-          "globalIndex": 30,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/RR Capital .mp4",
-          "title": "RR Capital 1",
-          "description": "AI-assisted marketing video promoting capital growth, investment consulting, and advisory services.",
-          "globalIndex": 21,
-          "type": "video"
-        },
-        {
-          "src": "/creative_content/Creative7.jpeg",
-          "title": "Investment Growth Ad",
-          "description": "Wealth management and finance growth promotional content.",
-          "globalIndex": 6,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative8.jpeg",
-          "title": "Crypto Platform Asset",
-          "description": "Digital currency trading platform banner design concept.",
-          "globalIndex": 7,
-          "type": "image"
-        },
-        {
-          "src": "/ai_videos/RR Capital video 2.mp4",
-          "title": "RR Capital 2",
-          "description": "AI-assisted promotional video illustrating mutual funds, wealth accumulation, and asset management.",
-          "globalIndex": 22,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/Altius Inforway .mp4",
-          "title": "Altius Inforway",
-          "description": "AI-assisted promotional video illustrating corporate finance, solutions, and enterprise software services.",
-          "globalIndex": 20,
-          "type": "video"
-        },
-        {
-          "src": "https://youtu.be/5HZekAPLk6s?si=zbM4UGvaEq1hJAcZ",
-          "title": "MyAiWorks",
-          "description": "AI TODAY",
-          "globalIndex": 754,
-          "type": "youtube"
-        },
-        {
-          "src": "\"C:\\Users\\premg\\Downloads\\Mac Agro .mp4\"",
-          "title": "Mack GR – Strong Roots, Better Yields",
-          "description": "Boost soil fertility and crop health with Mack GR. Improve root development, enhance nutrient absorption, and help your crops achieve higher productivity for a greener, more profitable harvest",
-          "globalIndex": 242,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/TAXCLAIR .mp4",
-          "title": "TaxClair",
-          "description": "AI-assisted promotional video illustrating tax planning, calculation, and online filing services.",
-          "globalIndex": 23,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/LIC Bima Sakhi.mp4",
-          "title": "LIC Bima Sakhi",
-          "description": "AI-assisted promotional video illustrating insurance and financial planning benefits.",
-          "globalIndex": 12,
-          "type": "video"
-        }
+        { "src": "/creative_content/RealStatecreative.jpeg", "title": "Real Estate Brand Creative", "description": "High-impact branding and promotional creative for real estate marketing campaigns.", "globalIndex": 0, "type": "image" },
+        { "src": "/creative_content/Creative1.jpeg", "title": "Luxury Villa Showcase", "description": "Branding creative for high-end residential real estate listing.", "globalIndex": 1, "type": "image" }
       ]
     },
     {
       "industry": "Education",
-      "description": "AI-assisted promotional video illustrating educational learning, branding, or classroom setup concepts.",
+      "description": "Educational websites, admission campaigns, student-focused creatives, and promotional reels.",
       "images": [
-        {
-          "src": "/ai_videos/Gurukul Sketch  final.mp4",
-          "title": "Gurukul Sketch",
-          "description": "AI-assisted promotional video illustrating educational learning, branding, or classroom setup concepts.",
-          "globalIndex": 14,
-          "type": "video"
-        }
+        { "src": "/creative_content/Educationcreative.jpeg", "title": "Education Creative", "description": "Engaging promotional creative for educational institutions and admission campaigns.", "globalIndex": 10, "type": "image" },
+        { "src": "/creative_content/Education2creative.jpeg", "title": "Education Creative 2", "description": "Student-focused ad creative designed for enrollment and awareness campaigns.", "globalIndex": 11, "type": "image" },
+        { "src": "/creative_content/Education3creative.jpeg", "title": "Education Creative 3", "description": "Vibrant creative for school and college marketing campaigns.", "globalIndex": 12, "type": "image" },
+        { "src": "/creative_content/Education4creative.jpeg", "title": "Education Creative 4", "description": "Academic program promotional visual for digital ad campaigns.", "globalIndex": 13, "type": "image" },
+        { "src": "/creative_content/Education5creative.jpeg", "title": "Education Creative 5", "description": "Modern education branding creative for social media and paid ads.", "globalIndex": 14, "type": "image" },
+        { "src": "/creative_content/Creative3.jpeg", "title": "Global University Banner", "description": "Promotional visual for academic programs and admissions.", "globalIndex": 15, "type": "image" },
+        { "src": "/creative_content/Creative4.jpeg", "title": "Online Learning Poster", "description": "E-learning platform advertisement graphic designed for campaigns.", "globalIndex": 16, "type": "image" },
+        { "src": "https://youtube.com/shorts/CqpNv45IQBI", "title": "UPSC DECODED", "description": "An educational guide and course preview from UPSC DECODED, highlighting exam strategies and academic content.", "globalIndex": 204, "type": "youtube" },
+        { "src": "https://youtube.com/shorts/pd6kbpNsp5M", "title": "Little Genius", "description": "An engaging and fun promotional video highlighting early childhood learning, creative activities, and classes at Little Genius.", "globalIndex": 207, "type": "youtube" },
+        { "src": "https://youtube.com/shorts/3BNF1HUdHUo", "title": "Paath Study", "description": "An interactive educational overview and study session guide from Paath Study, designed to assist student learning and academic performance.", "globalIndex": 209, "type": "youtube" },
+        { "src": "/Campaign/EducationCampaign.jpeg", "title": "Education Admission Campaign", "description": "Targeted digital marketing campaign focusing on school and college admissions, enrollments, and academic awareness.", "globalIndex": 300, "type": "campaign" }
       ]
     },
     {
-      "industry": "Real Estate",
-      "description": "Promotional visual for academic programs and admissions.",
+      "industry": "Healthcare",
+      "description": "Healthcare websites, awareness campaigns, AI medical videos, and promotional content.",
       "images": [
-        {
-          "src": "/creative_content/Creative3.jpeg",
-          "title": "Global University Banner",
-          "description": "Promotional visual for academic programs and admissions.",
-          "globalIndex": 2,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative1.jpeg",
-          "title": "Luxury Villa Showcase",
-          "description": "Branding creative for high-end residential real estate listing.",
-          "type": "image"
-        },
-        {
-          "src": "/ai_videos/Viviana Realty video 2.mp4",
-          "title": "Viviana Realty 2",
-          "description": "AI-assisted marketing video highlighting modern architectural design, floor plans, and residential amenities.",
-          "globalIndex": 27,
-          "type": "video"
-        },
-        {
-          "src": "/creative_content/Creative4.jpeg",
-          "title": "Online Learning Poster",
-          "description": "E-learning platform advertisement graphic designed for campaigns.",
-          "globalIndex": 3,
-          "type": "image"
-        },
-        {
-          "src": "/ai_videos/Viviana Realty video 3 with company logo .mp4",
-          "title": "Viviana Realty 3",
-          "description": "AI-assisted branded real estate presentation video featuring company logo and listing details.",
-          "globalIndex": 28,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/Viviana Realty.mp4",
-          "title": "Viviana Realty 1",
-          "description": "AI-assisted promotional video showcasing luxury apartments, property highlights, and real estate offerings.",
-          "globalIndex": 26,
-          "type": "video"
-        }
+        { "src": "/creative_content/HealthcareCreative.jpeg", "title": "Healthcare Creative", "description": "Medical services and healthcare awareness promotional creative.", "globalIndex": 30, "type": "image" },
+        { "src": "/creative_content/Healthcare2Creative.jpeg", "title": "Healthcare Creative 2", "description": "Doctor and clinic lead generation campaign creative.", "globalIndex": 31, "type": "image" },
+        { "src": "/creative_content/healthcare3Creative.jpeg", "title": "Healthcare Creative 3", "description": "Hospital and specialist services promotional banner creative.", "globalIndex": 32, "type": "image" },
+        { "src": "/creative_content/Healthcare4.jpeg", "title": "Healthcare Creative 4", "description": "Medical awareness and health services social media creative.", "globalIndex": 33, "type": "image" },
+        { "src": "/creative_content/Oldagehome.jpeg", "title": "Old Age Home Creative", "description": "Compassionate care services promotional creative for senior living facilities.", "globalIndex": 34, "type": "image" },
+        { "src": "/creative_content/Oldagehome2.jpeg", "title": "Old Age Home Creative 2", "description": "Elder care and assisted living promotional campaign visual.", "globalIndex": 35, "type": "image" },
+        { "src": "/creative_content/Oldagehome3.jpeg", "title": "Old Age Home Creative 3", "description": "Senior care and wellness services ad creative.", "globalIndex": 36, "type": "image" },
+        { "src": "/creative_content/Opticalscreative.jpeg", "title": "Opticals Creative", "description": "Eyecare and optical services promotional creative for digital ads.", "globalIndex": 37, "type": "image" },
+        { "src": "/creative_content/Opticalscretive.jpeg", "title": "Opticals Creative 2", "description": "Vision care and spectacle store branding promotional visual.", "globalIndex": 38, "type": "image" },
+        { "src": "/creative_content/Creative2.jpeg", "title": "Healthcare Lead Campaign", "description": "Digital marketing campaign designed to help doctors, clinics, and hospitals generate quality leads.", "globalIndex": 39, "type": "image" },
+        { "src": "/creative_content/Creative5.jpeg", "title": "Healthcare Digital Marketing Campaign", "description": "An ad creative and landing page concept designed for B2B lead generation targeting doctors and clinics.", "globalIndex": 40, "type": "image" },
+        { "src": "https://youtube.com/shorts/QIh7twZ3mV4", "title": "Apple Multi Specialist Healthcare", "description": "An AI-assisted promotional video highlighting hospital infrastructure, expert doctors, and advanced healthcare services at Apple Multi Specialist Healthcare.", "globalIndex": 208, "type": "youtube" },
+        { "src": "/Campaign/HealthcareCampaign.jpeg", "title": "Healthcare Clinic Campaign", "description": "A patient acquisition and awareness campaign built for doctors, specialty hospitals, and wellness clinics.", "globalIndex": 304, "type": "campaign" }
       ]
     },
     {
-      "industry": "Hospitality",
-      "description": "High-quality lead generation and marketing flyer for dining brands.",
+      "industry": "Finance",
+      "description": "Finance dashboards, investment campaigns, branding creatives, and educational reels.",
       "images": [
-        {
-          "src": "/creative_content/Creative6.jpeg",
-          "title": "Restaurant Brand Campaign",
-          "description": "High-quality lead generation and marketing flyer for dining brands.",
-          "globalIndex": 5,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative9.jpeg",
-          "title": "Gourmet Bistro Banner",
-          "description": "Aesthetic culinary advertising graphic for restaurant promotions.",
-          "globalIndex": 8,
-          "type": "image"
-        }
+        { "src": "/creative_content/Financexreative.jpeg", "title": "Finance Creative", "description": "Premium finance branding and investment promotional creative.", "globalIndex": 20, "type": "image" },
+        { "src": "/creative_content/Financecreative2.jpeg", "title": "Finance Creative 2", "description": "Wealth management and financial services ad creative.", "globalIndex": 21, "type": "image" },
+        { "src": "/creative_content/Financecreative3.jpeg", "title": "Finance Creative 3", "description": "Investment advisory and financial growth promotional visual.", "globalIndex": 22, "type": "image" },
+        { "src": "/creative_content/Financecreative4.jpeg", "title": "Finance Creative 4", "description": "Finance sector branding creative for digital marketing campaigns.", "globalIndex": 23, "type": "image" },
+        { "src": "/creative_content/Financecreative5.jpeg", "title": "Finance Creative 5", "description": "Insurance and savings promotional creative for lead generation.", "globalIndex": 24, "type": "image" },
+        { "src": "/creative_content/Financecreative6.jpeg", "title": "Finance Creative 6", "description": "Mutual fund and wealth planning social media ad creative.", "globalIndex": 25, "type": "image" },
+        { "src": "/creative_content/Financecreative7.jpeg", "title": "Finance Creative 7", "description": "Corporate finance and business growth promotional banner.", "globalIndex": 26, "type": "image" },
+        { "src": "/creative_content/ITRFinance.jpeg", "title": "ITR Finance Creative", "description": "Tax filing and ITR services promotional creative for digital campaigns.", "globalIndex": 27, "type": "image" },
+        { "src": "/creative_content/Creative7.jpeg", "title": "Investment Growth Ad", "description": "Wealth management and finance growth promotional content.", "globalIndex": 6, "type": "image" },
+        { "src": "/creative_content/Creative8.jpeg", "title": "Crypto Platform Asset", "description": "Digital currency trading platform banner design concept.", "globalIndex": 7, "type": "image" },
+        { "src": "https://youtube.com/shorts/4K5K4USvQ-0", "title": "Viyom Finance Services (Promo)", "description": "A high-impact promotional video for Viyom Finance Services highlighting wealth growth, loans, and investment advisory.", "globalIndex": 210, "type": "youtube" },
+        { "src": "https://youtube.com/shorts/QheeYMmcdn4", "title": "Quick Personal Loans", "description": "An informative video guide on personal loans, instant approval options, and flexible repayment schemes.", "globalIndex": 211, "type": "youtube" },
+        { "src": "/Campaign/FinanceCampaign.jpeg", "title": "Finance Advisory Campaign", "description": "A lead generation and conversion-focused performance marketing campaign designed for financial service advisors.", "globalIndex": 301, "type": "campaign" },
+        { "src": "/Campaign/FinanceCampaign2.jpeg", "title": "Finance Wealth Campaign", "description": "Strategic marketing campaign focusing on wealth management, investment trust, and retirement planning.", "globalIndex": 302, "type": "campaign" }
       ]
     },
     {
-      "industry": "Other Projects",
-      "description": "Software product launch promotional design visual.",
+      "industry": "Hospitality & Food",
+      "description": "Hotel booking platforms, restaurant campaigns, food brand creatives, and social media reels.",
       "images": [
-        {
-          "src": "/creative_content/Creative10.jpeg",
-          "title": "SaaS Launch Creative",
-          "description": "Software product launch promotional design visual.",
-          "globalIndex": 9,
-          "type": "image"
-        },
-        {
-          "src": "/ai_videos/SWAMINI TOURS.mp4",
-          "title": "Swamini Tours",
-          "description": "AI-assisted promotional video illustrating travel packages, itineraries, and tourism experiences.",
-          "globalIndex": 17,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/MOTORYDO.mp4",
-          "title": "Motorydo",
-          "description": "AI-assisted marketing video showcasing automotive detailing, tracking, or booking concepts.",
-          "globalIndex": 13,
-          "type": "video"
-        }
-      ]
-    },
-    {
-      "industry": "Agriculture",
-      "description": "AI-assisted promotional video showcasing organic seeds, crop protection products, and agricultural growth solutions.",
-      "images": [
-        {
-          "src": "/ai_videos/Final Vidhivihan Agro Products .mp4",
-          "title": "Vidhivihan Agro Products",
-          "description": "AI-assisted promotional video showcasing organic seeds, crop protection products, and agricultural growth solutions.",
-          "globalIndex": 29,
-          "type": "video"
-        },
-        {
-          "src": "/ai_videos/MACK AGRO.mp4",
-          "title": "Mack Agro",
-          "description": "AI-assisted promotional video illustrating advanced farming equipment, crop protection, and modern agro-solutions.",
-          "globalIndex": 25,
-          "type": "video"
-        }
+        { "src": "/creative_content/HotelAndResort.jpeg", "title": "Hotel & Resort Creative", "description": "Premium hospitality branding creative for hotel and resort marketing.", "globalIndex": 50, "type": "image" },
+        { "src": "/creative_content/HotelandResort2.jpeg", "title": "Hotel & Resort Creative 2", "description": "Luxury hotel and resort promotional visual for digital campaigns.", "globalIndex": 51, "type": "image" },
+        { "src": "/creative_content/HotelAndResorts3.jpeg", "title": "Hotel & Resort Creative 3", "description": "Boutique hotel and resort services ad creative for lead generation.", "globalIndex": 52, "type": "image" },
+        { "src": "/creative_content/foodcreative1.jpeg", "title": "Food Creative 1", "description": "Restaurant and food brand social media promotional creative.", "globalIndex": 53, "type": "image" },
+        { "src": "/creative_content/foodcreative2.jpeg", "title": "Food Creative 2", "description": "Gourmet dining and food delivery promotional banner creative.", "globalIndex": 54, "type": "image" },
+        { "src": "/creative_content/Creative6.jpeg", "title": "Restaurant Brand Campaign", "description": "High-quality lead generation and marketing flyer for dining brands.", "globalIndex": 5, "type": "image" },
+        { "src": "/creative_content/Creative9.jpeg", "title": "Gourmet Bistro Banner", "description": "Aesthetic culinary advertising graphic for restaurant promotions.", "globalIndex": 8, "type": "image" },
+        { "src": "https://youtube.com/shorts/eP3mbrEjEgA", "title": "Hayat Food", "description": "An appetizing preview showcasing Hayat Food's culinary items, gourmet dishes, and hospitality experiences.", "globalIndex": 205, "type": "youtube" },
+        { "src": "/Campaign/ResortsCampaign.jpeg", "title": "Luxury Resort Booking Campaign", "description": "High-impact advertising campaign optimized for luxury resort stays, hotel bookings, and dining promotions.", "globalIndex": 305, "type": "campaign" }
       ]
     },
     {
       "industry": "Solar",
-      "description": "AI-assisted promotional video illustrating clean energy solutions, solar panel installations, and sustainable technology benefits.",
+      "description": "Solar websites, green energy campaigns, AI solar videos, and promotional clean energy reels.",
       "images": [
-        {
-          "src": "/ai_videos/kwikM solar.mp4",
-          "title": "KwikM Solar",
-          "description": "AI-assisted promotional video illustrating clean energy solutions, solar panel installations, and sustainable technology benefits.",
-          "globalIndex": 15,
-          "type": "video"
-        }
+        { "src": "/creative_content/Solar.jpeg", "title": "Solar Energy Creative", "description": "Clean energy and solar installation promotional creative for digital campaigns.", "globalIndex": 60, "type": "image" },
+        { "src": "/creative_content/Solarcreative2.jpeg", "title": "Solar Creative 2", "description": "Residential and commercial solar panel solutions ad creative.", "globalIndex": 61, "type": "image" },
+        { "src": "/creative_content/SolarCreative3.jpeg", "title": "Solar Creative 3", "description": "Green energy awareness promotional banner for solar services.", "globalIndex": 62, "type": "image" },
+        { "src": "/creative_content/Solarcreative4.jpeg", "title": "Solar Creative 4", "description": "Sustainable energy and solar rooftop solutions campaign creative.", "globalIndex": 63, "type": "image" },
+        { "src": "https://youtube.com/shorts/ZPqqln6JGNA", "title": "BITAPLUS Solar", "description": "An informative overview of BITAPLUS Solar's solar energy solutions, rooftop panel installations, and clean energy benefits.", "globalIndex": 206, "type": "youtube" },
+        { "src": "/Campaign/SolarCampaign.jpeg", "title": "Solar Energy Lead Campaign", "description": "Performance marketing campaign designed for commercial and residential solar installation leads.", "globalIndex": 306, "type": "campaign" }
+      ]
+    },
+    {
+      "industry": "Interior Design",
+      "description": "Interior design studios, home décor campaigns, and premium living space creatives.",
+      "images": [
+        { "src": "/creative_content/Interiorcreative.jpeg", "title": "Interior Design Creative", "description": "Premium home interior and décor services promotional creative.", "globalIndex": 70, "type": "image" },
+        { "src": "/creative_content/interior2creative.jpeg", "title": "Interior Design Creative 2", "description": "Modern living space and interior styling ad creative.", "globalIndex": 71, "type": "image" },
+        { "src": "/creative_content/Interior3creative.jpeg", "title": "Interior Design Creative 3", "description": "Luxury interior design and home renovation promotional visual.", "globalIndex": 72, "type": "image" },
+        { "src": "https://youtube.com/shorts/jEOIOVnY_vI", "title": "Aditya Modular Design Studio", "description": "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", "globalIndex": 201, "type": "youtube" }
+      ]
+    },
+    {
+      "industry": "Technology & Apps",
+      "description": "Technology companies, SaaS platforms, application launches, and digital services campaigns.",
+      "images": [
+        { "src": "/creative_content/TechnologyCreative.jpeg", "title": "Technology Creative", "description": "Tech company and digital solutions promotional creative for branding campaigns.", "globalIndex": 80, "type": "image" },
+        { "src": "/creative_content/Applicationcreative.jpeg", "title": "Application Creative", "description": "Mobile and web application launch promotional creative.", "globalIndex": 81, "type": "image" },
+        { "src": "/creative_content/Applicationcreative2.jpeg", "title": "Application Creative 2", "description": "SaaS and digital product ad creative for performance marketing.", "globalIndex": 82, "type": "image" },
+        { "src": "/creative_content/Creative10.jpeg", "title": "SaaS Launch Creative", "description": "Software product launch promotional design visual.", "globalIndex": 9, "type": "image" }
+      ]
+    },
+    {
+      "industry": "Tours & Travels",
+      "description": "Travel agencies, tourism campaigns, tour package creatives, and destination marketing.",
+      "images": [
+        { "src": "/creative_content/ToursAndTravels.jpeg", "title": "Tours & Travels Creative", "description": "Travel agency and tour package promotional creative for digital campaigns.", "globalIndex": 90, "type": "image" },
+        { "src": "/creative_content/ToursAnd2TRavels.jpeg", "title": "Tours & Travels Creative 2", "description": "Destination tourism and holiday package promotional banner creative.", "globalIndex": 91, "type": "image" }
+      ]
+    },
+    {
+      "industry": "Sports",
+      "description": "Sports brands, fitness campaigns, athletic event creatives, and sports marketing.",
+      "images": [
+        { "src": "/creative_content/Sportscreative1.jpeg", "title": "Sports Creative", "description": "Sports brand and fitness promotional creative for social media campaigns.", "globalIndex": 100, "type": "image" }
+      ]
+    },
+    {
+      "industry": "Other Creative",
+      "description": "Additional marketing campaigns, custom integrations, branding assets, and creative content.",
+      "images": [
+        { "src": "/creative_content/Othercreative.jpeg", "title": "Other Brand Creative", "description": "General branding and promotional creative for digital marketing campaigns.", "globalIndex": 110, "type": "image" },
+        { "src": "/Campaign/FoundationCampaign.jpeg", "title": "Foundation Brand Campaign", "description": "Branding and donor awareness campaign designed for non-profit and charitable foundations.", "globalIndex": 303, "type": "campaign" }
+      ]
+    },
+    {
+      "industry": "Digital Marketing",
+      "description": "AI-powered social media marketing, Google Ads, and performance-driven digital campaigns by Ai Digital.",
+      "images": [
+        { "src": "https://youtube.com/shorts/VNMd9kBvsmg", "title": "Ai Digital – Social Media Marketing", "description": "Discover how Ai Digital drives measurable growth through social media marketing, Google Ads, and AI-powered digital strategies.", "globalIndex": 200, "type": "youtube" },
+        { "src": "https://youtube.com/shorts/dv9gLumeu4c", "title": "Adly – Brand Promotional Video", "description": "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.", "globalIndex": 202, "type": "youtube" },
+        { "src": "https://youtube.com/shorts/yrA8PZJ17k4", "title": "Hayum – Brand Promotional Video", "description": "An engaging AI-assisted promotional reel for Hayum, highlighting brand story, product offerings, and audience connect.", "globalIndex": 203, "type": "youtube" },
+        { "src": "https://youtube.com/shorts/kGqZ1WCFwXA", "title": "Ai Digital – Affordable Video Services", "description": "Get high-quality AI videos and social media creatives at affordable prices to boost your business reach.", "globalIndex": 212, "type": "youtube" }
       ]
     },
     {
       "industry": "Construction",
-      "description": "Complete construction ERP and project management software website showcase. Feature-rich, optimized for lead generation and search engine visibility.",
+      "description": "All-in-one Construction ERP & Project Management software showcase, web portal, and local SEO campaign.",
       "images": [
-        {
-          "src": "/uploads/Hitoofice_1782739586341.png",
-          "title": "Hitoffice Construction ERP",
-          "description": "Complete construction ERP and project management software website showcase. Feature-rich, optimized for lead generation and search engine visibility.",
-          "globalIndex": 101,
-          "type": "image"
-        }
+        { "src": "https://www.hitoffice.co.in/", "title": "Hitoffice Construction ERP", "description": "Complete construction ERP and project management software website showcase. Feature-rich, optimized for lead generation and search engine visibility.", "globalIndex": 101, "type": "website" }
       ]
     }
   ]
