@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { execSync } from "child_process";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   try {
     console.log("🚀 Starting Git Push via API...");
@@ -12,9 +14,8 @@ export async function GET() {
     // 2. Git Commit
     let commitOut = "";
     try {
-      commitOut = execSync('git commit -m "feat: integrate Campaign images gallery and fix Campaigns tab filtering"', { encoding: "utf-8" });
+      commitOut = execSync('git commit -m "chore: secure test API routes and add scan-db script"', { encoding: "utf-8" });
     } catch (commitErr) {
-      // If there's nothing to commit, catch and proceed
       commitOut = commitErr.stdout || commitErr.message;
     }
     console.log("Git Commit:", commitOut);

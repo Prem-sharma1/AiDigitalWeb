@@ -20,9 +20,10 @@ if (fs.existsSync(envPath)) {
     if (eqIdx === -1) continue;
     const key = trimmed.substring(0, eqIdx).trim();
     const val = trimmed.substring(eqIdx + 1).trim().replace(/^"|"$/g, "");
-    if (!process.env[key]) process.env[key] = val;
+    process.env[key] = val;
   }
 }
+console.log("⚙️  Env Loaded. User:", process.env.DB_USER, "| Password Status:", process.env.DB_PASSWORD ? "[Set]" : "[Empty]");
 
 const DB_CONFIG = {
   host: process.env.DB_HOST || "127.0.0.1",
