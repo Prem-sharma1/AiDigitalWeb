@@ -208,7 +208,29 @@ function formatAndSortPortfolio(rows) {
 
 export async function GET() {
   try {
-    // Read exclusively from local JSON (the single source of truth)
+    const connection = await pool.getConnection();
+    try {
+      await ensurePortfolioTable(connection);
+      const [rows] = await connection.query("SELECT * FROM portfolio_items");
+      if (rows && rows.length > 0) {
+        const data = formatAndSortPortfolio(rows);
+        return NextResponse.json(data, {
+          headers: {
+            "Cache-Control": "no-store, no-cache, must-revalidate, proxy-revalidate",
+            "Pragma": "no-cache",
+            "Expires": "0"
+          }
+        });
+      }
+    } finally {
+      connection.release();
+    }
+  } catch (dbError) {
+    console.warn("Failed to retrieve portfolio data from MySQL, falling back to JSON:", dbError.message);
+  }
+
+  try {
+    // Read fallback from local JSON (backup source of truth)
     const data = getJsonFallback();
     return NextResponse.json(data, {
       headers: {
@@ -228,6 +250,7 @@ export async function GET() {
     });
   }
 }
+
 
 export async function POST(req) {
   try {
