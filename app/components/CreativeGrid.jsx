@@ -163,22 +163,6 @@ export default function CreativeGrid({ activeFilter = "All" }) {
   const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
   const [videoErrors, setVideoErrors] = useState({});
 
-  useEffect(() => {
-    fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error("Failed to load portfolio");
-      })
-      .then((data) => {
-        if (data.creativeGroups && data.creativeGroups.length > 0) {
-          const hasImages = data.creativeGroups.some((g) => g.images && g.images.length > 0);
-          if (hasImages) {
-            setCreativeGroupsState(data.creativeGroups);
-          }
-        }
-      })
-      .catch((err) => console.warn("Using static fallback creative groups:", err));
-  }, []);
 
   const getMediaType = (type, src, category) => {
     if (category === "image" || category === "video" || category === "reel" || category === "website" || category === "campaign") {

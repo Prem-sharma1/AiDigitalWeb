@@ -46,19 +46,6 @@ export default function PortfolioShowcase() {
   const [showcaseProjectsState, setShowcaseProjectsState] = useState(showcaseProjects);
   const [activeIndex, setActiveIndex] = useState(0);
 
-  useEffect(() => {
-    fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error("Failed to load portfolio");
-      })
-      .then((data) => {
-        if (data.showcaseProjects && data.showcaseProjects.length > 0) {
-          setShowcaseProjectsState(data.showcaseProjects);
-        }
-      })
-      .catch((err) => console.warn("Using static fallback showcase projects:", err));
-  }, []);
 
   const activeProject = showcaseProjectsState[activeIndex] || showcaseProjectsState[0] || { tags: [] };
 

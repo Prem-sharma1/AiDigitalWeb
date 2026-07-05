@@ -128,23 +128,6 @@ export default function FeaturedWork() {
   const [industriesState, setIndustriesState] = useState(industries);
   const [otherProjectsState, setOtherProjectsState] = useState(otherProjects);
 
-  useEffect(() => {
-    fetch("/api/admin/portfolio?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error("Failed to load portfolio data");
-      })
-      .then((data) => {
-        if (data.industries && data.industries.length > 0) {
-          const hasProjects = data.industries.some((ind) => ind.projects && ind.projects.length > 0);
-          if (hasProjects) setIndustriesState(data.industries);
-        }
-        if (data.otherProjects && data.otherProjects.length > 0) {
-          setOtherProjectsState(data.otherProjects);
-        }
-      })
-      .catch((err) => console.warn("Using fallback static industries/other projects:", err));
-  }, []);
 
   const visibleIndustries = useMemo(() => {
     if (activeFilter === "All") {
