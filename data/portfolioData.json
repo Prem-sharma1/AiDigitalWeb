@@ -39,6 +39,17 @@
   ],
   "industries": [
     {
+      "name": "Real Estate",
+      "description": "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
+      "projects": [
+        { "title": "Property Listing Website", "type": "Website & SEO" },
+        { "title": "ANV Realty Website", "type": "Website & SEO" },
+        { "title": "Real Estate Lead Campaign", "type": "Campaigns" },
+        { "title": "AI Property Promo", "type": "AI Videos" },
+        { "title": "Real Estate Instagram Reel", "type": "Reels" }
+      ]
+    },
+    {
       "name": "Finance",
       "description": "Finance dashboards, investment campaigns, branding creatives, and educational reels.",
       "projects": [
@@ -121,7 +132,8 @@
       "description": "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
       "images": [
         { "src": "/creative_content/RealStatecreative.jpeg", "title": "Real Estate Brand Creative", "description": "High-impact branding and promotional creative for real estate marketing campaigns.", "globalIndex": 0, "type": "image" },
-        { "src": "/creative_content/Creative1.jpeg", "title": "Luxury Villa Showcase", "description": "Branding creative for high-end residential real estate listing.", "globalIndex": 1, "type": "image" }
+        { "src": "/creative_content/Creative1.jpeg", "title": "Luxury Villa Showcase", "description": "Branding creative for high-end residential real estate listing.", "globalIndex": 1, "type": "image" },
+        { "src": "https://anvreealty.com/", "thumbnail": "/uploads/Anv_reality.jpg", "title": "ANV Realty Website", "description": "Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.", "globalIndex": 2, "type": "website" }
       ]
     },
     {

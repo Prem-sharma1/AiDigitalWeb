@@ -9,7 +9,8 @@ const creativeGroups = [
     description: "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
     images: [
       { src: "/creative_content/RealStatecreative.jpeg", title: "Real Estate Brand Creative", description: "High-impact branding and promotional creative for real estate marketing campaigns.", globalIndex: 0, type: "image" },
-      { src: "/creative_content/Creative1.jpeg", title: "Luxury Villa Showcase", description: "Branding creative for high-end residential real estate listing.", globalIndex: 1, type: "image" }
+      { src: "/creative_content/Creative1.jpeg", title: "Luxury Villa Showcase", description: "Branding creative for high-end residential real estate listing.", globalIndex: 1, type: "image" },
+      { src: "https://anvreealty.com/", thumbnail: "/uploads/Anv_reality.jpg", title: "ANV Realty Website", description: "Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.", globalIndex: 2, type: "website" }
     ]
   },
   {
@@ -432,9 +433,9 @@ export default function CreativeGrid({ activeFilter = "All" }) {
 
                       // Website type: if local uploaded image, render directly; if external URL, use thum.io screenshot
                       if (playerType === "website") {
-                        const thumb = isExternalUrl
+                        const thumb = img.thumbnail || (isExternalUrl
                           ? `https://image.thum.io/get/${img.src}`
-                          : img.src;
+                          : img.src);
                         return (
                           <img
                             src={thumb}
@@ -610,9 +611,9 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                     />
                   );
                 } else if (playerType === "website") {
-                  const imageSrc = activeImage.src && (activeImage.src.startsWith("http://") || activeImage.src.startsWith("https://"))
+                  const imageSrc = activeImage.thumbnail || (activeImage.src && (activeImage.src.startsWith("http://") || activeImage.src.startsWith("https://"))
                     ? `https://image.thum.io/get/${activeImage.src}`
-                    : activeImage.src;
+                    : activeImage.src);
                   return (
                     <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "16px" }}>
                       <img

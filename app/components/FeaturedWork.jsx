@@ -21,6 +21,7 @@ const industries = [
       "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
     projects: [
       { title: "Property Listing Website", type: "Website & SEO" },
+      { title: "ANV Realty Website", type: "Website & SEO" },
       { title: "Real Estate Lead Campaign", type: "Campaigns" },
       { title: "AI Property Promo", type: "AI Videos" },
       { title: "Real Estate Instagram Reel", type: "Reels" }

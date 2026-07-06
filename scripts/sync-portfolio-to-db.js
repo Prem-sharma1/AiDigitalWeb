@@ -57,9 +57,16 @@ async function main() {
       src VARCHAR(500) DEFAULT NULL,
       type VARCHAR(50) DEFAULT NULL,
       global_index INT DEFAULT NULL,
+      thumbnail VARCHAR(255) DEFAULT NULL,
       PRIMARY KEY (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `);
+
+  try {
+    await connection.execute("ALTER TABLE portfolio_items ADD COLUMN thumbnail VARCHAR(255) DEFAULT NULL");
+  } catch (err) {
+    // Ignore error if column already exists
+  }
   console.log("✅ Table ready.");
 
   // Read JSON data
@@ -117,10 +124,10 @@ async function main() {
     for (const img of (grp.images || [])) {
       const id = crypto.randomUUID();
       await connection.execute(
-        `INSERT INTO portfolio_items (id, section, title, description, src, type, global_index, industry, category)
-         VALUES (?, 'creative', ?, ?, ?, ?, ?, ?, ?)`,
+        `INSERT INTO portfolio_items (id, section, title, description, src, type, global_index, industry, category, thumbnail)
+         VALUES (?, 'creative', ?, ?, ?, ?, ?, ?, ?, ?)`,
         [id, img.title, img.description || null, img.src, img.type || "image",
-         img.globalIndex || null, grp.industry, img.category || null]
+         img.globalIndex || null, grp.industry, img.category || null, img.thumbnail || null]
       );
       inserted++;
       creativeCount++;

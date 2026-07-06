@@ -43,10 +43,17 @@ async function ensurePortfolioTable(connection) {
       src VARCHAR(255) DEFAULT NULL,
       type VARCHAR(50) DEFAULT NULL,
       global_index INT DEFAULT NULL,
+      thumbnail VARCHAR(255) DEFAULT NULL,
       PRIMARY KEY (id)
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
   `;
   await connection.query(query);
+
+  try {
+    await connection.query("ALTER TABLE portfolio_items ADD COLUMN thumbnail VARCHAR(255) DEFAULT NULL");
+  } catch (err) {
+    // Ignore error if column already exists
+  }
 }
 
 // Helper to synchronize JSON portfolio data into the database
@@ -119,8 +126,8 @@ async function syncPortfolioToDb(connection, portfolioData) {
         const id = crypto.randomUUID();
         await connection.query(`
           INSERT INTO portfolio_items 
-          (id, section, title, description, src, type, global_index, industry, category)
-          VALUES (?, 'creative', ?, ?, ?, ?, ?, ?, ?)
+          (id, section, title, description, src, type, global_index, industry, category, thumbnail)
+          VALUES (?, 'creative', ?, ?, ?, ?, ?, ?, ?, ?)
         `, [
           id,
           img.title,
@@ -129,7 +136,8 @@ async function syncPortfolioToDb(connection, portfolioData) {
           img.type || "image",
           img.globalIndex || null,
           grp.industry,
-          img.category || null
+          img.category || null,
+          img.thumbnail || null
         ]);
       }
     }
@@ -196,6 +204,7 @@ function formatAndSortPortfolio(rows) {
         globalIndex: item.global_index || undefined,
         type: item.type || "image",
         category: item.category || undefined,
+        thumbnail: item.thumbnail || undefined,
       });
     }
   });

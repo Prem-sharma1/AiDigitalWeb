@@ -79,9 +79,16 @@ async function main() {
       icon VARCHAR(50) NULL,
       src VARCHAR(255) NULL,
       type VARCHAR(50) NULL,
-      global_index INT NULL
+      global_index INT NULL,
+      thumbnail VARCHAR(255) NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
   `);
+
+  try {
+    await db.query("ALTER TABLE portfolio_items ADD COLUMN thumbnail VARCHAR(255) DEFAULT NULL");
+  } catch (err) {
+    // Ignore error if column already exists
+  }
   console.log('Table "portfolio_items" verified.');
 
   // Create blogs
@@ -244,8 +251,8 @@ async function main() {
           const id = Math.random().toString(36).substring(2, 15);
           await db.query(`
             INSERT INTO portfolio_items 
-            (id, section, title, description, src, type, global_index, industry)
-            VALUES (?, 'creative', ?, ?, ?, ?, ?, ?)
+            (id, section, title, description, src, type, global_index, industry, thumbnail)
+            VALUES (?, 'creative', ?, ?, ?, ?, ?, ?, ?)
           `, [
             id,
             img.title,
@@ -253,7 +260,8 @@ async function main() {
             img.src,
             img.type || "image",
             img.globalIndex || null,
-            grp.industry
+            grp.industry,
+            img.thumbnail || null
           ]);
         }
       }

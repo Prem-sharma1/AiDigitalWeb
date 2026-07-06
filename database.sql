@@ -52,7 +52,6 @@ INSERT INTO `pricing_plans` VALUES
 ('p6pk00m966', 'aiVideoPlans', NULL, NULL, 'Growth Plan', NULL, '5,950', NULL, '[{"icon":"video_library","text":"7 AI Videos"},{"icon":"check_circle","text":"Ideal for growing brands"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Growth Plan (7 Videos for ₹5950)', 'static-tag', 1, '{"card":{"borderColor":"#FD7E14","borderWidth":"2px","position":"relative","overflow":"hidden"},"tag":{"backgroundColor":"#FFF0EA","color":"#FD7E14"},"icon":{"color":"#FD7E14"},"button":{"backgroundColor":"#FD7E14"}}'),
 ('22w0etoexmy', 'aiVideoPlans', NULL, NULL, 'Pro Plan', NULL, '8,000', NULL, '[{"icon":"video_library","text":"10 AI Videos"},{"icon":"check_circle","text":"Best for maximum impact"}]', 'Select Plan', 0, 'AI Video Production', 'AI Video - Pro Plan (10 Videos for ₹8000)', 'static-tag', 0, NULL);
 
-
 -- --------------------------------------------------------
 -- Table structure for table `portfolio_items`
 -- --------------------------------------------------------
@@ -73,11 +72,12 @@ CREATE TABLE `portfolio_items` (
   `src` VARCHAR(255) DEFAULT NULL,
   `type` VARCHAR(50) DEFAULT NULL,
   `global_index` INT DEFAULT NULL,
+  `thumbnail` VARCHAR(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 -- Dumping data for table `portfolio_items`
-INSERT INTO `portfolio_items` VALUES 
+INSERT INTO `portfolio_items` (`id`, `section`, `title`, `category`, `industry`, `metric`, `metric_label`, `description`, `tags`, `accent`, `icon`, `src`, `type`, `global_index`) VALUES 
 ('s1', 'showcase', 'Property Listing Website', 'Website & SEO', 'Real Estate', '+142%', 'Organic traffic', 'A conversion-focused property portal with SEO pages, lead capture, and campaign-ready landing sections.', '[\"Static Website\",\"Local SEO\",\"Lead Forms\"]', 'blue', 'language', NULL, NULL, NULL),
 ('s2', 'showcase', 'AI Property Promo', 'AI Videos', 'Real Estate', '3.8x', 'Ad return', 'AI-assisted property video concepting and short-form creative built for paid and organic distribution.', '[\"AI Video\",\"Reels\",\"Paid Ads\"]', 'orange', 'movie', NULL, NULL, NULL),
 ('s3', 'showcase', 'Finance Dashboard', 'Website & SEO', 'Finance', '+78%', 'Qualified leads', 'A modern dashboard-style web experience for finance education, investor trust, and measurable inquiries.', '[\"Dashboard UI\",\"Content SEO\",\"Analytics\"]', 'blue', 'query_stats', NULL, NULL, NULL),
@@ -126,6 +126,10 @@ INSERT INTO `portfolio_items` VALUES
 ('c24', 'creative', 'Restaurant Brand Campaign', NULL, 'Hospitality', NULL, NULL, 'High-quality lead generation and marketing flyer for dining brands.', NULL, NULL, NULL, '/creative_content/Creative6.jpeg', 'image', 5),
 ('c25', 'creative', 'Gourmet Bistro Banner', NULL, 'Hospitality', NULL, NULL, 'Aesthetic culinary advertising graphic for restaurant promotions.', NULL, NULL, NULL, '/creative_content/Creative9.jpeg', 'image', 8),
 ('c29', 'creative', 'SaaS Launch Creative', NULL, 'Other Projects', NULL, NULL, 'Software product launch promotional design visual.', NULL, NULL, NULL, '/creative_content/Creative10.jpeg', 'image', 9);
+
+INSERT INTO `portfolio_items` (`id`, `section`, `title`, `category`, `industry`, `metric`, `metric_label`, `description`, `tags`, `accent`, `icon`, `src`, `type`, `global_index`, `thumbnail`) VALUES
+('c_anv', 'creative', 'ANV Realty Website', NULL, 'Real Estate', NULL, NULL, 'Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.', NULL, NULL, NULL, 'https://anvreealty.com/', 'website', 2, '/uploads/Anv_reality.jpg'),
+('f_anv', 'featured', 'ANV Realty Website', 'Website & SEO', 'Real Estate', NULL, NULL, 'Websites, campaigns, AI property promotions, creative branding, and real estate reels.', NULL, NULL, NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 -- Table structure for table `blogs`
@@ -228,4 +232,3 @@ CREATE TABLE `checkout_exit_feedback` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
