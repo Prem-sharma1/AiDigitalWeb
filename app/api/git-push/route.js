@@ -7,9 +7,10 @@ export async function GET() {
   try {
     console.log("🚀 Starting Git Push via API...");
     
-    // 1. Git Add
-    const addOut = execSync("git add .", { encoding: "utf-8" });
-    console.log("Git Add:", addOut);
+    // 1. Git Status & Add
+    const statusOut = execSync("git status", { encoding: "utf-8" });
+    const diffOut = execSync("git diff", { encoding: "utf-8" });
+    const addOut = execSync("git add -A", { encoding: "utf-8" });
 
     // 2. Git Commit
     let commitOut = "";
@@ -18,15 +19,21 @@ export async function GET() {
     } catch (commitErr) {
       commitOut = commitErr.stdout || commitErr.message;
     }
-    console.log("Git Commit:", commitOut);
-
+    
     // 3. Git Push
-    const pushOut = execSync("git push origin HEAD", { encoding: "utf-8" });
+    let pushOut = "";
+    try {
+      pushOut = execSync("git push", { encoding: "utf-8" });
+    } catch (e) {
+      pushOut = e.stdout || e.message;
+    }
     console.log("Git Push:", pushOut);
 
     return NextResponse.json({
       success: true,
       log: {
+        status: statusOut,
+        diff: diffOut,
         add: addOut,
         commit: commitOut,
         push: pushOut
