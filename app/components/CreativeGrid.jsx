@@ -81,7 +81,8 @@ const creativeGroups = [
       { src: "/creative_content/Creative6.jpeg", title: "Restaurant Brand Campaign", description: "High-quality lead generation and marketing flyer for dining brands.", globalIndex: 5, type: "image" },
       { src: "/creative_content/Creative9.jpeg", title: "Gourmet Bistro Banner", description: "Aesthetic culinary advertising graphic for restaurant promotions.", globalIndex: 8, type: "image" },
       { src: "https://youtube.com/shorts/eP3mbrEjEgA", title: "Hayat Food", description: "An appetizing preview showcasing Hayat Food's culinary items, gourmet dishes, and hospitality experiences.", globalIndex: 205, type: "youtube" },
-      { src: "/Campaign/ResortsCampaign.jpeg", title: "Luxury Resort Booking Campaign", description: "High-impact advertising campaign optimized for luxury resort stays, hotel bookings, and dining promotions.", globalIndex: 305, type: "campaign" }
+      { src: "/Campaign/ResortsCampaign.jpeg", title: "Luxury Resort Booking Campaign", description: "High-impact advertising campaign optimized for luxury resort stays, hotel bookings, and dining promotions.", globalIndex: 305, type: "campaign" },
+      { src: "https://youtube.com/shorts/yrA8PZJ17k4", title: "Hayum – Brand Promotional Video", description: "An engaging AI-assisted promotional reel for Hayum, highlighting brand story, product offerings, and audience connect.", globalIndex: 203, type: "youtube" }
     ]
   },
   {
@@ -113,7 +114,8 @@ const creativeGroups = [
       { src: "/creative_content/TechnologyCreative.jpeg", title: "Technology Creative", description: "Tech company and digital solutions promotional creative for branding campaigns.", globalIndex: 80, type: "image" },
       { src: "/creative_content/Applicationcreative.jpeg", title: "Application Creative", description: "Mobile and web application launch promotional creative.", globalIndex: 81, type: "image" },
       { src: "/creative_content/Applicationcreative2.jpeg", title: "Application Creative 2", description: "SaaS and digital product ad creative for performance marketing.", globalIndex: 82, type: "image" },
-      { src: "/creative_content/Creative10.jpeg", title: "SaaS Launch Creative", description: "Software product launch promotional design visual.", globalIndex: 9, type: "image" }
+      { src: "/creative_content/Creative10.jpeg", title: "SaaS Launch Creative", description: "Software product launch promotional design visual.", globalIndex: 9, type: "image" },
+      { src: "https://youtube.com/shorts/dv9gLumeu4c", title: "Adly – Brand Promotional Video", description: "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.", globalIndex: 202, type: "youtube" }
     ]
   },
   {
@@ -144,8 +146,6 @@ const creativeGroups = [
     description: "AI-powered social media marketing, Google Ads, and performance-driven digital campaigns by Ai Digital.",
     images: [
       { src: "https://youtube.com/shorts/VNMd9kBvsmg", title: "Ai Digital – Social Media Marketing", description: "Discover how Ai Digital drives measurable growth through social media marketing, Google Ads, and AI-powered digital strategies.", globalIndex: 200, type: "youtube" },
-      { src: "https://youtube.com/shorts/dv9gLumeu4c", title: "Adly – Brand Promotional Video", description: "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.", globalIndex: 202, type: "youtube" },
-      { src: "https://youtube.com/shorts/yrA8PZJ17k4", title: "Hayum – Brand Promotional Video", description: "An engaging AI-assisted promotional reel for Hayum, highlighting brand story, product offerings, and audience connect.", globalIndex: 203, type: "youtube" },
       { src: "https://youtube.com/shorts/kGqZ1WCFwXA", title: "Ai Digital – Affordable Video Services", description: "Get high-quality AI videos and social media creatives at affordable prices to boost your business reach.", globalIndex: 212, type: "youtube" }
     ]
   },
@@ -169,7 +169,7 @@ export default function CreativeGrid({ activeFilter = "All" }) {
     if (category === "image" || category === "video" || category === "reel" || category === "website" || category === "campaign") {
       return category;
     }
-    
+
     let resolvedType = type;
     if (!resolvedType && src) {
       const url = src.toLowerCase();
@@ -270,7 +270,6 @@ export default function CreativeGrid({ activeFilter = "All" }) {
         return true;
       });
 
-      // Sort images by globalIndex/sequence ascending
       const sortedImages = [...filteredImages].sort((a, b) => {
         const indexA = a.globalIndex !== undefined && a.globalIndex !== null && a.globalIndex !== "" ? Number(a.globalIndex) : 999999;
         const indexB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
@@ -284,7 +283,6 @@ export default function CreativeGrid({ activeFilter = "All" }) {
     }).filter(group => group.images.length > 0);
   }, [activeFilter, creativeGroupsState]);
 
-  // Flat array of visible items for lightbox navigation
   const visibleItems = useMemo(() => {
     return filteredGroups.flatMap(group => group.images);
   }, [filteredGroups]);
@@ -300,7 +298,6 @@ export default function CreativeGrid({ activeFilter = "All" }) {
     }
   };
 
-  // Close lightbox on Escape, navigate on ArrowLeft/ArrowRight
   useEffect(() => {
     if (selectedImageIndex === null) return;
 
@@ -318,7 +315,6 @@ export default function CreativeGrid({ activeFilter = "All" }) {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImageIndex, visibleItems]);
 
-  // Disable body scroll when lightbox is open
   useEffect(() => {
     if (selectedImageIndex !== null) {
       document.body.style.overflow = "hidden";
@@ -390,16 +386,16 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                       if (playerType === "video") {
                         if (videoErrors[img.src]) {
                           return (
-                            <div 
+                            <div
                               className="creative-img-fallback"
-                              style={{ 
-                                width: "100%", 
-                                height: "100%", 
-                                display: "flex", 
-                                flexDirection: "column", 
-                                alignItems: "center", 
-                                justifyContent: "center", 
-                                background: "linear-gradient(135deg, #1f2937, #111827)", 
+                              style={{
+                                width: "100%",
+                                height: "100%",
+                                display: "flex",
+                                flexDirection: "column",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                background: "linear-gradient(135deg, #1f2937, #111827)",
                                 color: "#9ca3af",
                                 padding: "16px",
                                 textAlign: "center"
@@ -446,7 +442,7 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                           />
                         );
                       }
-                      
+
                       const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
                       return (
                         <img
@@ -463,8 +459,8 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                         <span className="material-symbols-outlined">
                           {(() => {
                             const playerType = getPlayerType(img.src, img.type);
-                            return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel") 
-                              ? "play_circle" 
+                            return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel")
+                              ? "play_circle"
                               : "zoom_in";
                           })()}
                         </span>
@@ -551,16 +547,16 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                 if (playerType === "video") {
                   if (videoErrors[activeImage.src]) {
                     return (
-                      <div 
-                        style={{ 
+                      <div
+                        style={{
                           width: "80vw",
                           height: "50vh",
                           maxWidth: "600px",
-                          display: "flex", 
-                          flexDirection: "column", 
-                          alignItems: "center", 
-                          justifyContent: "center", 
-                          background: "linear-gradient(135deg, #1f2937, #111827)", 
+                          display: "flex",
+                          flexDirection: "column",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          background: "linear-gradient(135deg, #1f2937, #111827)",
                           color: "#9ca3af",
                           borderRadius: "12px",
                           border: "1px solid #374151",

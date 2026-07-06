@@ -14,7 +14,7 @@ export async function GET() {
     // 2. Git Commit
     let commitOut = "";
     try {
-      commitOut = execSync('git commit -m "chore: secure test API routes and add scan-db script"', { encoding: "utf-8" });
+      commitOut = execSync('git commit -m "Update portfolio layout and add Google Analytics tracking"', { encoding: "utf-8" });
     } catch (commitErr) {
       commitOut = commitErr.stdout || commitErr.message;
     }
