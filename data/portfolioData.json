@@ -764,6 +764,20 @@
           "description": "Destination tourism and holiday package promotional banner creative.",
           "globalIndex": 91,
           "type": "image"
+        },
+        {
+          "src": "https://youtube.com/shorts/i62UuswIIBU",
+          "title": "SWAMINI TOURS.",
+          "description": "Swamini Tours travel and tour package promotional reel.",
+          "globalIndex": 221,
+          "type": "reel"
+        },
+        {
+          "src": "https://youtube.com/shorts/oicsQmkp5D4",
+          "title": "Tours & Travels Reel",
+          "description": "Promotional reel for tourism and travel packages.",
+          "globalIndex": 220,
+          "type": "reel"
         }
       ]
     },
@@ -797,6 +811,13 @@
           "description": "Branding and donor awareness campaign designed for non-profit and charitable foundations.",
           "globalIndex": 303,
           "type": "campaign"
+        },
+        {
+          "src": "https://youtube.com/shorts/B1ZTysSbjnA",
+          "title": "Ayush Vikas Foundation Reel",
+          "description": "Ayush Vikas Foundation awareness and promotional reel.",
+          "globalIndex": 222,
+          "type": "reel"
         }
       ]
     },

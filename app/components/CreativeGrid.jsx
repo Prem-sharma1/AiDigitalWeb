@@ -46,7 +46,9 @@ const creativeGroups = [
       { src: "/creative_content/Creative2.jpeg", title: "Healthcare Lead Campaign", description: "Digital marketing campaign designed to help doctors, clinics, and hospitals generate quality leads.", globalIndex: 39, type: "image" },
       { src: "/creative_content/Creative5.jpeg", title: "Healthcare Digital Marketing Campaign", description: "An ad creative and landing page concept designed for B2B lead generation targeting doctors and clinics.", globalIndex: 40, type: "image" },
       { src: "https://youtube.com/shorts/QIh7twZ3mV4", title: "Apple Multi Specialist Healthcare", description: "An AI-assisted promotional video highlighting hospital infrastructure, expert doctors, and advanced healthcare services at Apple Multi Specialist Healthcare.", globalIndex: 208, type: "youtube" },
-      { src: "/Campaign/HealthcareCampaign.jpeg", title: "Healthcare Clinic Campaign", description: "A patient acquisition and awareness campaign built for doctors, specialty hospitals, and wellness clinics.", globalIndex: 304, type: "campaign" }
+      { src: "/Campaign/HealthcareCampaign.jpeg", title: "Healthcare Clinic Campaign", description: "A patient acquisition and awareness campaign built for doctors, specialty hospitals, and wellness clinics.", globalIndex: 304, type: "campaign" },
+      { src: "https://youtu.be/AFilU3i5pTU", title: "Health Care", description: "Promotional reel highlighting advanced healthcare services and medical expertise.", globalIndex: 213, type: "reel" },
+      { src: "https://youtube.com/shorts/3LK4K10ukvg", title: "Orthopedic Surgeon", description: "Promotional reel highlighting orthopedic surgical expertise.", globalIndex: 218, type: "reel" }
     ]
   },
   {
@@ -82,7 +84,8 @@ const creativeGroups = [
       { src: "/creative_content/Creative9.jpeg", title: "Gourmet Bistro Banner", description: "Aesthetic culinary advertising graphic for restaurant promotions.", globalIndex: 8, type: "image" },
       { src: "https://youtube.com/shorts/eP3mbrEjEgA", title: "Hayat Food", description: "An appetizing preview showcasing Hayat Food's culinary items, gourmet dishes, and hospitality experiences.", globalIndex: 205, type: "youtube" },
       { src: "/Campaign/ResortsCampaign.jpeg", title: "Luxury Resort Booking Campaign", description: "High-impact advertising campaign optimized for luxury resort stays, hotel bookings, and dining promotions.", globalIndex: 305, type: "campaign" },
-      { src: "https://youtube.com/shorts/yrA8PZJ17k4", title: "Hayum – Brand Promotional Video", description: "An engaging AI-assisted promotional reel for Hayum, highlighting brand story, product offerings, and audience connect.", globalIndex: 203, type: "youtube" }
+      { src: "https://youtube.com/shorts/yrA8PZJ17k4", title: "Hayum – Brand Promotional Video", description: "An engaging AI-assisted promotional reel for Hayum, highlighting brand story, product offerings, and audience connect.", globalIndex: 203, type: "youtube" },
+      { src: "https://youtube.com/shorts/fzG-Itnt4ww", title: "Resort Reel", description: "Explore luxury resort experiences and hospitality excellence.", globalIndex: 214, type: "reel" }
     ]
   },
   {
@@ -94,7 +97,8 @@ const creativeGroups = [
       { src: "/creative_content/SolarCreative3.jpeg", title: "Solar Creative 3", description: "Green energy awareness promotional banner for solar services.", globalIndex: 62, type: "image" },
       { src: "/creative_content/Solarcreative4.jpeg", title: "Solar Creative 4", description: "Sustainable energy and solar rooftop solutions campaign creative.", globalIndex: 63, type: "image" },
       { src: "https://youtube.com/shorts/ZPqqln6JGNA", title: "BITAPLUS Solar", description: "An informative overview of BITAPLUS Solar's solar energy solutions, rooftop panel installations, and clean energy benefits.", globalIndex: 206, type: "youtube" },
-      { src: "/Campaign/SolarCampaign.jpeg", title: "Solar Energy Lead Campaign", description: "Performance marketing campaign designed for commercial and residential solar installation leads.", globalIndex: 306, type: "campaign" }
+      { src: "/Campaign/SolarCampaign.jpeg", title: "Solar Energy Lead Campaign", description: "Performance marketing campaign designed for commercial and residential solar installation leads.", globalIndex: 306, type: "campaign" },
+      { src: "https://youtube.com/shorts/D8Bq6DyepVs", title: "Bitaplus Solar", description: "Clean energy solutions and solar panel installation showcase.", globalIndex: 219, type: "reel" }
     ]
   },
   {
@@ -104,7 +108,8 @@ const creativeGroups = [
       { src: "/creative_content/Interiorcreative.jpeg", title: "Interior Design Creative", description: "Premium home interior and décor services promotional creative.", globalIndex: 70, type: "image" },
       { src: "/creative_content/interior2creative.jpeg", title: "Interior Design Creative 2", description: "Modern living space and interior styling ad creative.", globalIndex: 71, type: "image" },
       { src: "/creative_content/Interior3creative.jpeg", title: "Interior Design Creative 3", description: "Luxury interior design and home renovation promotional visual.", globalIndex: 72, type: "image" },
-      { src: "https://youtube.com/shorts/jEOIOVnY_vI", title: "Aditya Modular Design Studio", description: "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", globalIndex: 201, type: "youtube" }
+      { src: "https://youtube.com/shorts/jEOIOVnY_vI", title: "Aditya Modular Design Studio", description: "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", globalIndex: 201, type: "youtube" },
+      { src: "https://youtube.com/shorts/c5EmfsVswZk", title: "Interior Reel", description: "Aesthetic interior design concepts and space styling.", globalIndex: 215, type: "reel" }
     ]
   },
   {
@@ -123,14 +128,18 @@ const creativeGroups = [
     description: "Travel agencies, tourism campaigns, tour package creatives, and destination marketing.",
     images: [
       { src: "/creative_content/ToursAndTravels.jpeg", title: "Tours & Travels Creative", description: "Travel agency and tour package promotional creative for digital campaigns.", globalIndex: 90, type: "image" },
-      { src: "/creative_content/ToursAnd2TRavels.jpeg", title: "Tours & Travels Creative 2", description: "Destination tourism and holiday package promotional banner creative.", globalIndex: 91, type: "image" }
+      { src: "/creative_content/ToursAnd2TRavels.jpeg", title: "Tours & Travels Creative 2", description: "Destination tourism and holiday package promotional banner creative.", globalIndex: 91, type: "image" },
+      { src: "https://youtube.com/shorts/IBu2_EvKAH4", title: "Tourism Reel", description: "Explore beautiful destinations and holiday packages.", globalIndex: 217, type: "reel" },
+      { src: "https://youtube.com/shorts/i62UuswIIBU", title: "SWAMINI TOURS.", description: "Swamini Tours travel and tour package promotional reel.", globalIndex: 221, type: "reel" },
+      { src: "https://youtube.com/shorts/oicsQmkp5D4", title: "Tours & Travels Reel", description: "Promotional reel for tourism and travel packages.", globalIndex: 220, type: "reel" }
     ]
   },
   {
     industry: "Sports",
     description: "Sports brands, fitness campaigns, athletic event creatives, and sports marketing.",
     images: [
-      { src: "/creative_content/Sportscreative1.jpeg", title: "Sports Creative", description: "Sports brand and fitness promotional creative for social media campaigns.", globalIndex: 100, type: "image" }
+      { src: "/creative_content/Sportscreative1.jpeg", title: "Sports Creative", description: "Sports brand and fitness promotional creative for social media campaigns.", globalIndex: 100, type: "image" },
+      { src: "https://youtube.com/shorts/0BccV040p3o", title: "Sports Reel", description: "Dynamic sports and fitness promotional reel.", globalIndex: 216, type: "reel" }
     ]
   },
   {
@@ -138,7 +147,8 @@ const creativeGroups = [
     description: "Additional marketing campaigns, custom integrations, branding assets, and creative content.",
     images: [
       { src: "/creative_content/Othercreative.jpeg", title: "Other Brand Creative", description: "General branding and promotional creative for digital marketing campaigns.", globalIndex: 110, type: "image" },
-      { src: "/Campaign/FoundationCampaign.jpeg", title: "Foundation Brand Campaign", description: "Branding and donor awareness campaign designed for non-profit and charitable foundations.", globalIndex: 303, type: "campaign" }
+      { src: "/Campaign/FoundationCampaign.jpeg", title: "Foundation Brand Campaign", description: "Branding and donor awareness campaign designed for non-profit and charitable foundations.", globalIndex: 303, type: "campaign" },
+      { src: "https://youtube.com/shorts/B1ZTysSbjnA", title: "Ayush Vikas Foundation Reel", description: "Ayush Vikas Foundation awareness and promotional reel.", globalIndex: 222, type: "reel" }
     ]
   },
   {
