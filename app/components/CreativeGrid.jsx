@@ -10,7 +10,19 @@ const creativeGroups = [
     images: [
       { src: "/creative_content/RealStatecreative.jpeg", title: "Real Estate Brand Creative", description: "High-impact branding and promotional creative for real estate marketing campaigns.", globalIndex: 0, type: "image" },
       { src: "/creative_content/Creative1.jpeg", title: "Luxury Villa Showcase", description: "Branding creative for high-end residential real estate listing.", globalIndex: 1, type: "image" },
-      { src: "https://anvreealty.com/", thumbnail: "/uploads/Anv_reality.jpg", title: "ANV Realty Website", description: "Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.", globalIndex: 2, type: "website" }
+      { src: "https://anvreealty.com/", thumbnail: "/uploads/Anv_reality.jpg", title: "ANV Realty Website", description: "Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.", globalIndex: 2, type: "website" },
+      { src: "/creative_content/RealState1.jpeg", title: "Modern Home Showcase", description: "Clean, high-impact marketing design for modern residential listings.", globalIndex: 3, type: "image" },
+      { src: "/creative_content/RealState2.jpeg", title: "Luxury Villa Feature", description: "Elegant flyer highlighting upscale property details and high-end aesthetics.", globalIndex: 4, type: "image" },
+      { src: "/creative_content/RealState3.jpeg", title: "Contemporary Property Promo", description: "Visual branding creative showcasing structural elegance and open floor plans.", globalIndex: 5, type: "image" },
+      { src: "/creative_content/RealState4.jpeg", title: "Premium Living Spaces", description: "Premium promotional content focusing on interior layout and design aesthetics.", globalIndex: 6, type: "image" },
+      { src: "/creative_content/RealState5.jpeg", title: "Exclusive Villa Spotlight", description: "High-quality campaign creative built to capture attention for premium listings.", globalIndex: 7, type: "image" },
+      { src: "/creative_content/RealState6.jpeg", title: "Modern Residential Flyer", description: "Polished design showcasing suburban homes with optimized call-to-action layout.", globalIndex: 8, type: "image" },
+      { src: "/creative_content/RealState7.jpeg", title: "Luxury Estate Presentation", description: "Aesthetic real estate advertising banner highlighting premium property features.", globalIndex: 9, type: "image" },
+      { src: "/creative_content/RealState8.jpeg", title: "Architectural Design Feature", description: "Campaign visual highlighting modern architecture and premium materials of top listings.", globalIndex: 10, type: "image" },
+      { src: "https://youtube.com/shorts/CGmclmt0ibU?feature=share", title: "Luxury Villa Walkthrough", description: "A premium walkthrough reel showcasing high-end interior spaces and architecture of a luxury villa.", globalIndex: 250, type: "reel" },
+      { src: "https://youtu.be/uxlAeIZCY1w", title: "Modern Apartment Tour", description: "An engaging real estate reel showing aesthetic decor, layout, and lighting in a modern urban apartment.", globalIndex: 251, type: "reel" },
+      { src: "https://youtube.com/shorts/pogRO6aMOes?feature=share", title: "Property Listing Promo", description: "A dynamic and high-impact short-form property promo video highlighting premium real estate spaces.", globalIndex: 252, type: "reel" },
+      { src: "https://youtube.com/shorts/APpxjSt5LLw?si=4r68FMnAWGrdhhxA", title: "Realistic AI Property Promo", description: "An immersive AI-assisted property promo video showcasing realistic real estate environments.", globalIndex: 253, type: "youtube" }
     ]
   },
   {
