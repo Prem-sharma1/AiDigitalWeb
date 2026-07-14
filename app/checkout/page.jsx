@@ -208,7 +208,7 @@ export default function CheckoutPage() {
         currency: "INR",
         name: "AI Digital",
         description: `${selectedItem.name} Purchase`,
-        image: "/logo-cropped.png",
+        image: "/Logo.ai.png",
         order_id: data.orderId,
         handler: async function (paymentResponse) {
           try {

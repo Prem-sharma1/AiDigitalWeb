@@ -93,7 +93,7 @@ export default function PricingPopup({ dialogRef }) {
                 <div className="popup-header-container">
                     <div className="popup-logo-wrapper">
                         <Image
-                            src="/logo-cropped.png"
+                            src="/Logo.ai.png"
                             alt="AI Digital Logo"
                             width={48}
                             height={48}

@@ -41,7 +41,7 @@ export function Icon({ name, className = "" }) {
 export function Logo() {
   return (
     <a className="logo" href="/" aria-label="AI Digital home">
-      <Image src="/logo-cropped.png" alt="AI Digital Logo" width={180} height={56} priority />
+      <Image src="/Logo.ai.png" alt="AI Digital Logo" width={180} height={56} priority />
     </a>
   );
 }
@@ -192,6 +192,15 @@ export function SiteFooter() {
                 <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.108C19.513 3.545 12 3.545 12 3.545s-7.512 0-9.388.51a3.002 3.002 0 0 0-2.11 2.108C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.108c1.876.512 9.388.512 9.388.512s7.513 0 9.388-.512a3.003 3.003 0 0 0 2.11-2.108C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
               </svg>
             </a>
+          </div>
+          {/* Company Address */}
+          <div style={{ display: "flex", alignItems: "flex-start", gap: "8px", marginTop: "16px", color: "#94a3b8", fontSize: "13px", lineHeight: "1.6" }}>
+            <span className="material-symbols-outlined" style={{ fontSize: "18px", color: "#e56030", flexShrink: 0, marginTop: "2px" }}>location_on</span>
+            <address style={{ fontStyle: "normal" }}>
+              Office No: 315, Boulevard Tower,<br />
+              Bramha Corp, Sadhu Vaswani Chowk,<br />
+              Camp, Pune 411001
+            </address>
           </div>
         </div>
         {footerGroups.map((group) => (

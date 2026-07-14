@@ -180,6 +180,14 @@ const creativeGroups = [
   }
 ];
 
+const chunkArray = (array, size) => {
+  const chunks = [];
+  for (let i = 0; i < array.length; i += size) {
+    chunks.push(array.slice(i, i + size));
+  }
+  return chunks;
+};
+
 export default function CreativeGrid({ activeFilter = "All" }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
@@ -280,6 +288,32 @@ export default function CreativeGrid({ activeFilter = "All" }) {
   };
 
   const filteredGroups = useMemo(() => {
+    // Round-robin interleave: pick 1 website, 1 creative, 1 AI video, 1 reel per round
+    const interleaveByType = (images) => {
+      const sortByIndex = (arr) => [...arr].sort((a, b) => {
+        const iA = a.globalIndex !== undefined && a.globalIndex !== null && a.globalIndex !== "" ? Number(a.globalIndex) : 999999;
+        const iB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
+        return iA - iB;
+      });
+
+      const websites  = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "website"));
+      const creatives = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "image" || getMediaType(img.type, img.src, img.category) === "campaign"));
+      const videos    = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "video"));
+      const reels     = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "reel"));
+
+      const maxRounds = Math.max(websites.length, creatives.length, videos.length, reels.length);
+      const result = [];
+
+      for (let i = 0; i < maxRounds; i++) {
+        if (websites[i])  result.push(websites[i]);
+        if (creatives[i]) result.push(creatives[i]);
+        if (videos[i])    result.push(videos[i]);
+        if (reels[i])     result.push(reels[i]);
+      }
+
+      return result;
+    };
+
     return creativeGroupsState.map(group => {
       const filteredImages = group.images.filter(img => {
         const type = getMediaType(img.type, img.src, img.category);
@@ -292,15 +326,22 @@ export default function CreativeGrid({ activeFilter = "All" }) {
         return true;
       });
 
-      const sortedImages = [...filteredImages].sort((a, b) => {
-        const indexA = a.globalIndex !== undefined && a.globalIndex !== null && a.globalIndex !== "" ? Number(a.globalIndex) : 999999;
-        const indexB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
-        return indexA - indexB;
-      });
+      let finalImages;
+      if (activeFilter === "All") {
+        // Interleave: 1 website → 1 creative → 1 AI video → 1 reel per slide
+        finalImages = interleaveByType(filteredImages);
+      } else {
+        // Other filters: sort by globalIndex only
+        finalImages = [...filteredImages].sort((a, b) => {
+          const indexA = a.globalIndex !== undefined && a.globalIndex !== null && a.globalIndex !== "" ? Number(a.globalIndex) : 999999;
+          const indexB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
+          return indexA - indexB;
+        });
+      }
 
       return {
         ...group,
-        images: sortedImages
+        images: finalImages
       };
     }).filter(group => group.images.length > 0);
   }, [activeFilter, creativeGroupsState]);
@@ -312,7 +353,7 @@ export default function CreativeGrid({ activeFilter = "All" }) {
   const handleScroll = (industry, direction) => {
     const container = scrollContainers.current[industry];
     if (container) {
-      const scrollAmount = container.clientWidth * 0.8;
+      const scrollAmount = container.clientWidth;
       container.scrollBy({
         left: direction === "left" ? -scrollAmount : scrollAmount,
         behavior: "smooth"
@@ -358,178 +399,229 @@ export default function CreativeGrid({ activeFilter = "All" }) {
             <span className="industry-label">Industry</span>
             <h3>{group.industry}</h3>
             <p>{group.description}</p>
-            {group.images.length > 2 && (
-              <div className="portfolio-slider-controls" style={{ marginTop: "16px" }}>
-                <button
-                  type="button"
-                  onClick={() => handleScroll(group.industry, "left")}
-                  aria-label="Scroll left"
-                >
-                  <span className="material-symbols-outlined">arrow_back</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => handleScroll(group.industry, "right")}
-                  aria-label="Scroll right"
-                >
-                  <span className="material-symbols-outlined">arrow_forward</span>
-                </button>
-              </div>
-            )}
           </div>
-          <div
-            className="creative-grid"
-            ref={(el) => {
-              if (el) scrollContainers.current[group.industry] = el;
-            }}
-          >
-            {group.images.map((img) => {
-              const imageIndex = visibleItems.findIndex((item) => item.src === img.src);
-              return (
-                <div
-                  className="creative-card"
-                  key={img.src}
-                  onClick={() => setSelectedImageIndex(imageIndex)}
-                  tabIndex={0}
-                  role="button"
-                  aria-label={`View ${img.title} in full screen`}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
-                      setSelectedImageIndex(imageIndex);
-                    }
-                  }}
-                >
-                  <div className="creative-img-wrapper" style={{ position: "relative", width: "100%", height: "200px" }}>
-                    {(() => {
-                      const playerType = getPlayerType(img.src, img.type);
-                      const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
 
-                      if (playerType === "video") {
-                        if (videoErrors[img.src]) {
-                          return (
-                            <div
-                              className="creative-img-fallback"
-                              style={{
-                                width: "100%",
-                                height: "100%",
-                                display: "flex",
-                                flexDirection: "column",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                background: "linear-gradient(135deg, #1f2937, #111827)",
-                                color: "#9ca3af",
-                                padding: "16px",
-                                textAlign: "center"
-                              }}
-                            >
-                              <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#e56030", marginBottom: "8px" }}>
-                                videocam_off
-                              </span>
-                              <span style={{ fontSize: "11px", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                                Video Unavailable
-                              </span>
-                            </div>
-                          );
-                        }
-                        return (
-                          <video
-                            src={img.src}
-                            className="creative-img"
-                            style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
-                            muted
-                            playsInline
-                            loop
-                            onMouseOver={(e) => e.target.play()}
-                            onMouseOut={(e) => e.target.pause()}
-                            onError={() => {
-                              setVideoErrors((prev) => ({ ...prev, [img.src]: true }));
-                            }}
-                          />
-                        );
-                      }
+          {/* Grid + side arrows wrapper */}
+          <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "0" }}>
+            {/* Left arrow */}
+            {group.images.length > (activeFilter === "All" ? 4 : 2) && (
+              <button
+                type="button"
+                onClick={() => handleScroll(group.industry, "left")}
+                aria-label="Scroll left"
+                style={{
+                  flexShrink: 0,
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  boxShadow: "0 2px 8px rgba(15,23,42,0.10)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "#2684b9",
+                  transition: "background 0.2s, box-shadow 0.2s",
+                  zIndex: 2,
+                  marginRight: "8px",
+                }}
+                onMouseOver={e => e.currentTarget.style.background = "#f0f9ff"}
+                onMouseOut={e => e.currentTarget.style.background = "#ffffff"}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_back</span>
+              </button>
+            )}
 
-                      // Website type: if local uploaded image, render directly; if external URL, use thum.io screenshot
-                      if (playerType === "website") {
-                        const thumb = img.thumbnail || (isExternalUrl
-                          ? `https://image.thum.io/get/${img.src}`
-                          : img.src);
-                        return (
-                          <img
-                            src={thumb}
-                            alt={img.title}
-                            className="creative-img"
-                            style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
-                            loading="lazy"
-                          />
-                        );
-                      }
-
-                      const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
-                      return (
-                        <img
-                          src={thumb}
-                          alt={img.title}
-                          className="creative-img"
-                          style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
-                          loading="lazy"
-                        />
-                      );
-                    })()}
-                    <div className="creative-overlay">
-                      <div className="creative-overlay-icon">
-                        <span className="material-symbols-outlined">
-                          {(() => {
-                            const playerType = getPlayerType(img.src, img.type);
-                            return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel")
-                              ? "play_circle"
-                              : "zoom_in";
-                          })()}
-                        </span>
-                      </div>
-                    </div>
-                  </div>
-                  <div className="creative-card-info" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
-                    <div>
-                      <h4>{img.title}</h4>
-                      <p>{img.description}</p>
-                    </div>
-                    {getPlayerType(img.src, img.type) === "website" && img.src && (img.src.startsWith("http://") || img.src.startsWith("https://")) && (
-                      <a
-                        href={img.src}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="open-website-btn"
-                        style={{
-                          display: "inline-flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          gap: "6px",
-                          marginTop: "12px",
-                          backgroundColor: "#d63e13",
-                          color: "#fff",
-                          padding: "8px 16px",
-                          borderRadius: "6px",
-                          fontSize: "12px",
-                          fontWeight: "600",
-                          textDecoration: "none",
-                          border: "none",
-                          cursor: "pointer",
-                          width: "fit-content",
-                          transition: "background-color 0.2s ease"
-                        }}
-                        onClick={(e) => {
-                          e.stopPropagation();
+            {/* Scrollable card grid */}
+            <div
+              className="creative-grid"
+              ref={(el) => {
+                if (el) scrollContainers.current[group.industry] = el;
+              }}
+              style={{ flex: 1, minWidth: 0 }}
+            >
+              {chunkArray(group.images, activeFilter === "All" ? 4 : 2).map((slideImages, slideIdx) => (
+                <div className="creative-slide" key={slideIdx}>
+                  {slideImages.map((img) => {
+                    const imageIndex = visibleItems.findIndex((item) => item.src === img.src);
+                    return (
+                      <div
+                        className="creative-card"
+                        key={img.src}
+                        onClick={() => setSelectedImageIndex(imageIndex)}
+                        tabIndex={0}
+                        role="button"
+                        aria-label={`View ${img.title} in full screen`}
+                        onKeyDown={(e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            setSelectedImageIndex(imageIndex);
+                          }
                         }}
                       >
-                        <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>open_in_new</span>
-                        Visit Website
-                      </a>
-                    )}
-                  </div>
+                        <div className="creative-img-wrapper" style={{ position: "relative", width: "100%", height: "200px" }}>
+                          {(() => {
+                            const playerType = getPlayerType(img.src, img.type);
+                            const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
+
+                            if (playerType === "video") {
+                              if (videoErrors[img.src]) {
+                                return (
+                                  <div
+                                    className="creative-img-fallback"
+                                    style={{
+                                      width: "100%",
+                                      height: "100%",
+                                      display: "flex",
+                                      flexDirection: "column",
+                                      alignItems: "center",
+                                      justifyContent: "center",
+                                      background: "linear-gradient(135deg, #1f2937, #111827)",
+                                      color: "#9ca3af",
+                                      padding: "16px",
+                                      textAlign: "center"
+                                    }}
+                                  >
+                                    <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#e56030", marginBottom: "8px" }}>
+                                      videocam_off
+                                    </span>
+                                    <span style={{ fontSize: "11px", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                      Video Unavailable
+                                    </span>
+                                  </div>
+                                );
+                              }
+                              return (
+                                <video
+                                  src={img.src}
+                                  className="creative-img"
+                                  style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                                  muted
+                                  playsInline
+                                  loop
+                                  onMouseOver={(e) => e.target.play()}
+                                  onMouseOut={(e) => e.target.pause()}
+                                  onError={() => {
+                                    setVideoErrors((prev) => ({ ...prev, [img.src]: true }));
+                                  }}
+                                />
+                              );
+                            }
+
+                            if (playerType === "website") {
+                              const thumb = img.thumbnail || (isExternalUrl
+                                ? `https://image.thum.io/get/${img.src}`
+                                : img.src);
+                              return (
+                                <img
+                                  src={thumb}
+                                  alt={img.title}
+                                  className="creative-img"
+                                  style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                                  loading="lazy"
+                                />
+                              );
+                            }
+
+                            const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
+                            return (
+                              <img
+                                src={thumb}
+                                alt={img.title}
+                                className="creative-img"
+                                style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                                loading="lazy"
+                              />
+                            );
+                          })()}
+                          <div className="creative-overlay">
+                            <div className="creative-overlay-icon">
+                              <span className="material-symbols-outlined">
+                                {(() => {
+                                  const playerType = getPlayerType(img.src, img.type);
+                                  return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel")
+                                    ? "play_circle"
+                                    : "zoom_in";
+                                })()}
+                              </span>
+                            </div>
+                          </div>
+                        </div>
+                        <div className="creative-card-info" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+                          <div>
+                            <h4>{img.title}</h4>
+                            <p>{img.description}</p>
+                          </div>
+                          {getPlayerType(img.src, img.type) === "website" && img.src && (img.src.startsWith("http://") || img.src.startsWith("https://")) && (
+                            <a
+                              href={img.src}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="open-website-btn"
+                              style={{
+                                display: "inline-flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                gap: "6px",
+                                marginTop: "12px",
+                                backgroundColor: "#d63e13",
+                                color: "#fff",
+                                padding: "8px 16px",
+                                borderRadius: "6px",
+                                fontSize: "12px",
+                                fontWeight: "600",
+                                textDecoration: "none",
+                                border: "none",
+                                cursor: "pointer",
+                                width: "fit-content",
+                                transition: "background-color 0.2s ease"
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                            >
+                              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>open_in_new</span>
+                              Visit Website
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    );
+                  })}
                 </div>
-              );
-            })}
+              ))}
+            </div>
+
+            {/* Right arrow */}
+            {group.images.length > (activeFilter === "All" ? 4 : 2) && (
+              <button
+                type="button"
+                onClick={() => handleScroll(group.industry, "right")}
+                aria-label="Scroll right"
+                style={{
+                  flexShrink: 0,
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  border: "1px solid #e2e8f0",
+                  background: "#ffffff",
+                  boxShadow: "0 2px 8px rgba(15,23,42,0.10)",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  cursor: "pointer",
+                  color: "#2684b9",
+                  transition: "background 0.2s, box-shadow 0.2s",
+                  zIndex: 2,
+                  marginLeft: "8px",
+                }}
+                onMouseOver={e => e.currentTarget.style.background = "#f0f9ff"}
+                onMouseOut={e => e.currentTarget.style.background = "#ffffff"}
+              >
+                <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_forward</span>
+              </button>
+            )}
           </div>
         </article>
       ))}

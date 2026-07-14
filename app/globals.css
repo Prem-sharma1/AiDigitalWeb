@@ -4195,7 +4195,7 @@ p {
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  gap: 20px;
+  gap: 0;
   width: 100%;
   margin-top: 24px;
   overflow-x: auto;
@@ -4289,11 +4289,32 @@ p {
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  /* Original: horizontal scroll sizing */
-  flex: 0 0 calc(50% - 10px);
-  scroll-snap-align: start;
-  min-width: 280px;
   transition: transform 0.3s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease;
+}
+
+.creative-slide {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  flex: 0 0 100%;
+  width: 100%;
+  scroll-snap-align: start;
+  padding: 4px 2px;
+  box-sizing: border-box;
+}
+
+.creative-slide .creative-card {
+  flex: none !important;
+  width: 100% !important;
+  min-width: 0 !important;
+}
+
+@media (max-width: 768px) {
+  .creative-slide {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+    gap: 16px;
+  }
 }
 
 
