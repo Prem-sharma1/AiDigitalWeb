@@ -125,10 +125,10 @@ import { useEffect } from "react";
 
 export default function FeaturedWork() {
   const [activeFilter, setActiveFilter] = useState("All");
+  const [searchQuery, setSearchQuery] = useState("");
   const [showOthers, setShowOthers] = useState(false);
   const [industriesState, setIndustriesState] = useState(industries);
   const [otherProjectsState, setOtherProjectsState] = useState(otherProjects);
-
 
   const visibleIndustries = useMemo(() => {
     if (activeFilter === "All") {
@@ -159,6 +159,31 @@ export default function FeaturedWork() {
         </p>
       </div>
 
+      <div className="project-search-row">
+        <div className="project-search-bar">
+          <span className="material-symbols-outlined search-icon" aria-hidden="true">
+            search
+          </span>
+          <input
+            type="text"
+            value={searchQuery}
+            onChange={(e) => setSearchQuery(e.target.value)}
+            placeholder="Search projects by title, keyword, or industry..."
+            aria-label="Search projects"
+          />
+          {searchQuery && (
+            <button
+              type="button"
+              className="search-clear-btn"
+              onClick={() => setSearchQuery("")}
+              aria-label="Clear search"
+            >
+              <span className="material-symbols-outlined">close</span>
+            </button>
+          )}
+        </div>
+      </div>
+
       <div className="work-filter-row" aria-label="Service filters">
         {filters.map((filter) => (
           <button
@@ -183,7 +208,12 @@ export default function FeaturedWork() {
 
       <div className="industry-list">
         {activeFilter === "Creative Content" || activeFilter === "AI Videos" || activeFilter === "Reels" || activeFilter === "Website & SEO" || activeFilter === "All" || activeFilter === "Campaigns" ? (
-          <CreativeGrid activeFilter={activeFilter} setActiveFilter={setActiveFilter} />
+          <CreativeGrid
+            activeFilter={activeFilter}
+            setActiveFilter={setActiveFilter}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+          />
         ) : (
           <>
             {visibleIndustries.map((industry) => (

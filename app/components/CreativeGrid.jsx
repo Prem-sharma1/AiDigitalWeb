@@ -231,7 +231,7 @@ const CATEGORIES = [
   }
 ];
 
-export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) {
+export default function CreativeGrid({ activeFilter = "All", setActiveFilter, searchQuery = "", setSearchQuery }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
   const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
@@ -461,6 +461,8 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) 
   };
 
   const filteredGroups = useMemo(() => {
+    const q = searchQuery.trim().toLowerCase();
+
     // Round-robin interleave: pick 1 website, 1 creative, 1 AI video, 1 reel per round
     const interleaveByType = (images) => {
       const sortByIndex = (arr) => [...arr].sort((a, b) => {
@@ -490,21 +492,32 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) 
     return creativeGroupsState.map(group => {
       const filteredImages = group.images.filter(img => {
         const type = getMediaType(img.type, img.src, img.category);
-        if (activeFilter === "All") return true;
-        if (activeFilter === "Creative Content") return type === "image";
-        if (activeFilter === "AI Videos") return type === "video";
-        if (activeFilter === "Reels") return type === "reel";
-        if (activeFilter === "Website & SEO") return type === "website";
-        if (activeFilter === "Campaigns") return type === "campaign";
-        return true;
+        
+        let matchesCategory = true;
+        if (activeFilter === "Creative Content") matchesCategory = type === "image";
+        else if (activeFilter === "AI Videos") matchesCategory = type === "video";
+        else if (activeFilter === "Reels") matchesCategory = type === "reel";
+        else if (activeFilter === "Website & SEO") matchesCategory = type === "website";
+        else if (activeFilter === "Campaigns") matchesCategory = type === "campaign";
+
+        if (!matchesCategory) return false;
+
+        if (!q) return true;
+
+        const titleMatch = img.title?.toLowerCase().includes(q);
+        const descMatch = img.description?.toLowerCase().includes(q);
+        const typeMatch = img.type?.toLowerCase().includes(q) || type.toLowerCase().includes(q);
+        const industryMatch = group.industry?.toLowerCase().includes(q);
+
+        return titleMatch || descMatch || typeMatch || industryMatch;
       });
 
       let finalImages;
-      if (activeFilter === "All") {
+      if (activeFilter === "All" && !q) {
         // Interleave: 1 website → 1 creative → 1 AI video → 1 reel per slide
         finalImages = interleaveByType(filteredImages);
       } else {
-        // Other filters: sort by globalIndex only
+        // Other filters or when search query is active: sort by globalIndex only
         finalImages = [...filteredImages].sort((a, b) => {
           const indexA = a.globalIndex !== undefined && a.globalIndex !== null && a.globalIndex !== "" ? Number(a.globalIndex) : 999999;
           const indexB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
@@ -517,7 +530,7 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) 
         images: finalImages
       };
     }).filter(group => group.images.length > 0);
-  }, [activeFilter, creativeGroupsState]);
+  }, [activeFilter, searchQuery, creativeGroupsState]);
 
   const visibleItems = useMemo(() => {
     return filteredGroups.flatMap(group => group.images);
@@ -564,6 +577,29 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) 
 
   const activeImage = selectedImageIndex !== null ? visibleItems[selectedImageIndex] : null;
 
+  if (filteredGroups.length === 0) {
+    return (
+      <div className="search-no-results">
+        <span className="material-symbols-outlined no-results-icon" aria-hidden="true">
+          search_off
+        </span>
+        <h4>No projects found</h4>
+        <p>
+          We couldn&apos;t find any projects matching &quot;<strong>{searchQuery}</strong>&quot;.
+        </p>
+        <button
+          type="button"
+          onClick={() => {
+            if (setSearchQuery) setSearchQuery("");
+            if (setActiveFilter) setActiveFilter("All");
+          }}
+        >
+          Clear Search Filter
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       {filteredGroups.map((group) => (
@@ -574,7 +610,7 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) 
             <p>{group.description}</p>
           </div>
 
-          {activeFilter === "All" ? (
+          {activeFilter === "All" && !searchQuery.trim() ? (
             <div className="industry-boxes-grid">
               {CATEGORIES.map((cat, idx) => {
                 const proj = getCategoryProject(group, cat.id);

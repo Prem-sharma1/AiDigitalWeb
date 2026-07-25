@@ -60,11 +60,11 @@ export default function ChatWidget() {
 
   return (
     <div className="ai-chat-widget-wrapper">
-      {/* Floating Trigger Button with Assistance Text */}
+      {/* Floating Trigger Button */}
       {!isOpen && (
         <div className="chat-trigger-container">
           <span className="chat-assistance-text" onClick={() => setIsOpen(true)}>
-            Click me for assistance
+            Ask me
           </span>
           <button className="chat-trigger-btn" onClick={() => setIsOpen(true)} aria-label="Open support chat">
             <svg className="chat-icon-svg" viewBox="0 0 121.85 122.88" fill="currentColor">
