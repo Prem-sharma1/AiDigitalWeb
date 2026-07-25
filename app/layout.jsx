@@ -20,9 +20,13 @@ const sora = Sora({
 });
 
 export const metadata = {
+  metadataBase: new URL("https://www.aidigital.biz"),
   title: "AI Digital | Neural Growth Marketing",
   description:
-    "AI-powered digital marketing for SEO, performance campaigns, social growth, design, and analytics."
+    "AI-powered digital marketing for SEO, performance campaigns, social growth, design, and analytics.",
+  alternates: {
+    canonical: "/",
+  },
 };
 
 export default function RootLayout({ children }) {

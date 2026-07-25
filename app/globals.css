@@ -2245,6 +2245,31 @@ p {
   gap: 12px;
 }
 
+.industry-boxes-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .industry-boxes-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 768px) {
+  .industry-boxes-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .industry-boxes-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 .featured-project-card {
   position: relative;
   display: grid;
@@ -4594,6 +4619,34 @@ p {
   font-family: var(--font-body), sans-serif;
 }
 
+.chat-trigger-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.chat-assistance-text {
+  background: #ffffff;
+  color: #1e293b;
+  font-size: 0.85rem;
+  font-weight: 600;
+  padding: 8px 14px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.12);
+  border: 1px solid #e2e8f0;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: transform 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+  user-select: none;
+}
+
+.chat-assistance-text:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(15, 23, 42, 0.18);
+  background-color: #f8fafc;
+  color: var(--orange, #e56030);
+}
+
 .chat-trigger-btn {
   position: relative;
   width: 56px;
@@ -4713,6 +4766,12 @@ p {
   background: #10b981;
   border: 2px solid #1e293b;
   border-radius: 50%;
+}
+
+.bot-avatar-svg {
+  width: 22px;
+  height: 22px;
+  color: #ffffff;
 }
 
 .bot-title {
@@ -4899,6 +4958,11 @@ p {
   .ai-chat-widget-wrapper {
     bottom: 16px;
     right: 16px;
+  }
+
+  .chat-assistance-text {
+    font-size: 0.75rem;
+    padding: 6px 10px;
   }
 }
 

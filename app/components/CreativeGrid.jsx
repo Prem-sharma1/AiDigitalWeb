@@ -188,7 +188,50 @@ const chunkArray = (array, size) => {
   return chunks;
 };
 
-export default function CreativeGrid({ activeFilter = "All" }) {
+const CATEGORIES = [
+  {
+    id: "website",
+    label: "WEBSITE & SEO",
+    filterKey: "Website & SEO",
+    description: "High-converting websites & SEO strategies",
+    icon: "language",
+    accent: "blue"
+  },
+  {
+    id: "campaign",
+    label: "CAMPAIGNS",
+    filterKey: "Campaigns",
+    description: "Targeted ad campaigns that drive real leads",
+    icon: "campaign",
+    accent: "orange"
+  },
+  {
+    id: "video",
+    label: "AI VIDEOS",
+    filterKey: "AI Videos",
+    description: "AI-powered promo videos & property tours",
+    icon: "movie",
+    accent: "blue"
+  },
+  {
+    id: "image",
+    label: "CREATIVE CONTENT",
+    filterKey: "Creative Content",
+    description: "Stunning visuals & brand design assets",
+    icon: "palette",
+    accent: "orange"
+  },
+  {
+    id: "reel",
+    label: "REELS",
+    filterKey: "Reels",
+    description: "Engaging short-form reels for social media",
+    icon: "smart_display",
+    accent: "blue"
+  }
+];
+
+export default function CreativeGrid({ activeFilter = "All", setActiveFilter }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
   const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
@@ -216,6 +259,136 @@ export default function CreativeGrid({ activeFilter = "All" }) {
     if (resolvedType === "website") return "website";
     if (resolvedType === "campaign") return "campaign";
     return "image";
+  };
+
+  const getCategoryProject = (group, catId) => {
+    // 1. Find direct match in group.images
+    const imgProj = group.images.find(img => {
+      const type = getMediaType(img.type, img.src, img.category);
+      return type === catId;
+    });
+    if (imgProj) return imgProj;
+
+    // 2. Fallback to hardcoded industry mapping
+    const industryData = {
+      "Real Estate": {
+        website: "ANV Realty Website",
+        campaign: "Real Estate Lead Campaign",
+        video: "AI Property Promo",
+        image: "Real Estate Brand Creative",
+        reel: "Real Estate Instagram Reel"
+      },
+      "Education": {
+        website: "School Website",
+        campaign: "Admission Campaign",
+        video: "Educational AI Video",
+        image: "Education Creative",
+        reel: "Student Awareness Reel"
+      },
+      "Healthcare": {
+        website: "Hospital Website",
+        campaign: "Healthcare Campaign",
+        video: "AI Medical Promo",
+        image: "Healthcare Branding Creative",
+        reel: "Health Care"
+      },
+      "Finance": {
+        website: "Finance Dashboard",
+        campaign: "Investment Campaign",
+        video: "RR Capital Promo",
+        image: "Finance Social Creative",
+        reel: "Finance Awareness Reel"
+      },
+      "Hospitality & Food": {
+        website: "Hotel Booking Website",
+        campaign: "Restaurant Campaign",
+        video: "AI Hotel Promo",
+        image: "Hotel & Resort Creative",
+        reel: "Hospitality Reel"
+      },
+      "Solar": {
+        website: "Solar Landing Page",
+        campaign: "Green Energy Campaign",
+        video: "KwikM Solar Promo",
+        image: "Solar Energy Creative",
+        reel: "Bitaplus Solar"
+      },
+      "Interior Design": {
+        website: "Interior Design Portal",
+        campaign: "Modular Home Campaign",
+        video: "Aditya Modular Design Studio",
+        image: "Interior Design Creative",
+        reel: "Interior Reel"
+      },
+      "Technology & Apps": {
+        website: "SaaS Launch Page",
+        campaign: "App Lead Campaign",
+        video: "Adly – Brand Promotional Video",
+        image: "Technology Creative",
+        reel: "Technology Explainer Reel"
+      },
+      "Tours & Travels": {
+        website: "Travel Booking Site",
+        campaign: "Tours Lead Campaign",
+        video: "Tourism Reel",
+        image: "Tours & Travels Creative",
+        reel: "Tours & Travels Reel"
+      },
+      "Sports": {
+        website: "Sports Platform",
+        campaign: "Fitness Lead Campaign",
+        video: "Dynamic Fitness Promo",
+        image: "Sports Creative",
+        reel: "Sports Reel"
+      },
+      "Other Creative": {
+        website: "Custom Web Integration",
+        campaign: "Foundation Brand Campaign",
+        video: "Ayush Vikas Foundation Reel",
+        image: "Other Brand Creative",
+        reel: "Ayush Vikas Foundation Reel"
+      },
+      "Digital Marketing": {
+        website: "Affordable Growth Site",
+        campaign: "AI Performance Campaign",
+        video: "Ai Digital – Social Media Marketing",
+        image: "Ai Digital – Affordable Video Services",
+        reel: "Ai Digital – Affordable Video Services"
+      },
+      "Construction": {
+        website: "Hitoffice Construction ERP",
+        campaign: "Construction ERP Campaign",
+        video: "Construction ERP AI Promo",
+        image: "Construction Branding Creative",
+        reel: "Construction Project Reel"
+      }
+    };
+
+    const indName = group.industry;
+    const mappedObj = industryData[indName];
+    if (mappedObj && mappedObj[catId]) {
+      return {
+        title: mappedObj[catId],
+        src: "",
+        type: catId,
+        isPlaceholder: true
+      };
+    }
+
+    const defaults = {
+      website: "Website Design",
+      campaign: "Performance Marketing",
+      video: "AI Promo Video",
+      image: "Creative Content",
+      reel: "Instagram Reel"
+    };
+    
+    return {
+      title: `${indName} ${defaults[catId]}`,
+      src: "",
+      type: catId,
+      isPlaceholder: true
+    };
   };
 
   const getPlayerType = (src, type) => {
@@ -401,118 +574,158 @@ export default function CreativeGrid({ activeFilter = "All" }) {
             <p>{group.description}</p>
           </div>
 
-          {/* Grid + side arrows wrapper */}
-          <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "0" }}>
-            {/* Left arrow */}
-            {group.images.length > (activeFilter === "All" ? 4 : 2) && (
-              <button
-                type="button"
-                onClick={() => handleScroll(group.industry, "left")}
-                aria-label="Scroll left"
-                style={{
-                  flexShrink: 0,
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  border: "1px solid #e2e8f0",
-                  background: "#ffffff",
-                  boxShadow: "0 2px 8px rgba(15,23,42,0.10)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  color: "#2684b9",
-                  transition: "background 0.2s, box-shadow 0.2s",
-                  zIndex: 2,
-                  marginRight: "8px",
+          {activeFilter === "All" ? (
+            <div className="industry-boxes-grid">
+              {CATEGORIES.map((cat, idx) => {
+                const proj = getCategoryProject(group, cat.id);
+                
+                const handleClick = (e) => {
+                  if (setActiveFilter) {
+                    setActiveFilter(cat.filterKey);
+                  }
+                };
+
+                return (
+                  <div
+                    key={cat.id}
+                    className="featured-project-card"
+                    style={{ cursor: "pointer" }}
+                    onClick={handleClick}
+                  >
+                    <span className="material-symbols-outlined" aria-hidden="true">
+                      {cat.icon}
+                    </span>
+                    <strong>{cat.filterKey}</strong>
+                    <small>{cat.description}</small>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Grid + side arrows wrapper */
+            <div style={{ position: "relative", display: "flex", alignItems: "center", gap: "0", width: "100%", minWidth: 0 }}>
+              {/* Left arrow */}
+              {group.images.length > 2 && (
+                <button
+                  type="button"
+                  onClick={() => handleScroll(group.industry, "left")}
+                  aria-label="Scroll left"
+                  style={{
+                    flexShrink: 0,
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    border: "1px solid #e2e8f0",
+                    background: "#ffffff",
+                    boxShadow: "0 2px 8px rgba(15,23,42,0.10)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    color: "#2684b9",
+                    transition: "background 0.2s, box-shadow 0.2s",
+                    zIndex: 2,
+                    marginRight: "8px",
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background = "#f0f9ff"}
+                  onMouseOut={e => e.currentTarget.style.background = "#ffffff"}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_back</span>
+                </button>
+              )}
+
+              {/* Scrollable card grid */}
+              <div
+                className="creative-grid"
+                ref={(el) => {
+                  if (el) scrollContainers.current[group.industry] = el;
                 }}
-                onMouseOver={e => e.currentTarget.style.background = "#f0f9ff"}
-                onMouseOut={e => e.currentTarget.style.background = "#ffffff"}
+                style={{ flex: 1, minWidth: 0 }}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_back</span>
-              </button>
-            )}
+                {chunkArray(group.images, 2).map((slideImages, slideIdx) => (
+                  <div className="creative-slide" key={slideIdx}>
+                    {slideImages.map((img) => {
+                      const imageIndex = visibleItems.findIndex((item) => item.src === img.src);
+                      return (
+                        <div
+                          className="creative-card"
+                          key={img.src}
+                          onClick={() => setSelectedImageIndex(imageIndex)}
+                          tabIndex={0}
+                          role="button"
+                          aria-label={`View ${img.title} in full screen`}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              e.preventDefault();
+                              setSelectedImageIndex(imageIndex);
+                            }
+                          }}
+                        >
+                          <div className="creative-img-wrapper" style={{ position: "relative", width: "100%", height: "200px" }}>
+                            {(() => {
+                              const playerType = getPlayerType(img.src, img.type);
+                              const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
 
-            {/* Scrollable card grid */}
-            <div
-              className="creative-grid"
-              ref={(el) => {
-                if (el) scrollContainers.current[group.industry] = el;
-              }}
-              style={{ flex: 1, minWidth: 0 }}
-            >
-              {chunkArray(group.images, activeFilter === "All" ? 4 : 2).map((slideImages, slideIdx) => (
-                <div className="creative-slide" key={slideIdx}>
-                  {slideImages.map((img) => {
-                    const imageIndex = visibleItems.findIndex((item) => item.src === img.src);
-                    return (
-                      <div
-                        className="creative-card"
-                        key={img.src}
-                        onClick={() => setSelectedImageIndex(imageIndex)}
-                        tabIndex={0}
-                        role="button"
-                        aria-label={`View ${img.title} in full screen`}
-                        onKeyDown={(e) => {
-                          if (e.key === "Enter" || e.key === " ") {
-                            e.preventDefault();
-                            setSelectedImageIndex(imageIndex);
-                          }
-                        }}
-                      >
-                        <div className="creative-img-wrapper" style={{ position: "relative", width: "100%", height: "200px" }}>
-                          {(() => {
-                            const playerType = getPlayerType(img.src, img.type);
-                            const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
-
-                            if (playerType === "video") {
-                              if (videoErrors[img.src]) {
+                              if (playerType === "video") {
+                                if (videoErrors[img.src]) {
+                                  return (
+                                    <div
+                                      className="creative-img-fallback"
+                                      style={{
+                                        width: "100%",
+                                        height: "100%",
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        background: "linear-gradient(135deg, #1f2937, #111827)",
+                                        color: "#9ca3af",
+                                        padding: "16px",
+                                        textAlign: "center"
+                                      }}
+                                    >
+                                      <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#e56030", marginBottom: "8px" }}>
+                                        videocam_off
+                                      </span>
+                                      <span style={{ fontSize: "11px", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                                        Video Unavailable
+                                      </span>
+                                    </div>
+                                  );
+                                }
                                 return (
-                                  <div
-                                    className="creative-img-fallback"
-                                    style={{
-                                      width: "100%",
-                                      height: "100%",
-                                      display: "flex",
-                                      flexDirection: "column",
-                                      alignItems: "center",
-                                      justifyContent: "center",
-                                      background: "linear-gradient(135deg, #1f2937, #111827)",
-                                      color: "#9ca3af",
-                                      padding: "16px",
-                                      textAlign: "center"
+                                  <video
+                                    src={img.src}
+                                    className="creative-img"
+                                    style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                                    muted
+                                    playsInline
+                                    loop
+                                    onMouseOver={(e) => e.target.play()}
+                                    onMouseOut={(e) => e.target.pause()}
+                                    onError={() => {
+                                      setVideoErrors((prev) => ({ ...prev, [img.src]: true }));
                                     }}
-                                  >
-                                    <span className="material-symbols-outlined" style={{ fontSize: "40px", color: "#e56030", marginBottom: "8px" }}>
-                                      videocam_off
-                                    </span>
-                                    <span style={{ fontSize: "11px", fontWeight: "500", textTransform: "uppercase", letterSpacing: "0.05em" }}>
-                                      Video Unavailable
-                                    </span>
-                                  </div>
+                                  />
                                 );
                               }
-                              return (
-                                <video
-                                  src={img.src}
-                                  className="creative-img"
-                                  style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
-                                  muted
-                                  playsInline
-                                  loop
-                                  onMouseOver={(e) => e.target.play()}
-                                  onMouseOut={(e) => e.target.pause()}
-                                  onError={() => {
-                                    setVideoErrors((prev) => ({ ...prev, [img.src]: true }));
-                                  }}
-                                />
-                              );
-                            }
 
-                            if (playerType === "website") {
-                              const thumb = img.thumbnail || (isExternalUrl
-                                ? `https://image.thum.io/get/${img.src}`
-                                : img.src);
+                              if (playerType === "website") {
+                                const thumb = img.thumbnail || (isExternalUrl
+                                  ? `https://image.thum.io/get/${img.src}`
+                                  : img.src);
+                                return (
+                                  <img
+                                    src={thumb}
+                                    alt={img.title}
+                                    className="creative-img"
+                                    style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
+                                    loading="lazy"
+                                  />
+                                );
+                              }
+
+                              const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
                               return (
                                 <img
                                   src={thumb}
@@ -522,107 +735,96 @@ export default function CreativeGrid({ activeFilter = "All" }) {
                                   loading="lazy"
                                 />
                               );
-                            }
-
-                            const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
-                            return (
-                              <img
-                                src={thumb}
-                                alt={img.title}
-                                className="creative-img"
-                                style={{ objectFit: "cover", width: "100%", height: "100%", display: "block" }}
-                                loading="lazy"
-                              />
-                            );
-                          })()}
-                          <div className="creative-overlay">
-                            <div className="creative-overlay-icon">
-                              <span className="material-symbols-outlined">
-                                {(() => {
-                                  const playerType = getPlayerType(img.src, img.type);
-                                  return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel")
-                                    ? "play_circle"
-                                    : "zoom_in";
-                                })()}
-                              </span>
+                            })()}
+                            <div className="creative-overlay">
+                              <div className="creative-overlay-icon">
+                                <span className="material-symbols-outlined">
+                                  {(() => {
+                                    const playerType = getPlayerType(img.src, img.type);
+                                    return (playerType === "video" || playerType === "youtube" || playerType === "instagram" || playerType === "reel")
+                                      ? "play_circle"
+                                      : "zoom_in";
+                                  })()}
+                                </span>
+                              </div>
                             </div>
                           </div>
-                        </div>
-                        <div className="creative-card-info" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
-                          <div>
-                            <h4>{img.title}</h4>
-                            <p>{img.description}</p>
+                          <div className="creative-card-info" style={{ display: "flex", flexDirection: "column", justifyContent: "space-between", height: "100%" }}>
+                            <div>
+                              <h4>{img.title}</h4>
+                              <p>{img.description}</p>
+                            </div>
+                            {getPlayerType(img.src, img.type) === "website" && img.src && (img.src.startsWith("http://") || img.src.startsWith("https://")) && (
+                              <a
+                                href={img.src}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="open-website-btn"
+                                style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  justifyContent: "center",
+                                  gap: "6px",
+                                  marginTop: "12px",
+                                  backgroundColor: "#d63e13",
+                                  color: "#fff",
+                                  padding: "8px 16px",
+                                  borderRadius: "6px",
+                                  fontSize: "12px",
+                                  fontWeight: "600",
+                                  textDecoration: "none",
+                                  border: "none",
+                                  cursor: "pointer",
+                                  width: "fit-content",
+                                  transition: "background-color 0.2s ease"
+                                }}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                }}
+                              >
+                                <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>open_in_new</span>
+                                Visit Website
+                              </a>
+                            )}
                           </div>
-                          {getPlayerType(img.src, img.type) === "website" && img.src && (img.src.startsWith("http://") || img.src.startsWith("https://")) && (
-                            <a
-                              href={img.src}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="open-website-btn"
-                              style={{
-                                display: "inline-flex",
-                                alignItems: "center",
-                                justifyContent: "center",
-                                gap: "6px",
-                                marginTop: "12px",
-                                backgroundColor: "#d63e13",
-                                color: "#fff",
-                                padding: "8px 16px",
-                                borderRadius: "6px",
-                                fontSize: "12px",
-                                fontWeight: "600",
-                                textDecoration: "none",
-                                border: "none",
-                                cursor: "pointer",
-                                width: "fit-content",
-                                transition: "background-color 0.2s ease"
-                              }}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                              }}
-                            >
-                              <span className="material-symbols-outlined" style={{ fontSize: "16px" }}>open_in_new</span>
-                              Visit Website
-                            </a>
-                          )}
                         </div>
-                      </div>
-                    );
-                  })}
-                </div>
-              ))}
-            </div>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
 
-            {/* Right arrow */}
-            {group.images.length > (activeFilter === "All" ? 4 : 2) && (
-              <button
-                type="button"
-                onClick={() => handleScroll(group.industry, "right")}
-                aria-label="Scroll right"
-                style={{
-                  flexShrink: 0,
-                  width: "40px",
-                  height: "40px",
-                  borderRadius: "50%",
-                  border: "1px solid #e2e8f0",
-                  background: "#ffffff",
-                  boxShadow: "0 2px 8px rgba(15,23,42,0.10)",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  cursor: "pointer",
-                  color: "#2684b9",
-                  transition: "background 0.2s, box-shadow 0.2s",
-                  zIndex: 2,
-                  marginLeft: "8px",
-                }}
-                onMouseOver={e => e.currentTarget.style.background = "#f0f9ff"}
-                onMouseOut={e => e.currentTarget.style.background = "#ffffff"}
-              >
-                <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_forward</span>
-              </button>
-            )}
-          </div>
+              {/* Right arrow */}
+              {group.images.length > 2 && (
+                <button
+                  type="button"
+                  onClick={() => handleScroll(group.industry, "right")}
+                  aria-label="Scroll right"
+                  style={{
+                    flexShrink: 0,
+                    width: "40px",
+                    height: "40px",
+                    borderRadius: "50%",
+                    border: "1px solid #e2e8f0",
+                    background: "#ffffff",
+                    boxShadow: "0 2px 8px rgba(15,23,42,0.10)",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    cursor: "pointer",
+                    color: "#2684b9",
+                    transition: "background 0.2s, box-shadow 0.2s",
+                    zIndex: 2,
+                    marginLeft: "8px",
+                  }}
+                  onMouseOver={e => e.currentTarget.style.background = "#f0f9ff"}
+                  onMouseOut={e => e.currentTarget.style.background = "#ffffff"}
+                >
+                  <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_forward</span>
+                </button>
+              )}
+            </div>
+          )}
         </article>
       ))}
 
