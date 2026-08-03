@@ -10,6 +10,8 @@
   --blue-soft: #eaf6fd;
   --orange: #e56030;
   --orange-soft: #fff0ea;
+  --green: #0ea85c;
+  --green-soft: #e6f9ef;
   --shadow: 0 18px 45px rgba(15, 23, 42, 0.08);
   --card-bg: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 251, 255, 0.94));
   --card-border: rgba(148, 163, 184, 0.24);
@@ -1905,6 +1907,10 @@ p {
   background: linear-gradient(90deg, var(--orange), #ffb59d);
 }
 
+.portfolio-slider-card.green::before {
+  background: linear-gradient(90deg, var(--green), #86e4b6);
+}
+
 .portfolio-slide-topline {
   display: flex;
   align-items: center;
@@ -1957,6 +1963,11 @@ p {
 .portfolio-slider-card.orange .portfolio-slide-content>.material-symbols-outlined {
   color: var(--orange);
   background: var(--orange-soft);
+}
+
+.portfolio-slider-card.green .portfolio-slide-content>.material-symbols-outlined {
+  color: var(--green);
+  background: var(--green-soft);
 }
 
 .portfolio-slide-content h2 {
@@ -2046,6 +2057,10 @@ p {
   color: var(--orange);
 }
 
+.portfolio-slider-card.green .preview-metric strong {
+  color: var(--green);
+}
+
 .preview-chart {
   display: flex;
   align-items: flex-end;
@@ -2063,6 +2078,10 @@ p {
 
 .portfolio-slider-card.orange .preview-chart span {
   background: linear-gradient(180deg, var(--orange), #ffb59d);
+}
+
+.portfolio-slider-card.green .preview-chart span {
+  background: linear-gradient(180deg, var(--green), #86e4b6);
 }
 
 .portfolio-slider-dots {
@@ -2144,6 +2163,10 @@ p {
   background: linear-gradient(90deg, var(--orange, #e56030), #ffb59d);
 }
 
+.portfolio-slider-card.green .card-progress-fill {
+  background: linear-gradient(90deg, var(--green, #0ea85c), #86e4b6);
+}
+
 .card-progress-fill.paused {
   animation-play-state: paused;
 }
@@ -2190,6 +2213,11 @@ p {
 .portfolio-slider-card.orange .slide-cta-btn {
   background: var(--orange, #e56030);
   box-shadow: 0 4px 14px rgba(229, 96, 48, 0.25);
+}
+
+.portfolio-slider-card.green .slide-cta-btn {
+  background: var(--green, #0ea85c);
+  box-shadow: 0 4px 14px rgba(14, 168, 92, 0.25);
 }
 
 .slide-cta-btn:hover {

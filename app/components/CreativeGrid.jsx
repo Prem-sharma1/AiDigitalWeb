@@ -8,8 +8,6 @@ const creativeGroups = [
     industry: "Real Estate",
     description: "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
     images: [
-      { src: "/creative_content/RealStatecreative.jpeg", title: "Real Estate Brand Creative", description: "High-impact branding and promotional creative for real estate marketing campaigns.", globalIndex: 0, type: "image" },
-      { src: "/creative_content/Creative1.jpeg", title: "Luxury Villa Showcase", description: "Branding creative for high-end residential real estate listing.", globalIndex: 1, type: "image" },
       { src: "https://anvreealty.com/", thumbnail: "/uploads/Anv_reality.jpg", title: "ANV Realty Website", description: "Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.", globalIndex: 2, type: "website" },
       { src: "/creative_content/RealState1.jpeg", title: "Modern Home Showcase", description: "Clean, high-impact marketing design for modern residential listings.", globalIndex: 3, type: "image" },
       { src: "/creative_content/RealState2.jpeg", title: "Luxury Villa Feature", description: "Elegant flyer highlighting upscale property details and high-end aesthetics.", globalIndex: 4, type: "image" },
@@ -19,9 +17,9 @@ const creativeGroups = [
       { src: "/creative_content/RealState6.jpeg", title: "Modern Residential Flyer", description: "Polished design showcasing suburban homes with optimized call-to-action layout.", globalIndex: 8, type: "image" },
       { src: "/creative_content/RealState7.jpeg", title: "Luxury Estate Presentation", description: "Aesthetic real estate advertising banner highlighting premium property features.", globalIndex: 9, type: "image" },
       { src: "/creative_content/RealState8.jpeg", title: "Architectural Design Feature", description: "Campaign visual highlighting modern architecture and premium materials of top listings.", globalIndex: 10, type: "image" },
-      { src: "https://youtube.com/shorts/CGmclmt0ibU?feature=share", title: "Luxury Villa Walkthrough", description: "A premium walkthrough reel showcasing high-end interior spaces and architecture of a luxury villa.", globalIndex: 250, type: "reel" },
+      { src: "https://youtube.com/shorts/CGmclmt0ibU?si=1Axb2IWBm_WGI-LB", title: "AI Luxury Villa Walkthrough", description: "An AI-enhanced premium walkthrough video showcasing high-end interior spaces and architecture of a luxury villa.", globalIndex: 250, type: "youtube" },
       { src: "https://youtu.be/uxlAeIZCY1w", title: "Modern Apartment Tour", description: "An engaging real estate reel showing aesthetic decor, layout, and lighting in a modern urban apartment.", globalIndex: 251, type: "reel" },
-      { src: "https://youtube.com/shorts/pogRO6aMOes?feature=share", title: "Property Listing Promo", description: "A dynamic and high-impact short-form property promo video highlighting premium real estate spaces.", globalIndex: 252, type: "reel" },
+      { src: "https://youtube.com/shorts/pogRO6aMOes?si=AM5Q5hTy50oTqGRa", title: "Real Estate AI Video", description: "A dynamic AI-generated short-form property promo video highlighting premium real estate spaces.", globalIndex: 252, type: "youtube" },
       { src: "https://youtube.com/shorts/APpxjSt5LLw?si=4r68FMnAWGrdhhxA", title: "Realistic AI Property Promo", description: "An immersive AI-assisted property promo video showcasing realistic real estate environments.", globalIndex: 253, type: "youtube" }
     ]
   },
@@ -36,6 +34,7 @@ const creativeGroups = [
       { src: "/creative_content/Education5creative.jpeg", title: "Education Creative 5", description: "Modern education branding creative for social media and paid ads.", globalIndex: 14, type: "image" },
       { src: "/creative_content/Creative3.jpeg", title: "Global University Banner", description: "Promotional visual for academic programs and admissions.", globalIndex: 15, type: "image" },
       { src: "/creative_content/Creative4.jpeg", title: "Online Learning Poster", description: "E-learning platform advertisement graphic designed for campaigns.", globalIndex: 16, type: "image" },
+      { src: "https://youtube.com/shorts/OjB222E1JFI?si=JQY90ZdxJdl7wLiY", title: "Educational AI Promo", description: "An interactive educational video highlighting learning concepts and academic excellence.", globalIndex: 198, type: "youtube" },
       { src: "https://youtube.com/shorts/CqpNv45IQBI", title: "UPSC DECODED", description: "An educational guide and course preview from UPSC DECODED, highlighting exam strategies and academic content.", globalIndex: 204, type: "youtube" },
       { src: "https://youtube.com/shorts/pd6kbpNsp5M", title: "Little Genius", description: "An engaging and fun promotional video highlighting early childhood learning, creative activities, and classes at Little Genius.", globalIndex: 207, type: "youtube" },
       { src: "https://youtube.com/shorts/3BNF1HUdHUo", title: "Paath Study", description: "An interactive educational overview and study session guide from Paath Study, designed to assist student learning and academic performance.", globalIndex: 209, type: "youtube" },
@@ -120,7 +119,7 @@ const creativeGroups = [
       { src: "/creative_content/Interiorcreative.jpeg", title: "Interior Design Creative", description: "Premium home interior and décor services promotional creative.", globalIndex: 70, type: "image" },
       { src: "/creative_content/interior2creative.jpeg", title: "Interior Design Creative 2", description: "Modern living space and interior styling ad creative.", globalIndex: 71, type: "image" },
       { src: "/creative_content/Interior3creative.jpeg", title: "Interior Design Creative 3", description: "Luxury interior design and home renovation promotional visual.", globalIndex: 72, type: "image" },
-      { src: "https://youtube.com/shorts/jEOIOVnY_vI", title: "Aditya Modular Design Studio", description: "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", globalIndex: 201, type: "youtube" },
+      { src: "https://youtube.com/shorts/jEOIOVnY_vI?si=8XAPXt0CxEe2YtTK", title: "Design Studio AI Video", description: "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", globalIndex: 201, type: "youtube" },
       { src: "https://youtube.com/shorts/c5EmfsVswZk", title: "Interior Reel", description: "Aesthetic interior design concepts and space styling.", globalIndex: 215, type: "reel" }
     ]
   },
@@ -142,7 +141,7 @@ const creativeGroups = [
       { src: "/creative_content/ToursAndTravels.jpeg", title: "Tours & Travels Creative", description: "Travel agency and tour package promotional creative for digital campaigns.", globalIndex: 90, type: "image" },
       { src: "/creative_content/ToursAnd2TRavels.jpeg", title: "Tours & Travels Creative 2", description: "Destination tourism and holiday package promotional banner creative.", globalIndex: 91, type: "image" },
       { src: "https://youtube.com/shorts/IBu2_EvKAH4", title: "Tourism Reel", description: "Explore beautiful destinations and holiday packages.", globalIndex: 217, type: "reel" },
-      { src: "https://youtube.com/shorts/i62UuswIIBU", title: "SWAMINI TOURS.", description: "Swamini Tours travel and tour package promotional reel.", globalIndex: 221, type: "reel" },
+      { src: "https://youtube.com/shorts/i62UuswIIBU?si=aM-xl-eHdip6offu", title: "SWAMINI TOURS AI Promo", description: "Swamini Tours travel and tour package AI promotional video.", globalIndex: 221, type: "youtube" },
       { src: "https://youtube.com/shorts/oicsQmkp5D4", title: "Tours & Travels Reel", description: "Promotional reel for tourism and travel packages.", globalIndex: 220, type: "reel" }
     ]
   },
@@ -167,6 +166,8 @@ const creativeGroups = [
     industry: "Digital Marketing",
     description: "AI-powered social media marketing, Google Ads, and performance-driven digital campaigns by Ai Digital.",
     images: [
+      { src: "https://youtube.com/shorts/MHZQprGSsQ8?si=tKNvvbMnbiwHi2JD", title: "Ai Digital Performance Marketing", description: "Data-driven performance marketing and ROI focused digital campaigns.", globalIndex: 198, type: "youtube" },
+      { src: "https://youtube.com/shorts/SzXb1FN8Q4E?si=n3blzkt9Z63PoimS", title: "Ai Digital Marketing Promo", description: "Performance-driven digital marketing and growth strategies by Ai Digital.", globalIndex: 199, type: "youtube" },
       { src: "https://youtube.com/shorts/VNMd9kBvsmg", title: "Ai Digital – Social Media Marketing", description: "Discover how Ai Digital drives measurable growth through social media marketing, Google Ads, and AI-powered digital strategies.", globalIndex: 200, type: "youtube" },
       { src: "https://youtube.com/shorts/kGqZ1WCFwXA", title: "Ai Digital – Affordable Video Services", description: "Get high-quality AI videos and social media creatives at affordable prices to boost your business reach.", globalIndex: 212, type: "youtube" }
     ]
@@ -176,6 +177,14 @@ const creativeGroups = [
     description: "All-in-one Construction ERP & Project Management software showcase, web portal, and local SEO campaign.",
     images: [
       { src: "https://www.hitoffice.co.in/", title: "Hitoffice Construction ERP", description: "Complete construction ERP and project management software website showcase. Feature-rich, optimized for lead generation and search engine visibility.", globalIndex: 101, type: "website" }
+    ]
+  },
+  {
+    industry: "E-Commerce",
+    description: "High-converting e-commerce platforms, wellness product showcases, and retail marketing campaigns.",
+    images: [
+      { src: "https://ayurmor.com/", thumbnail: "/uploads/Ayurmor.jpg", title: "Ayurmor Ayurvedic Wellness", description: "An SEO-friendly e-commerce platform for Ayurvedic health supplements and instant herbal soups, built with optimized product schemas and category pages.", globalIndex: 102, type: "website" },
+      { src: "https://pureplush.in/", thumbnail: "/uploads/Pureplush.jpg", title: "Pureplush E-Commerce", description: "A premium e-commerce platform designed for high conversions, featuring a seamless shopping experience and elegant product showcases.", globalIndex: 103, type: "website" }
     ]
   }
 ];
@@ -361,6 +370,13 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         video: "Construction ERP AI Promo",
         image: "Construction Branding Creative",
         reel: "Construction Project Reel"
+      },
+      "E-Commerce": {
+        website: "Ayurmor Wellness Store",
+        campaign: "E-Commerce Growth Campaign",
+        video: "E-Commerce AI Promo",
+        image: "E-Commerce Branding Creative",
+        reel: "E-Commerce Product Reel"
       }
     };
 

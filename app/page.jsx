@@ -45,46 +45,46 @@ const services = [
 const campaigns = [
   {
     icon: "ads_click",
-    title: "Google Ads Campaign",
-    body: "High-intent search campaigns with landing pages, tracking, and ongoing ROAS improvement.",
-    tags: ["Search", "Leads", "ROI"],
-    fit: "Paid growth",
+    title: "Google Ads Management & PPC",
+    body: "High-intent search engine marketing (SEM) campaigns with optimized landing pages, tracking, and continuous ROAS scaling.",
+    tags: ["Search Ads", "Lead Generation", "PPC"],
+    fit: "Paid Search Growth",
     price: "Starts at ₹4,999/mo",
     link: "/pricing#ads"
   },
   {
     icon: "mail",
-    title: "Meta Ads Campaign",
-    body: "Audience-first targeting, creative testing, and retargeting for brand and sales growth.",
-    tags: ["Creative", "Social", "Retargeting"],
-    fit: "Social sales",
+    title: "Facebook Ads & Social Marketing",
+    body: "Data-driven audience targeting, creative testing, and strategic retargeting for accelerated brand awareness and sales growth.",
+    tags: ["Social Ads", "Instagram Marketing", "Retargeting"],
+    fit: "Social Media Sales",
     price: "Starts at ₹2,499/mo",
     link: "/pricing#ads"
   },
   {
     icon: "webhook",
-    title: "Website & Landing Page",
-    body: "CRO-focused pages that guide visitors toward clear conversion actions and measurable leads.",
-    tags: ["CRO", "UX", "Speed"],
-    fit: "Conversion",
+    title: "SEO Web Design & Landing Pages",
+    body: "High-performance, CRO-focused web development optimized for search engines, fast loading speeds, and maximum conversions.",
+    tags: ["SEO Web Design", "UX/UI", "Core Web Vitals"],
+    fit: "Conversion Optimization",
     price: "Starts at ₹7,499",
     link: "/pricing#websites"
   },
   {
     icon: "movie",
-    title: "AI Video Creation",
-    body: "Short-form video concepts, scripts, and production direction for paid and organic channels.",
-    tags: ["Shorts", "Reels", "Motion"],
-    fit: "Video content",
+    title: "AI Video Production for Ads",
+    body: "Engaging short-form video concepts, scriptwriting, and AI-driven production for YouTube, Instagram, and TikTok marketing.",
+    tags: ["YouTube Shorts", "Instagram Reels", "Video Ads"],
+    fit: "Viral Video Content",
     price: "Starts at ₹4,500",
     link: "/pricing#aivideo"
   },
   {
     icon: "post_add",
-    title: "Social Media Post Creation",
-    body: "Automated and manual high-engagement posts, captions, and scheduling for active brands.",
-    tags: ["Graphics", "Captions", "Scheduling"],
-    fit: "Active brands",
+    title: "Social Media Content & SEO",
+    body: "High-engagement organic social media posts, SEO-optimized captions, and strategic content scheduling for brand growth.",
+    tags: ["Content Creation", "Brand Growth", "SMM"],
+    fit: "Active Brand Building",
     price: "Starts at ₹599",
     link: "/pricing#creative"
   }
@@ -93,33 +93,33 @@ const campaigns = [
 const whyItems = [
   {
     icon: "troubleshoot",
-    title: "AI-Powered Research",
-    body: "Deep data analysis to uncover hidden opportunities in your market."
+    title: "AI Market Research",
+    body: "Deep SEO data analysis to uncover high-intent keywords."
   },
   {
     icon: "radar",
     title: "Competitor Intel",
-    body: "Track and outmaneuver competitors with real-time insights."
+    body: "Track competitors and analyze backlinks in real-time."
   },
   {
     icon: "speed",
     title: "Rapid Execution",
-    body: "Deploy campaigns faster with streamlined agile workflows."
+    body: "Deploy high-converting marketing campaigns faster."
   },
   {
     icon: "auto_graph",
     title: "Predictive Analytics",
-    body: "Forecast trends and optimize budgets before spending a dime."
+    body: "Forecast search trends and maximize ad spend ROI."
   },
   {
     icon: "groups",
-    title: "Dedicated Team",
-    body: "A squad of experts acting as an extension of your company."
+    title: "Dedicated Experts",
+    body: "An expert team of SEO specialists and growth hackers."
   },
   {
     icon: "verified",
-    title: "Proven Results",
-    body: "Track record of scaling businesses across multiple industries."
+    title: "Proven ROI",
+    body: "Track record of scaling e-commerce and local businesses."
   }
 ];
 

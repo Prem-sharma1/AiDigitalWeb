@@ -4,34 +4,34 @@ import { useMemo, useState } from "react";
 
 const goals = [
   {
-    label: "More Website Traffic",
-    result: "SEO Strategy + Content Marketing + Growth Framework",
-    description: "Drive high-intent organic visitors to your site with a custom SEO roadmap, engaging blog posts, and performance-focused optimization frameworks."
+    label: "Increase Organic Traffic",
+    result: "Advanced SEO Strategy + Content Marketing + Growth Framework",
+    description: "Drive high-intent organic traffic to your website with a custom technical SEO roadmap, SEO-optimized blog content, and growth-focused marketing frameworks."
   },
   {
-    label: "More Leads",
-    result: "Performance Marketing + Landing Page Optimization + Conversion Tracking",
-    description: "Acquire qualified prospects using conversion-optimized landing pages, targeted Google/Meta ad campaigns, and end-to-end analytics tracking."
+    label: "Maximize Lead Generation",
+    result: "PPC Performance Marketing + Landing Page CRO + Conversion Tracking",
+    description: "Acquire highly qualified B2B and local leads using conversion-optimized landing pages, targeted Google Ads & Meta campaigns, and end-to-end ROI analytics."
   },
   {
-    label: "Better Google Ranking",
-    result: "Technical SEO + Keyword Research + Authority Building",
-    description: "Climb to the top of Google search results by fixing technical audits, performing in-depth keyword analysis, and building high-authority links."
+    label: "Dominate Google Rankings",
+    result: "Technical SEO + High-Intent Keyword Research + Authority Link Building",
+    description: "Climb to the top of Google search engine results pages (SERPs) by resolving technical SEO audits, executing in-depth keyword analysis, and securing high-authority backlinks."
   },
   {
-    label: "Better Social Media",
-    result: "Content Strategy + Community Management + Social Ads",
-    description: "Build a thriving digital community through creative content strategies, daily page management, and highly-engaging social media ad spend."
+    label: "Boost Social Engagement",
+    result: "Viral Content Strategy + Community Management + Paid Social Ads",
+    description: "Build a thriving digital brand community through creative social media content, daily proactive page management, and highly-targeted Instagram and Facebook ad campaigns."
   },
   {
-    label: "More Online Sales",
-    result: "CRO + E-commerce Strategy + Retargeting",
-    description: "Boost your online store sales with conversion rate optimization (CRO), user-centric checkout funnels, and dynamic retargeting campaigns."
+    label: "Scale E-Commerce Sales",
+    result: "Conversion Rate Optimization (CRO) + E-commerce SEO + Retargeting",
+    description: "Exponentially boost your Shopify or WooCommerce sales with conversion rate optimization (CRO), frictionless checkout funnels, and high-ROAS dynamic retargeting campaigns."
   },
   {
-    label: "Better Brand Identity",
-    result: "Visual Design + Messaging + Brand Positioning",
-    description: "Set yourself apart from competitors with premium logo designs, harmonious color palettes, and a cohesive brand messaging framework."
+    label: "Elevate Brand Identity",
+    result: "Premium UI/UX Design + Brand Positioning + Visual Identity",
+    description: "Set your business apart from competitors with premium logo designs, conversion-focused UI/UX aesthetics, and a cohesive, authoritative brand messaging framework."
   }
 ];
 

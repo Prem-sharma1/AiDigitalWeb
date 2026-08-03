@@ -101,6 +101,15 @@ const industries = [
     projects: [
       { title: "Hitoffice Construction ERP", type: "Website & SEO" }
     ]
+  },
+  {
+    name: "E-Commerce",
+    description:
+      "High-converting e-commerce platforms, wellness product showcases, and retail marketing campaigns.",
+    projects: [
+      { title: "Ayurmor Ayurvedic Wellness", type: "Website & SEO" },
+      { title: "Pureplush E-Commerce", type: "Website & SEO" }
+    ]
   }
 ];
 

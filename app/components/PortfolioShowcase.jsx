@@ -6,42 +6,68 @@ import { Icon } from "./SiteChrome";
 const showcaseProjects = [
   {
     id: "proj-1",
-    title: "Property Listing Website",
+    title: "Real Estate SEO Portal",
     category: "Website & SEO",
     industry: "Real Estate",
     metric: "+142%",
-    metricLabel: "Organic traffic",
+    metricLabel: "Organic Traffic",
     description:
-      "A conversion-focused property portal with SEO pages, lead capture, and campaign-ready landing sections.",
-    tags: ["Static Website", "Local SEO", "Lead Forms"],
+      "A conversion-focused property listing website optimized for Local SEO, featuring advanced lead capture and campaign-ready landing pages.",
+    tags: ["Real Estate SEO", "Lead Generation", "UI/UX Design"],
     accent: "blue",
     icon: "language"
   },
   {
     id: "proj-2",
-    title: "AI Property Promo",
-    category: "AI Videos",
+    title: "AI Real Estate Video Ads",
+    category: "Video Marketing",
     industry: "Real Estate",
     metric: "3.8x",
-    metricLabel: "Ad return",
+    metricLabel: "Ad ROAS",
     description:
-      "AI-assisted property video concepting and short-form creative built for paid and organic distribution.",
-    tags: ["AI Video", "Reels", "Paid Ads"],
+      "AI-driven property video concepting and short-form video ads engineered for maximum reach on paid and organic social media channels.",
+    tags: ["AI Video Marketing", "Instagram Reels", "Paid Social Ads"],
     accent: "orange",
     icon: "movie"
   },
   {
     id: "proj-3",
-    title: "Finance Dashboard",
+    title: "Fintech Web Platform",
     category: "Website & SEO",
     industry: "Finance",
     metric: "+78%",
-    metricLabel: "Qualified leads",
+    metricLabel: "Qualified Leads",
     description:
-      "A modern dashboard-style web experience for finance education, investor trust, and measurable inquiries.",
-    tags: ["Dashboard UI", "Content SEO", "Analytics"],
+      "A secure, dashboard-style fintech web platform designed for finance education, building investor trust, and driving inbound lead generation.",
+    tags: ["Fintech Web Design", "Content SEO", "Lead Gen Analytics"],
     accent: "blue",
     icon: "query_stats"
+  },
+  {
+    id: "proj-4",
+    title: "Ayurmor Wellness",
+    category: "E-Commerce & SEO",
+    industry: "Health & Wellness",
+    metric: "+210%",
+    metricLabel: "Organic Sales",
+    description:
+      "An SEO-optimized e-commerce platform for 100% natural Ayurvedic wellness & instant superfood drinks. Features rich product schemas and trust badges.",
+    tags: ["E-Commerce SEO", "Schema Markup", "Conversion UX"],
+    accent: "green",
+    icon: "shopping_cart"
+  },
+  {
+    id: "proj-5",
+    title: "Pureplush E-Commerce",
+    category: "E-Commerce & SEO",
+    industry: "Retail",
+    metric: "+185%",
+    metricLabel: "Sales Growth",
+    description:
+      "A premium retail e-commerce platform designed with an optimized checkout flow and visually engaging product showcases.",
+    tags: ["E-Commerce", "Checkout Optimization", "Retail UI"],
+    accent: "orange",
+    icon: "storefront"
   }
 ];
 
@@ -91,8 +117,8 @@ export default function PortfolioShowcase() {
   const jsonLdData = {
     "@context": "https://schema.org",
     "@type": "ItemList",
-    "name": "Featured Project Showcase",
-    "description": "High-performing websites, campaigns, AI videos, and reels built by Ai Digital.",
+    "name": "Digital Marketing & SEO Web Design Portfolio",
+    "description": "High-converting SEO websites, performance marketing campaigns, and AI videos built for measurable ROI.",
     "itemListElement": showcaseProjectsState.map((proj, idx) => ({
       "@type": "ListItem",
       "position": idx + 1,
@@ -117,11 +143,11 @@ export default function PortfolioShowcase() {
       />
 
       <div className="portfolio-hero-copy">
-        <span className="eyebrow">Selected work</span>
-        <h1 id="portfolio-hero-title">Project Showcase</h1>
+        <span className="eyebrow">Our Success Stories</span>
+        <h1 id="portfolio-hero-title">Digital Growth Portfolio</h1>
         <p>
-          Explore high-performing websites, campaigns, AI videos, creatives, and
-          reels built for measurable growth.
+          Explore high-converting SEO websites, performance marketing campaigns, 
+          AI videos, and creatives built for scalable growth and measurable ROI.
         </p>
 
         <div className="showcase-category-chips" aria-label="Project showcase categories">
