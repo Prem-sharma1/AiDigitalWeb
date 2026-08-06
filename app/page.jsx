@@ -188,7 +188,7 @@ export default function Home() {
       <header className="hero section">
         <div className="hero-copy reveal">
           <h1>
-            Your Business <span>Our Success</span>
+            AI-Powered Digital Marketing Agency | <span>Your Business Our Success</span>
           </h1>
           <p>
             AI Digital helps businesses grow By adopting 360 Degress approach through SMO,Google Ads,SEO,Website and analytics powered by AI
@@ -304,10 +304,12 @@ export default function Home() {
                   >
                     <article className="insight-card" style={{ height: "100%" }}>
                       <div className="insight-image">
-                        <img
+                        <Image
                           src={post.coverImage || "/creative_content/Creative1.jpeg"}
                           alt={post.title}
-                          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+                          fill
+                          unoptimized={post.coverImage?.startsWith("http")}
+                          style={{ objectFit: "cover" }}
                         />
                       </div>
                       <div className="insight-body">
