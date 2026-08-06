@@ -5758,3 +5758,108 @@ p {
 .reveal-delay-4 {
   transition-delay: 400ms;
 }
+
+/* Trusted Partners Marquee */
+.client-carousel-section {
+  padding: 60px 0;
+  background-color: var(--surface-muted);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+}
+
+.client-carousel-section h2 {
+  font-family: var(--font-headline);
+  font-size: clamp(24px, 3vw, 32px);
+  color: var(--text);
+  margin-bottom: 40px;
+  text-align: center;
+  font-weight: 700;
+}
+
+.marquee-container {
+  width: 100%;
+  max-width: 1400px;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Glassmorphism edges for fading effect */
+.marquee-container::before,
+.marquee-container::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  width: 15%;
+  height: 100%;
+  z-index: 2;
+  pointer-events: none;
+}
+.marquee-container::before {
+  left: 0;
+  background: linear-gradient(to right, var(--surface-muted) 0%, transparent 100%);
+}
+.marquee-container::after {
+  right: 0;
+  background: linear-gradient(to left, var(--surface-muted) 0%, transparent 100%);
+}
+
+.marquee-row {
+  display: flex;
+  width: max-content;
+}
+
+.marquee-row-normal {
+  animation: scrollX 35s linear infinite;
+}
+.marquee-row-reverse {
+  animation: scrollX 35s linear infinite reverse;
+}
+
+.marquee-container:hover .marquee-row {
+  animation-play-state: paused;
+}
+
+.marquee-content {
+  display: flex;
+  gap: 20px;
+  padding: 0 10px;
+}
+
+.client-logo-card {
+  width: 200px;
+  height: 90px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.04);
+  border: 1px solid rgba(148, 163, 184, 0.1);
+  padding: 20px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.client-logo-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 25px rgba(15, 23, 42, 0.08);
+}
+
+.client-logo-card img {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+@keyframes scrollX {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}

@@ -8,6 +8,7 @@ import { Icon, SiteFooter, SiteHeader } from "./components/SiteChrome";
 import HeroOrbit from "./components/HeroOrbit";
 import ContactForm from "./components/ContactForm";
 import useScrollReveal from "./hooks/useScrollReveal";
+import ClientCarousel from "./components/ClientCarousel";
 
 const services = [
   {
@@ -212,6 +213,8 @@ export default function Home() {
           <div><Icon name="rocket_launch" /><span>Growth-Focused Execution</span></div>
         </div>
       </section>
+
+      <ClientCarousel />
 
       {/* 2. Choose the Right Services for Your Growth Goal */}
       <section id="services" className="section section-muted campaigns">
