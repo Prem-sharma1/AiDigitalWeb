@@ -33,7 +33,7 @@ export const metadata = {
     "AI Social Growth",
   ],
   alternates: {
-    canonical: "https://www.aidigital.biz",
+    canonical: "/",
   },
   openGraph: {
     title: "AI Digital | Neural Growth Marketing",
