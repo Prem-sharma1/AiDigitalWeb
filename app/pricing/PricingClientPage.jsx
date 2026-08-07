@@ -5,6 +5,8 @@ import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
 import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
 import { useCart } from "../hooks/useCart";
 import { useRouter } from "next/navigation";
+import useScrollReveal from "../hooks/useScrollReveal";
+import TiltCard from "../components/TiltCard";
 
 const getWhatsAppLink = (planName, price, period = "") => {
   const message = `Hi! I would like to buy the ${planName} plan priced at ₹${price}${period} from AI Digital.`;
@@ -13,6 +15,7 @@ const getWhatsAppLink = (planName, price, period = "") => {
 
 export default function PricingClientPage() {
   const { addToCart, clearCart } = useCart();
+  useScrollReveal([]);
   const router = useRouter();
 
   const [googlePlansState, setGooglePlansState] = React.useState(googlePlans);
@@ -77,11 +80,11 @@ export default function PricingClientPage() {
 
       {/* Top Banner Section */}
       <section className="pricing-hero">
-        <div className="badge-pill">Your Success, Our Business</div>
-        <h1 className="pricing-main-title">
+        <div className="badge-pill reveal">Your Success, Our Business</div>
+        <h1 className="pricing-main-title reveal delay-100">
           AiDigital <span>Plans</span>
         </h1>
-        <p className="pricing-hero-sub">
+        <p className="pricing-hero-sub reveal delay-200">
           Unlock growth with data-driven marketing and high-performance assets tailored for your business needs.
         </p>
       </section>
@@ -97,9 +100,9 @@ export default function PricingClientPage() {
 
         <div className="ads-pricing-grid" style={{ "--grid-cols": facebookPlansState.length }}>
           {facebookPlansState.map((plan, index) => (
-            <div
+            <TiltCard
               key={index}
-              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
+              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""} premium-shadow reveal delay-200`}
               style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
             >
               <div>
@@ -123,12 +126,12 @@ export default function PricingClientPage() {
               </div>
               <button
                 onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
-                className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
+                className={`${plan.isPopular ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", cursor: "pointer" }}
               >
                 Buy Now
               </button>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </section>
@@ -144,9 +147,9 @@ export default function PricingClientPage() {
 
         <div className="ads-pricing-grid" style={{ "--grid-cols": googlePlansState.length }}>
           {googlePlansState.map((plan, index) => (
-            <div
+            <TiltCard
               key={index}
-              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
+              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""} premium-shadow reveal delay-200`}
               style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
             >
               <div>
@@ -170,12 +173,12 @@ export default function PricingClientPage() {
               </div>
               <button
                 onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
-                className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
+                className={`${plan.isPopular ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", cursor: "pointer" }}
               >
                 Buy Now
               </button>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </section>
@@ -191,9 +194,9 @@ export default function PricingClientPage() {
 
         <div className="ads-pricing-grid" style={{ "--grid-cols": combinePlansState.length }}>
           {combinePlansState.map((plan, index) => (
-            <div
+            <TiltCard
               key={index}
-              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""}`}
+              className={`pricing-card-ads ${plan.isPopular ? "standard-popular-card" : ""} premium-shadow reveal delay-200`}
               style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}
             >
               <div>
@@ -217,12 +220,12 @@ export default function PricingClientPage() {
               </div>
               <button
                 onClick={() => handleBuyNow(plan.platform + " " + plan.level, plan.price, plan.features)}
-                className={plan.isPopular ? "btn-card-solid" : "btn-card-outline"}
+                className={`${plan.isPopular ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
                 style={{ display: "block", width: "100%", textAlign: "center", marginTop: "auto", cursor: "pointer" }}
               >
                 Buy Now
               </button>
-            </div>
+            </TiltCard>
           ))}
         </div>
       </section>
@@ -241,7 +244,7 @@ export default function PricingClientPage() {
             </p>
 
             {/* Promotional Badge Box */}
-            <div className="promotional-callout-box">
+            <div className="promotional-callout-box glass-panel reveal delay-300">
               <span className="promo-label">PROMOTIONAL</span>
               <h3>WhatsApp & SMS Marketing Bundles</h3>
               <p>Get exclusive discounts when you pair website development with our marketing automated tools.</p>
@@ -251,7 +254,7 @@ export default function PricingClientPage() {
           {/* Right Column Pricing Cards */}
           <div className="websites-cards-grid">
             {websitePlansState.map((plan, index) => (
-              <div className="website-plan-card" key={index} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
+              <TiltCard className="website-plan-card premium-shadow reveal delay-200" key={index} style={{ display: "flex", flexDirection: "column", justifyContent: "space-between" }}>
                 <div>
                   <div className={`web-badge-pill ${plan.tagClass}`}>{plan.level}</div>
                   <div className="price-display-flat">
@@ -275,7 +278,7 @@ export default function PricingClientPage() {
                 >
                   Buy Now
                 </button>
-              </div>
+              </TiltCard>
             ))}
           </div>
         </div>
@@ -308,8 +311,8 @@ export default function PricingClientPage() {
                 const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
 
                 return (
-                  <div
-                    className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
+                  <TiltCard
+                    className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""} premium-shadow reveal delay-200`}
                     key={index}
                     style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor, display: "flex", flexDirection: "column", justifyContent: "space-between" } : { ...cardStyles, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
                   >
@@ -340,7 +343,7 @@ export default function PricingClientPage() {
                     </div>
                     <button
                       onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price, plan.features.map(f => f.text))}
-                      className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
+                      className={`${plan.isHighlight ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
                       style={{
                         display: "block",
                         width: "100%",
@@ -351,7 +354,7 @@ export default function PricingClientPage() {
                     >
                       Buy Now
                     </button>
-                  </div>
+                  </TiltCard>
                 );
               })}
             </div>
@@ -421,7 +424,7 @@ export default function PricingClientPage() {
                     </div>
                     <button
                       onClick={() => handleBuyNow("Creative Packs - " + plan.level, plan.price, plan.features.map(f => f.text))}
-                      className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
+                      className={`${plan.isHighlight ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
                       style={{
                         display: "block",
                         width: "100%",
@@ -476,8 +479,8 @@ export default function PricingClientPage() {
             const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
 
             return (
-              <div
-                className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""}`}
+              <TiltCard
+                className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""} premium-shadow reveal delay-200`}
                 key={index}
                 style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor, display: "flex", flexDirection: "column", justifyContent: "space-between" } : { ...cardStyles, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
               >
@@ -508,7 +511,7 @@ export default function PricingClientPage() {
                 </div>
                 <button
                   onClick={() => handleBuyNow("AI Video - " + plan.level, plan.price, plan.features.map(f => f.text))}
-                  className={plan.isHighlight ? "btn-card-solid" : "btn-card-outline"}
+                  className={`${plan.isHighlight ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
                   style={{
                     display: "block",
                     width: "100%",
@@ -519,7 +522,7 @@ export default function PricingClientPage() {
                 >
                   Buy Now
                 </button>
-              </div>
+              </TiltCard>
             );
           })}
         </div>

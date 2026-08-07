@@ -4,6 +4,7 @@ import "./globals.css";
 import ChatWidget from "./components/ChatWidget";
 import WhatsAppFloating from "./components/WhatsAppFloating";
 import BackToTop from "./components/BackToTop";
+import GlobalCursorGlow from "./components/GlobalCursorGlow";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -171,6 +172,7 @@ export default function RootLayout({ children }) {
             alt=""
           />
         </noscript>
+        <GlobalCursorGlow />
         {children}
         <ChatWidget />
         <WhatsAppFloating />

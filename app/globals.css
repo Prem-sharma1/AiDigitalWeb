@@ -986,23 +986,23 @@ p {
 }
 
 .orbit-xl {
-  width: 600px;
-  height: 600px;
+  width: 560px;
+  height: 560px;
 }
 
 .orbit-lg {
-  width: 480px;
-  height: 480px;
+  width: 440px;
+  height: 440px;
 }
 
 .orbit-md {
-  width: 360px;
-  height: 360px;
+  width: 320px;
+  height: 320px;
 }
 
 .orbit-sm {
-  width: 240px;
-  height: 240px;
+  width: 200px;
+  height: 200px;
   border-style: dashed;
 }
 
@@ -1029,19 +1029,19 @@ p {
 }
 
 .orbit-dot-xl {
-  --orbit-size: 600px;
+  --orbit-size: 560px;
 }
 
 .orbit-dot-lg {
-  --orbit-size: 480px;
+  --orbit-size: 440px;
 }
 
 .orbit-dot-md {
-  --orbit-size: 360px;
+  --orbit-size: 320px;
 }
 
 .orbit-dot-sm {
-  --orbit-size: 240px;
+  --orbit-size: 200px;
 }
 
 .orbit-dot {
@@ -1051,17 +1051,17 @@ p {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 76px;
-  height: 76px;
+  width: 54px;
+  height: 54px;
   border-radius: 50%;
   font-family: var(--font-body);
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 9px;
+  font-weight: 800;
   text-transform: uppercase;
   text-align: center;
   white-space: normal;
-  line-height: 1.25;
-  padding: 8px;
+  line-height: 1.1;
+  padding: 4px;
   pointer-events: auto;
 }
 
@@ -2172,8 +2172,13 @@ p {
 }
 
 @keyframes progressFill {
-  from { width: 0%; }
-  to { width: 100%; }
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 
 /* Slide entrance animation */
@@ -2186,6 +2191,7 @@ p {
     opacity: 0;
     transform: translateY(8px) scale(0.99);
   }
+
   to {
     opacity: 1;
     transform: translateY(0) scale(1);
@@ -5799,10 +5805,12 @@ p {
   z-index: 2;
   pointer-events: none;
 }
+
 .marquee-container::before {
   left: 0;
   background: linear-gradient(to right, var(--surface-muted) 0%, transparent 100%);
 }
+
 .marquee-container::after {
   right: 0;
   background: linear-gradient(to left, var(--surface-muted) 0%, transparent 100%);
@@ -5816,6 +5824,7 @@ p {
 .marquee-row-normal {
   animation: scrollX 35s linear infinite;
 }
+
 .marquee-row-reverse {
   animation: scrollX 35s linear infinite reverse;
 }
@@ -5859,7 +5868,295 @@ p {
   0% {
     transform: translateX(0);
   }
+
   100% {
     transform: translateX(-50%);
   }
-}
+}
+
+/* FAQ Section */
+.faq-section {
+  padding: 80px 0;
+  background-color: var(--page);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.faq-container {
+  width: 100%;
+  max-width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: 0 clamp(20px, 4.5vw, 64px);
+}
+
+.faq-item {
+  background-color: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(15, 23, 42, 0.03);
+  transition: all 0.3s ease;
+}
+
+.faq-item:hover,
+.faq-item.open {
+  border-color: var(--blue);
+  box-shadow: 0 8px 25px rgba(38, 132, 185, 0.1);
+}
+
+.faq-question {
+  width: 100%;
+  text-align: left;
+  padding: 24px;
+  background: none;
+  border: none;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  color: var(--text);
+  font-family: var(--font-headline);
+  font-size: 1.1rem;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.faq-question h3 {
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: 600;
+  line-height: 1.4;
+}
+
+.faq-item.open .faq-question {
+  color: var(--blue);
+}
+
+.faq-icon {
+  font-size: 24px;
+  color: var(--muted);
+  transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.faq-item.open .faq-icon {
+  transform: rotate(180deg);
+  color: var(--blue);
+}
+
+.faq-answer {
+  margin: 0;
+  color: var(--muted);
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* ==========================================================================
+   Premium Animations & Modern UI Utilities
+   ========================================================================== */
+
+/* 1. Smooth Fade-Up Reveal */
+.animate-fade-up {
+  opacity: 0;
+  transform: translateY(30px);
+  animation: fadeUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Delays for staggered reveals */
+.delay-100 { animation-delay: 100ms; }
+.delay-200 { animation-delay: 200ms; }
+.delay-300 { animation-delay: 300ms; }
+
+/* 2. Gentle Floating Animation */
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-15px); }
+  100% { transform: translateY(0px); }
+}
+
+/* 3. Glassmorphism Panel */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(31, 38, 135, 0.05);
+}
+
+/* 4. Premium Soft Shadows */
+.premium-shadow {
+  box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.08);
+  transition: box-shadow 0.3s ease, transform 0.3s ease;
+}
+
+.premium-shadow:hover {
+  box-shadow: 0 20px 50px -10px rgba(0, 0, 0, 0.12);
+  transform: translateY(-4px);
+}
+
+/* 5. Button Micro-interactions */
+.btn-premium-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.btn-premium-hover:hover {
+  transform: scale(1.03);
+  box-shadow: 0 8px 20px rgba(38, 132, 185, 0.25);
+}
+
+/* ==========================================================================
+   2026 Advanced Animations (Tilt & Reveal)
+   ========================================================================== */
+
+/* 1. Tilt Card Component */
+.tilt-card-container {
+  position: relative;
+  transition: transform 0.1s ease-out; /* Super fast transition for mouse follow */
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+.tilt-card-glow {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  border-radius: inherit;
+  transition: opacity 0.3s ease;
+  z-index: 0;
+}
+
+.tilt-card-content {
+  position: relative;
+  z-index: 1;
+  height: 100%;
+}
+
+/* 2. Advanced Scroll Reveals */
+.reveal {
+  opacity: 0;
+  transform: translateY(40px) scale(0.98);
+  transition: opacity 0.8s cubic-bezier(0.34, 1.56, 0.64, 1), transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: opacity, transform;
+}
+
+.reveal.reveal-visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+}
+
+/* Staggered Reveal Delays */
+.reveal.delay-100 { transition-delay: 100ms; }
+.reveal.delay-200 { transition-delay: 200ms; }
+.reveal.delay-300 { transition-delay: 300ms; }
+.reveal.delay-400 { transition-delay: 400ms; }
+
+/* ==========================================================================
+   Massive 2026 Hero Sections
+   ========================================================================== */
+
+/* Full-screen breathing room */
+.hero-massive {
+  min-height: 60vh; /* Reduced from 85vh */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 80px 20px;
+  position: relative;
+  overflow: hidden; /* Fixes orbit/atom overflow */
+  width: 100%;
+}
+
+/* For side-by-side heroes (like the homepage with the Orbit) */
+.hero-massive.hero-split {
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  text-align: left;
+  max-width: 1200px; /* Reduced from 1400px */
+  margin: 0 auto;
+  gap: 40px;
+}
+
+.hero-massive .hero-copy {
+  max-width: 700px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* Giant typography */
+.hero-headline {
+  font-family: var(--font-headline);
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 1.1;
+  color: var(--text-dark);
+  margin: 0;
+  letter-spacing: -0.02em;
+}
+
+@media (min-width: 1024px) {
+  .hero-headline {
+    font-size: 3.5rem; /* Reduced from 5rem to prevent overflow */
+  }
+}
+
+/* Gradient text mask */
+.hero-headline span,
+.hero-gradient-text {
+  background: linear-gradient(90deg, #2684b9, #fd7e14);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  display: inline-block;
+}
+
+/* Softer, larger subtitle */
+.hero-subtitle {
+  font-size: 1.25rem;
+  color: var(--text-muted);
+  line-height: 1.6;
+  font-weight: 400;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+@media (min-width: 1024px) {
+  .hero-subtitle {
+    font-size: 1.5rem;
+  }
+}
+
+/* Action button spacing */
+.hero-actions {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+  flex-wrap: wrap;
+}
+
+/* Center aligned actions for pricing */
+.hero-massive.hero-centered .hero-actions {
+  justify-content: center;
+}
+
+

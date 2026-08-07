@@ -9,6 +9,7 @@ import HeroOrbit from "./components/HeroOrbit";
 import ContactForm from "./components/ContactForm";
 import useScrollReveal from "./hooks/useScrollReveal";
 import ClientCarousel from "./components/ClientCarousel";
+import FaqSection from "./components/FaqSection";
 
 const services = [
   {
@@ -150,23 +151,23 @@ export default function Home() {
   const getBlogLink = (post) => {
     const contentTrimmed = post.content ? post.content.trim() : "";
     const slugTrimmed = post.slug ? post.slug.trim() : "";
-    
+
     if (contentTrimmed.startsWith("http://") || contentTrimmed.startsWith("https://")) {
       return contentTrimmed;
     }
     if (slugTrimmed.startsWith("http://") || slugTrimmed.startsWith("https://")) {
       return slugTrimmed;
     }
-    
+
     const mdLinkMatch = contentTrimmed.match(/^\[.*?\]\((https?:\/\/.*?)\)$/);
     if (mdLinkMatch) {
       return mdLinkMatch[1];
     }
-    
+
     if (/^https?:\/\/[^\s]+$/.test(contentTrimmed)) {
       return contentTrimmed;
     }
-    
+
     return `/blog/${post.slug}`;
   };
 
@@ -293,16 +294,16 @@ export default function Home() {
               homeBlogs.map((post) => {
                 const url = getBlogLink(post);
                 const isExternal = url.startsWith("http://") || url.startsWith("https://");
-                
+
                 const CardTag = isExternal ? "a" : Link;
-                const cardProps = isExternal 
-                  ? { href: url, target: "_blank", rel: "noopener noreferrer" } 
+                const cardProps = isExternal
+                  ? { href: url, target: "_blank", rel: "noopener noreferrer" }
                   : { href: url };
 
                 return (
-                  <CardTag 
-                    {...cardProps} 
-                    key={post.id} 
+                  <CardTag
+                    {...cardProps}
+                    key={post.id}
                     className="insight-card-link reveal"
                   >
                     <article className="insight-card" style={{ height: "100%" }}>
@@ -337,6 +338,8 @@ export default function Home() {
           </button>
         </div>
       </section>
+
+      <FaqSection />
 
       <section id="contact" className="section contact-section">
         <ContactForm />
