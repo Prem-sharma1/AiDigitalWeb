@@ -843,6 +843,7 @@ p {
   position: relative;
   z-index: 2;
   max-width: 640px;
+  margin-top: -50px;
 }
 
 .hero h1 {
@@ -877,6 +878,7 @@ p {
   --metric-card-small-offset: -89px;
   position: relative;
   height: 620px;
+  margin-top: -50px;
   overflow: hidden;
   isolation: isolate;
   perspective: 1200px;

@@ -190,7 +190,7 @@ export default function Home() {
       <header className="hero section">
         <div className="hero-copy reveal">
           <h1>
-            AI-Powered Digital Marketing Agency | <span>Your Business Our Success</span>
+            AI-Powered Digital Marketing Agency | <span>Your Success Our Business</span>
           </h1>
           <p>
             AI Digital helps businesses grow By adopting 360 Degress approach through SMO,Google Ads,SEO,Website and analytics powered by AI
