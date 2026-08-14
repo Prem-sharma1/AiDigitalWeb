@@ -18,13 +18,13 @@ export default function PricingClientPage() {
   useScrollReveal([]);
   const router = useRouter();
 
-  const [googlePlansState, setGooglePlansState] = React.useState(googlePlans);
-  const [facebookPlansState, setFacebookPlansState] = React.useState(facebookPlans);
-  const [combinePlansState, setCombinePlansState] = React.useState(combinePlans);
-  const [websitePlansState, setWebsitePlansState] = React.useState(websitePlans);
-  const [creativePacksState, setCreativePacksState] = React.useState(creativePacks);
-  const [aiVideoPlansState, setAiVideoPlansState] = React.useState(aiVideoPlans);
-  const [realEstatePlansState, setRealEstatePlansState] = React.useState(realEstatePlans);
+  const googlePlansState = googlePlans;
+  const facebookPlansState = facebookPlans;
+  const combinePlansState = combinePlans;
+  const websitePlansState = websitePlans;
+  const creativePacksState = creativePacks;
+  const aiVideoPlansState = aiVideoPlans;
+  const realEstatePlansState = realEstatePlans;
 
   const [activeCreativeIndex, setActiveCreativeIndex] = React.useState(0);
 
@@ -35,24 +35,6 @@ export default function PricingClientPage() {
   const prevCreative = () => {
     setActiveCreativeIndex((prev) => (prev - 1 + creativePacksState.length) % creativePacksState.length);
   };
-
-  React.useEffect(() => {
-    fetch("/api/admin/pricing?t=" + Date.now(), { cache: "no-store" })
-      .then((res) => {
-        if (res.ok) return res.json();
-        throw new Error("Failed to load pricing configurations");
-      })
-      .then((data) => {
-        if (data.googlePlans) setGooglePlansState(data.googlePlans);
-        if (data.facebookPlans) setFacebookPlansState(data.facebookPlans);
-        if (data.combinePlans) setCombinePlansState(data.combinePlans);
-        if (data.websitePlans) setWebsitePlansState(data.websitePlans);
-        if (data.creativePacks) setCreativePacksState(data.creativePacks);
-        if (data.aiVideoPlans) setAiVideoPlansState(data.aiVideoPlans);
-        if (data.realEstatePlans) setRealEstatePlansState(data.realEstatePlans);
-      })
-      .catch((err) => console.warn("Using fallback static pricing plans:", err));
-  }, []);
 
   const creativeScrollRef = React.useRef(null);
 
