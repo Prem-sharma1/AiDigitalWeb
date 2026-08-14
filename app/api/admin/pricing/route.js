@@ -3,7 +3,7 @@ export const dynamic = "force-dynamic";
 import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
-import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans } from "../../../pricing/pricingData";
+import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans, realEstatePlans } from "../../../pricing/pricingData";
 
 // Fallback pricing retrieval from backup JSON file
 function getJsonFallback() {
@@ -16,7 +16,7 @@ function getJsonFallback() {
   } catch (err) {
     console.warn("Could not read backup pricing JSON file, using static code import. Error:", err.message);
   }
-  return { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans };
+  return { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans, realEstatePlans };
 }
 
 export async function GET() {

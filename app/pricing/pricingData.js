@@ -50,13 +50,13 @@ export const facebookPlans = [
     badgeClass: "fb-badge",
     level: "Basic",
     pillClass: "basic-pill",
-    price: 2499,
+    price: 3499,
     period: "/month",
     features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"],
     buttonText: "Select Plan",
     isPopular: false,
     serviceName: "Performance Marketing",
-    planParameter: "Meta Ads - Basic (₹2499/mo)"
+    planParameter: "Meta Ads - Basic (₹3499/mo)"
   },
   {
     id: "fb_standard_monthly",
@@ -64,41 +64,27 @@ export const facebookPlans = [
     badgeClass: "fb-badge",
     level: "Standard",
     pillClass: "standard-pill",
-    price: 3999,
-    period: "/month",
-    features: ["Meta Ads", "Creative - 5", "AI Video - 2", "Reels/Shorts - 3", "Weekly Report"],
+    price: 4999,
+    period: "/2 months",
+    features: ["Meta Ads", "Creative - 6", "AI Video - 2", "Reels/Shorts - 2", "Weekly Report"],
     buttonText: "Select Plan",
     isPopular: true,
     serviceName: "Performance Marketing",
-    planParameter: "Meta Ads - Standard (₹3999/mo)"
-  },
-  {
-    id: "fb_standard",
-    platform: "Meta Ads",
-    badgeClass: "fb-badge",
-    level: "Premium",
-    pillClass: "standard-pill",
-    price: 6899,
-    period: "/3 months",
-    features: ["Meta Ads", "Creative - 9", "AI Video - 3", "Reels/Shorts - 3", "Weekly Report"],
-    buttonText: "Select Plan",
-    isPopular: true,
-    serviceName: "Performance Marketing",
-    planParameter: "Meta Ads - Premium (₹6899/3mo)"
+    planParameter: "Meta Ads - Standard (₹4999/2mo)"
   },
   {
     id: "fb_premium",
     platform: "Meta Ads",
     badgeClass: "fb-badge",
-    level: "Platinum",
+    level: "Premium",
     pillClass: "premium-pill",
-    price: 12599,
-    period: "/6 months",
-    features: ["Meta Ads", "Creative - 18", "AI Video - 6", "Reels/Shorts - 6", "Weekly Report"],
+    price: 6899,
+    period: "/3 months",
+    features: ["Meta Ads", "Creative - 9", "AI Video - 3", "Reels/Shorts - 3", "Weekly Report"],
     buttonText: "Select Plan",
     isPopular: false,
     serviceName: "Performance Marketing",
-    planParameter: "Meta Ads - Platinum (₹12599/6mo)"
+    planParameter: "Meta Ads - Premium (₹6899/3mo)"
   }
 ];
 
@@ -183,46 +169,46 @@ export const creativePacks = [
   {
     level: "Starter",
     tagClass: "static-tag",
-    price: 599,
+    price: 199,
     features: [
-      { icon: "image", text: "5 Creatives" },
+      { icon: "image", text: "1 Creative" },
       { icon: "brush", text: "Social Media Sizes" },
       { icon: "folder_zip", text: "PNG & JPG Formats" },
       { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
-    planParameter: "Creative Packs - Starter (5 for ₹599)",
+    planParameter: "Creative Packs - Starter (1 for ₹199)",
     isHighlight: false
   },
   {
     level: "Growth",
     tagClass: "static-tag",
-    price: 1099,
+    price: 949,
     features: [
-      { icon: "image", text: "10 Creatives" },
+      { icon: "image", text: "5 Creatives" },
       { icon: "brush", text: "Ad Banner Formats" },
       { icon: "folder_zip", text: "PNG & JPG Formats" },
       { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
-    planParameter: "Creative Packs - Growth (10 for ₹1099)",
+    planParameter: "Creative Packs - Growth (5 for ₹949)",
     isHighlight: false
   },
   {
     level: "Value",
     tagClass: "static-tag",
-    price: 1499,
+    price: 1799,
     features: [
-      { icon: "image", text: "15 Creatives" },
+      { icon: "image", text: "10 Creatives" },
       { icon: "brush", text: "Brand Style Match" },
       { icon: "folder_zip", text: "Source Files Included" },
       { icon: "schedule", text: "Standard Delivery Time" }
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
-    planParameter: "Creative Packs - Value (15 for ₹1499)",
+    planParameter: "Creative Packs - Value (10 for ₹1799)",
     isHighlight: true,
     highlightStyles: {
       card: { borderColor: "#2563EB", borderWidth: "2px", position: "relative", overflow: "hidden" },
@@ -234,7 +220,7 @@ export const creativePacks = [
   {
     level: "Standard",
     tagClass: "static-tag",
-    price: 1899,
+    price: 3399,
     features: [
       { icon: "image", text: "20 Creatives" },
       { icon: "brush", text: "Multi-Platform Sizes" },
@@ -243,13 +229,13 @@ export const creativePacks = [
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
-    planParameter: "Creative Packs - Standard (20 for ₹1899)",
+    planParameter: "Creative Packs - Standard (20 for ₹3399)",
     isHighlight: false
   },
   {
     level: "Pro",
     tagClass: "static-tag",
-    price: 2699,
+    price: 4499,
     features: [
       { icon: "image", text: "30 Creatives" },
       { icon: "brush", text: "Complete Ad Sets" },
@@ -258,36 +244,52 @@ export const creativePacks = [
     ],
     buttonText: "Select Plan",
     serviceName: "SEO Growth",
-    planParameter: "Creative Packs - Pro (30 for ₹2699)",
+    planParameter: "Creative Packs - Pro (30 for ₹4499)",
     isHighlight: false
   }
 ];
 
 export const aiVideoPlans = [
   {
-    level: "Starter Plan",
+    level: "Basic Plan",
     tagClass: "static-tag",
-    price: "4,500",
+    price: "1,000",
     features: [
-      { icon: "video_library", text: "5 AI Videos" },
+      { icon: "video_library", text: "1 AI Video" },
+      { icon: "schedule", text: "Duration: 30-35 seconds" },
       { icon: "check_circle", text: "Perfect for getting started" }
     ],
     buttonText: "Select Plan",
     serviceName: "AI Video Production",
-    planParameter: "AI Video - Starter Plan (5 Videos for ₹4500)",
+    planParameter: "AI Video - Basic Plan (1 Video for ₹1000)",
+    isHighlight: false
+  },
+  {
+    level: "Starter Plan",
+    tagClass: "static-tag",
+    price: "4,749",
+    features: [
+      { icon: "video_library", text: "5 AI Videos" },
+      { icon: "schedule", text: "Duration: 30-35 seconds" },
+      { icon: "check_circle", text: "Ideal for growing brands" }
+    ],
+    buttonText: "Select Plan",
+    serviceName: "AI Video Production",
+    planParameter: "AI Video - Starter Plan (5 Videos for ₹4749)",
     isHighlight: false
   },
   {
     level: "Growth Plan",
     tagClass: "static-tag",
-    price: "5,950",
+    price: "6,299",
     features: [
       { icon: "video_library", text: "7 AI Videos" },
-      { icon: "check_circle", text: "Ideal for growing brands" }
+      { icon: "schedule", text: "Duration: 30-35 seconds" },
+      { icon: "check_circle", text: "Best for maximum impact" }
     ],
     buttonText: "Select Plan",
     serviceName: "AI Video Production",
-    planParameter: "AI Video - Growth Plan (7 Videos for ₹5950)",
+    planParameter: "AI Video - Growth Plan (7 Videos for ₹6299)",
     isHighlight: true,
     highlightStyles: {
       card: { borderColor: "#FD7E14", borderWidth: "2px", position: "relative", overflow: "hidden" },
@@ -299,15 +301,77 @@ export const aiVideoPlans = [
   {
     level: "Pro Plan",
     tagClass: "static-tag",
-    price: "8,000",
+    price: "8,499",
     features: [
       { icon: "video_library", text: "10 AI Videos" },
-      { icon: "check_circle", text: "Best for maximum impact" }
+      { icon: "schedule", text: "Duration: 30-35 seconds" },
+      { icon: "check_circle", text: "Premium video production" }
     ],
     buttonText: "Select Plan",
     serviceName: "AI Video Production",
-    planParameter: "AI Video - Pro Plan (10 Videos for ₹8000)",
+    planParameter: "AI Video - Pro Plan (10 Videos for ₹8499)",
     isHighlight: false
+  }
+];
+
+export const realEstatePlans = [
+  {
+    id: "re_meta",
+    platform: "Meta Ads",
+    badgeClass: "fb-badge",
+    level: "Meta Ads",
+    pillClass: "standard-pill",
+    price: "5,000",
+    period: "/month",
+    features: [
+      { icon: "my_location", text: "Targeted Ad Campaigns" },
+      { icon: "groups", text: "Quality Leads" },
+      { icon: "phone_callback", text: "More Site Visits" },
+      { icon: "trending_up", text: "Increased Sales" },
+      { icon: "palette", text: "3 Creatives" },
+      { icon: "movie", text: "1 AI Video" },
+      { icon: "play_arrow", text: "1 Reels/Shorts" }
+    ],
+    buttonText: "Call Now",
+    isPopular: false,
+    serviceName: "Real Estate Advertising",
+    planParameter: "Real Estate - Meta Ads (₹5,000/mo)",
+    isHighlight: false,
+    highlightStyles: {
+      card: { borderColor: "#1877F2", borderWidth: "2px", position: "relative", overflow: "hidden" },
+      tag: { backgroundColor: "#E7F3FF", color: "#1877F2" },
+      icon: { color: "#1877F2" },
+      button: { backgroundColor: "#1877F2" }
+    }
+  },
+  {
+    id: "re_google",
+    platform: "Google Ads",
+    badgeClass: "gg-badge",
+    level: "Google Ads",
+    pillClass: "premium-pill",
+    price: "7,500",
+    period: "/month",
+    features: [
+      { icon: "domain", text: "Real Estate Ad Experts" },
+      { icon: "insights", text: "High ROI Campaigns" },
+      { icon: "description", text: "Transparent Reporting" },
+      { icon: "support_agent", text: "Dedicated Support" },
+      { icon: "palette", text: "3 Creatives" },
+      { icon: "movie", text: "1 AI Video" },
+      { icon: "play_arrow", text: "1 Reels/Shorts" }
+    ],
+    buttonText: "Call Now",
+    isPopular: false,
+    serviceName: "Real Estate Advertising",
+    planParameter: "Real Estate - Google Ads (₹7,500/mo)",
+    isHighlight: true,
+    highlightStyles: {
+      card: { borderColor: "#EA4335", borderWidth: "2px", position: "relative", overflow: "hidden" },
+      tag: { backgroundColor: "#FCE8E6", color: "#EA4335" },
+      icon: { color: "#EA4335" },
+      button: { backgroundColor: "#EA4335" }
+    }
   }
 ];
 

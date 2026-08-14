@@ -62,6 +62,9 @@ export default function AdminPage() {
   // Payment Reminders State
   const [remindersData, setRemindersData] = useState([]);
 
+  // Job Applications State
+  const [applicationsData, setApplicationsData] = useState([]);
+
   // Promo Codes State
   const [promosData, setPromosData] = useState([]);
   const [promoForm, setPromoForm] = useState({
@@ -203,7 +206,54 @@ export default function AdminPage() {
         setRemindersData(data);
       }
     } catch (err) {
-      console.warn("Failed to load reminders data:", err);
+      console.warn("Failed to load reminders:", err);
+    }
+  };
+
+  const loadApplicationsData = async () => {
+    try {
+      const res = await fetch("/api/admin/applications?t=" + Date.now(), { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setApplicationsData(data);
+      }
+    } catch (err) {
+      console.warn("Failed to load applications:", err);
+    }
+  };
+
+  const handleUpdateApplicationStatus = async (id, newStatus) => {
+    try {
+      const res = await fetch("/api/admin/applications", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ id, status: newStatus })
+      });
+      if (res.ok) {
+        showToast("Application status updated!");
+        loadApplicationsData();
+      } else {
+        showToast("Failed to update status", "error");
+      }
+    } catch (err) {
+      showToast("Network error updating status", "error");
+    }
+  };
+
+  const handleDeleteApplication = async (id) => {
+    if (!confirm("Are you sure you want to delete this application record?")) return;
+    try {
+      const res = await fetch(`/api/admin/applications?id=${id}`, {
+        method: "DELETE"
+      });
+      if (res.ok) {
+        showToast("Application deleted successfully!");
+        loadApplicationsData();
+      } else {
+        showToast("Failed to delete application", "error");
+      }
+    } catch (err) {
+      showToast("Network error deleting application", "error");
     }
   };
 
@@ -1016,6 +1066,12 @@ export default function AdminPage() {
             style={{ ...styles.sidebarBtn, ...(activeTab === "promos" ? styles.sidebarBtnActive : {}) }}
           >
             <Icon name="sell" /> Promo Codes
+          </button>
+          <button
+            onClick={() => { setActiveTab("applications"); setEditingBlog(null); loadApplicationsData(); }}
+            style={{ ...styles.sidebarBtn, ...(activeTab === "applications" ? styles.sidebarBtnActive : {}) }}
+          >
+            <Icon name="work" /> Job Applications
           </button>
         </aside>
 
@@ -2545,6 +2601,132 @@ export default function AdminPage() {
                       <tr>
                         <td colSpan={5} style={{ padding: "30px 8px", textAlign: "center", color: "#94a3b8" }}>
                           No payment reminders recorded in database yet.
+                        </td>
+                      </tr>
+                    )}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          )}
+
+          {activeTab === "applications" && (
+            <div>
+              <div style={styles.contentHeader}>
+                <div>
+                  <h2 style={{ fontSize: "24px", fontWeight: "800", margin: 0 }}>Job Applications</h2>
+                  <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>Manage candidate applications submitted through the Careers page</p>
+                </div>
+                <button onClick={loadApplicationsData} style={styles.refreshBtn}>
+                  <Icon name="refresh" /> Refresh List
+                </button>
+              </div>
+
+              <div style={{ overflowX: "auto", marginTop: "24px" }}>
+                <table style={{ width: "100%", borderCollapse: "collapse", textAlign: "left", fontSize: "13px" }}>
+                  <thead>
+                    <tr style={{ borderBottom: "2px solid rgba(255,255,255,0.1)", color: "#cbd5e1" }}>
+                      <th style={{ padding: "12px 8px" }}>Applicant Info</th>
+                      <th style={{ padding: "12px 8px" }}>Job Role</th>
+                      <th style={{ padding: "12px 8px" }}>Location</th>
+                      <th style={{ padding: "12px 8px" }}>Resume & Info</th>
+                      <th style={{ padding: "12px 8px" }}>Status</th>
+                      <th style={{ padding: "12px 8px" }}>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {applicationsData && applicationsData.length > 0 ? (
+                      applicationsData.map((app) => (
+                        <tr key={app.id} style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", verticalAlign: "top" }}>
+                          {/* Applicant Info */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ fontWeight: "700", color: "#f8fafc" }}>{app.name}</div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>{app.phone}</div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8" }}>{app.email}</div>
+                          </td>
+                          {/* Job Role */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ fontWeight: "600", color: "#3B82F6" }}>{app.job_title}</div>
+                            <div style={{ fontSize: "11px", color: "#64748b", marginTop: "4px" }}>
+                              {new Date(app.created_at).toLocaleString()}
+                            </div>
+                          </td>
+                          {/* Location */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <div style={{ color: "#e2e8f0" }}>{app.address || "N/A"}</div>
+                            <div style={{ fontSize: "12px", color: "#94a3b8", marginTop: "2px" }}>
+                              {app.city ? app.city + ", " : ""}{app.district || ""}
+                            </div>
+                          </td>
+                          {/* Resume & Info */}
+                          <td style={{ padding: "14px 8px", maxWidth: "250px" }}>
+                            <div style={{ marginBottom: "6px" }}>
+                              <a 
+                                href={app.resume_url} 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                style={{ 
+                                  display: "inline-flex", 
+                                  alignItems: "center", 
+                                  gap: "4px",
+                                  padding: "4px 8px", 
+                                  backgroundColor: "rgba(16, 185, 129, 0.15)",
+                                  color: "#10B981", 
+                                  textDecoration: "none",
+                                  borderRadius: "4px",
+                                  fontSize: "11px",
+                                  fontWeight: "600" 
+                                }}
+                              >
+                                <Icon name="description" style={{ fontSize: "14px" }} /> View Resume
+                              </a>
+                            </div>
+                            {app.message && (
+                              <div style={{ fontSize: "11px", color: "#94a3b8", fontStyle: "italic", whiteSpace: "pre-wrap", maxHeight: "60px", overflowY: "auto" }}>
+                                "{app.message}"
+                              </div>
+                            )}
+                          </td>
+                          {/* Status */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <select
+                              value={app.status || "Pending"}
+                              onChange={(e) => handleUpdateApplicationStatus(app.id, e.target.value)}
+                              style={{
+                                padding: "6px 8px",
+                                borderRadius: "6px",
+                                border: "1px solid rgba(255,255,255,0.15)",
+                                background: "#1e293b",
+                                color: "#fff",
+                                fontSize: "12px",
+                                outline: "none",
+                                cursor: "pointer",
+                                fontWeight: "600"
+                              }}
+                            >
+                              <option value="Pending">Pending</option>
+                              <option value="Reviewed">Reviewed</option>
+                              <option value="Interviewing">Interviewing</option>
+                              <option value="Hired">Hired</option>
+                              <option value="Rejected">Rejected</option>
+                            </select>
+                          </td>
+                          {/* Actions */}
+                          <td style={{ padding: "14px 8px" }}>
+                            <button
+                              onClick={() => handleDeleteApplication(app.id)}
+                              style={styles.deleteBtnIconOnly}
+                              title="Delete Record"
+                            >
+                              <Icon name="delete" />
+                            </button>
+                          </td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={6} style={{ padding: "30px 8px", textAlign: "center", color: "#94a3b8" }}>
+                          No job applications found.
                         </td>
                       </tr>
                     )}

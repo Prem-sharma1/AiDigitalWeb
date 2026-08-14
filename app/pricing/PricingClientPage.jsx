@@ -2,7 +2,7 @@
 
 import React from "react";
 import { Icon, SiteFooter, SiteHeader } from "../components/SiteChrome";
-import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans } from "./pricingData";
+import { googlePlans, facebookPlans, combinePlans, websitePlans, creativePacks, aiVideoPlans, realEstatePlans } from "./pricingData";
 import { useCart } from "../hooks/useCart";
 import { useRouter } from "next/navigation";
 import useScrollReveal from "../hooks/useScrollReveal";
@@ -24,6 +24,7 @@ export default function PricingClientPage() {
   const [websitePlansState, setWebsitePlansState] = React.useState(websitePlans);
   const [creativePacksState, setCreativePacksState] = React.useState(creativePacks);
   const [aiVideoPlansState, setAiVideoPlansState] = React.useState(aiVideoPlans);
+  const [realEstatePlansState, setRealEstatePlansState] = React.useState(realEstatePlans);
 
   const [activeCreativeIndex, setActiveCreativeIndex] = React.useState(0);
 
@@ -48,6 +49,7 @@ export default function PricingClientPage() {
         if (data.websitePlans) setWebsitePlansState(data.websitePlans);
         if (data.creativePacks) setCreativePacksState(data.creativePacks);
         if (data.aiVideoPlans) setAiVideoPlansState(data.aiVideoPlans);
+        if (data.realEstatePlans) setRealEstatePlansState(data.realEstatePlans);
       })
       .catch((err) => console.warn("Using fallback static pricing plans:", err));
   }, []);
@@ -76,6 +78,7 @@ export default function PricingClientPage() {
         <a href="#websites" className="sub-nav-link">Websites</a>
         <a href="#creative" className="sub-nav-link">Creative</a>
         <a href="#aivideo" className="sub-nav-link">AI Video</a>
+        <a href="#realestate" className="sub-nav-link">Real Estate</a>
       </div>
 
       {/* Top Banner Section */}
@@ -470,10 +473,10 @@ export default function PricingClientPage() {
           <div className="section-title-underline" />
         </div>
 
-        <div className="pricing-grid" style={{ maxWidth: "1140px", margin: "0 auto", paddingInline: "var(--page-gutter)" }}>
+        <div className="ads-pricing-grid" style={{ "--grid-cols": aiVideoPlansState.length, maxWidth: "1200px", margin: "0 auto", paddingInline: "var(--page-gutter)" }}>
           {aiVideoPlansState.map((plan, index) => {
-            const cardStyles = plan.isHighlight
-              ? { ...plan.highlightStyles.card, borderColor: undefined, borderWidth: undefined }
+            const { borderColor, borderWidth, ...cardStyles } = plan.isHighlight
+              ? plan.highlightStyles.card
               : {};
             const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
             const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
@@ -521,6 +524,75 @@ export default function PricingClientPage() {
                   }}
                 >
                   Buy Now
+                </button>
+              </TiltCard>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* Real Estate Plans Section */}
+      <section id="realestate" className="pricing-section section-muted-light">
+        <div className="section-title-wrapper" style={{ marginBottom: "20px" }}>
+          <h2 className="section-title-text" style={{ color: "#0F172A" }}>Real Estate Plans</h2>
+          <div className="section-title-underline" />
+        </div>
+        <p className="pricing-hero-sub" style={{ textAlign: "center", maxWidth: "800px", margin: "0 auto 40px auto", color: "#475569", fontWeight: "500", fontSize: "1.1rem" }}>
+          More Leads. More Visibility. <span style={{ color: "#EA4335", fontWeight: "700" }}>MORE SALES!</span><br />
+          <span style={{ fontSize: "0.95rem", fontWeight: "400" }}>Result Driven Advertising for Real Estate</span>
+        </p>
+
+        <div className="ads-pricing-grid" style={{ "--grid-cols": realEstatePlansState.length, maxWidth: "800px", margin: "0 auto", paddingInline: "var(--page-gutter)" }}>
+          {realEstatePlansState.map((plan, index) => {
+            const { borderColor, borderWidth, ...cardStyles } = plan.isHighlight
+              ? plan.highlightStyles.card
+              : {};
+            const tagStyles = plan.isHighlight ? plan.highlightStyles.tag : {};
+            const iconStyles = plan.isHighlight ? plan.highlightStyles.icon : {};
+
+            return (
+              <TiltCard
+                className={`website-plan-card ${plan.isHighlight ? "popular-highlight-card" : ""} premium-shadow reveal delay-200`}
+                key={index}
+                style={plan.isHighlight ? { ...cardStyles, "--highlight-color": plan.highlightStyles.card.borderColor, display: "flex", flexDirection: "column", justifyContent: "space-between", boxShadow: `0 12px 32px ${plan.highlightStyles.card.borderColor}30` } : { ...cardStyles, display: "flex", flexDirection: "column", justifyContent: "space-between" }}
+              >
+                <div>
+                  <div
+                    className={`web-badge-pill ${plan.tagClass || ""}`}
+                    style={{ ...tagStyles, fontSize: "1.3rem", padding: "10px 20px", display: "inline-block" }}
+                  >
+                    {plan.level}
+                  </div>
+                  <div className="price-display-flat">
+                    <span className="currency">₹</span>
+                    <span className="value">{plan.price}</span>
+                    {plan.period && <span className="period">{plan.period}</span>}
+                  </div>
+                  <ul className="web-features-list">
+                    {plan.features.map((feat, i) => (
+                      <li key={i}>
+                        <Icon
+                          name={feat.icon}
+                          className="web-feat-icon"
+                          style={iconStyles}
+                        />
+                        {feat.text}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <button
+                  onClick={() => handleBuyNow(plan.serviceName + " - " + plan.level, plan.price, plan.features.map(f => f.text))}
+                  className={`${plan.isHighlight ? "btn-card-solid" : "btn-card-outline"} btn-premium-hover`}
+                  style={{
+                    display: "block",
+                    width: "100%",
+                    textAlign: "center",
+                    marginTop: "24px",
+                    cursor: "pointer"
+                  }}
+                >
+                  {plan.buttonText}
                 </button>
               </TiltCard>
             );

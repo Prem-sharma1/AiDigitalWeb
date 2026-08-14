@@ -27,6 +27,7 @@ const navItems = [
   { label: "Why Us", href: "/#why", key: "why" },
   { label: "Plans", href: "/pricing", key: "pricing" },
   { label: "Portfolio", href: "/portfolio", key: "portfolio" },
+  { label: "Careers", href: "/careers", key: "careers" },
   { label: "Blogs", href: "/blog", key: "blogs" }
 ];
 
@@ -65,6 +66,10 @@ export function SiteHeader({ active = "home" }) {
     }
     if (path === "/portfolio") {
       setCurrentActive("portfolio");
+      return;
+    }
+    if (path === "/careers") {
+      setCurrentActive("careers");
       return;
     }
 
@@ -190,6 +195,12 @@ export function SiteFooter() {
             <a href="https://www.youtube.com/@aidigitalbiz01" target="_blank" rel="noopener noreferrer" aria-label="YouTube">
               <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
                 <path d="M23.498 6.163a3.003 3.003 0 0 0-2.11-2.108C19.513 3.545 12 3.545 12 3.545s-7.512 0-9.388.51a3.002 3.002 0 0 0-2.11 2.108C0 8.033 0 12 0 12s0 3.967.502 5.837a3.003 3.003 0 0 0 2.11 2.108c1.876.512 9.388.512 9.388.512s7.513 0 9.388-.512a3.003 3.003 0 0 0 2.11-2.108C24 15.967 24 12 24 12s0-3.967-.502-5.837zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+              </svg>
+            </a>
+            {/* Google Maps Location */}
+            <a href="https://maps.app.goo.gl/7fqZQvWwbBxzDzCr9" target="_blank" rel="noopener noreferrer" aria-label="Google Maps Location">
+              <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7zm0 9.5c-1.38 0-2.5-1.12-2.5-2.5s1.12-2.5 2.5-2.5 2.5 1.12 2.5 2.5-1.12 2.5-2.5 2.5z"/>
               </svg>
             </a>
           </div>
