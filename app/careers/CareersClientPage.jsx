@@ -38,6 +38,14 @@ const jobOpenings = [
     location: "Pune (On-site)",
     description: "Drive revenue growth by pitching our digital marketing services to B2B clients and closing high-ticket deals.",
     icon: "trending_up"
+  },
+  {
+    title: "Field Sales Executive",
+    experience: "Fresher & Graduate",
+    type: "Full-Time",
+    location: "Field / On-site",
+    description: "Age 18 to 35. Visit field and present AI Digital plans to potential clients. Convert field visits into successful client onboarding. Strong sales and communication skill required.",
+    icon: "handshake"
   }
 ];
 
