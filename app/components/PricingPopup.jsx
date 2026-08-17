@@ -6,7 +6,7 @@ import { useCart } from "../hooks/useCart";
 import { useRouter } from "next/navigation";
 
 const defaultPlans = {
-    facebook: { price: 2499, period: "/mo", features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
+    facebook: { price: 3499, period: "/mo", features: ["Meta Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
     google: { price: 4999, period: "/mo", features: ["Google Ads", "Creative - 3", "AI Video - 1", "Reels/Shorts - 1", "Weekly Report"] },
     combine: { price: 6999, period: "/mo", features: ["Meta Ads + Google Ads", "Creative - 7", "AI Video - 2", "Reels/Shorts - 5", "Weekly Report"] }
 };
@@ -32,7 +32,7 @@ export default function PricingPopup({ dialogRef }) {
 
                 setPopupPlans({
                     facebook: {
-                        price: fbPlan.price,
+                        price: 3499, // Static as requested
                         period: normalizePeriod(fbPlan.period),
                         features: fbPlan.features
                     },
