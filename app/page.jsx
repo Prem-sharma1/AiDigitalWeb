@@ -10,6 +10,7 @@ import ContactForm from "./components/ContactForm";
 import useScrollReveal from "./hooks/useScrollReveal";
 import ClientCarousel from "./components/ClientCarousel";
 import FaqSection from "./components/FaqSection";
+import Testimonials from "./components/Testimonials";
 
 const services = [
   {
@@ -338,6 +339,8 @@ export default function Home() {
           </button>
         </div>
       </section>
+
+      <Testimonials />
 
       <FaqSection />
 
