@@ -306,8 +306,8 @@ export default function Home() {
                     key={post.id}
                     className="insight-card-link reveal"
                   >
-                    <article className="insight-card" style={{ height: "100%" }}>
-                      <div className="insight-image">
+                    <article className="insight-card" style={{ height: "100%", minHeight: "280px" }}>
+                      <div className="insight-image" style={{ position: "relative", height: "160px" }}>
                         <Image
                           src={post.coverImage || "/creative_content/Creative1.jpeg"}
                           alt={post.title}
@@ -316,7 +316,7 @@ export default function Home() {
                           style={{ objectFit: "cover" }}
                         />
                       </div>
-                      <div className="insight-body">
+                      <div className="insight-body" style={{ padding: "14px" }}>
                         <span>{post.category}</span>
                         <h3>{post.title}</h3>
                         <p>{post.excerpt}</p>
