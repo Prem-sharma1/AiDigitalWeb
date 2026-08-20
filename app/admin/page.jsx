@@ -2663,6 +2663,7 @@ export default function AdminPage() {
                             <div style={{ marginBottom: "6px" }}>
                               <a 
                                 href={app.resume_url} 
+                                download
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 style={{ 
