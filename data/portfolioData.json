@@ -277,59 +277,108 @@
           "type": "website"
         },
         {
+          "src": "/creative_content/RealState9.jpeg",
+          "title": "Avasa Grassland Plots",
+          "description": "Premium plotted development by Naiknavare Developers in Chakan, Pune.",
+          "globalIndex": 3,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/RealState10.jpeg",
+          "title": "Varistha Elite Residences",
+          "description": "Luxury 3 & 4 BHK homes with premium amenities and spacious residences.",
+          "globalIndex": 4,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/RealState11.jpeg",
+          "title": "Swapna Bhumi Badlapur",
+          "description": "Ready possession 1 & 2 BHK homes in a prime location in City Badlapur.",
+          "globalIndex": 5,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/RealState12.jpeg",
+          "title": "Premium Residences Hyderabad",
+          "description": "Iconic 3 & 4 BHK residences with 75% open spaces and world-class amenities.",
+          "globalIndex": 6,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/RealState13.jpeg",
+          "title": "Varistha Icon Luxury Homes",
+          "description": "Ready to move premium 3 & 4 BHK luxury homes with a 5-star clubhouse.",
+          "globalIndex": 7,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/RealState14.jpeg",
+          "title": "Swapna Bhumi Eid Promo",
+          "description": "Festive promotional campaign for 1 & 2 BHK ready to move homes in Badlapur.",
+          "globalIndex": 8,
+          "type": "image"
+        },
+        {
           "src": "/creative_content/RealState1.jpeg",
           "title": "Modern Home Showcase",
           "description": "Clean, high-impact marketing design for modern residential listings.",
-          "globalIndex": 3,
+          "globalIndex": 9,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState2.jpeg",
           "title": "Luxury Villa Feature",
           "description": "Elegant flyer highlighting upscale property details and high-end aesthetics.",
-          "globalIndex": 4,
+          "globalIndex": 10,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState3.jpeg",
           "title": "Contemporary Property Promo",
           "description": "Visual branding creative showcasing structural elegance and open floor plans.",
-          "globalIndex": 5,
+          "globalIndex": 11,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState4.jpeg",
           "title": "Premium Living Spaces",
           "description": "Premium promotional content focusing on interior layout and design aesthetics.",
-          "globalIndex": 6,
+          "globalIndex": 12,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState5.jpeg",
           "title": "Exclusive Villa Spotlight",
           "description": "High-quality campaign creative built to capture attention for premium listings.",
-          "globalIndex": 7,
+          "globalIndex": 13,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState6.jpeg",
           "title": "Modern Residential Flyer",
           "description": "Polished design showcasing suburban homes with optimized call-to-action layout.",
-          "globalIndex": 8,
+          "globalIndex": 14,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState7.jpeg",
           "title": "Luxury Estate Presentation",
           "description": "Aesthetic real estate advertising banner highlighting premium property features.",
-          "globalIndex": 9,
+          "globalIndex": 15,
           "type": "image"
         },
         {
           "src": "/creative_content/RealState8.jpeg",
           "title": "Architectural Design Feature",
           "description": "Campaign visual highlighting modern architecture and premium materials of top listings.",
-          "globalIndex": 10,
+          "globalIndex": 16,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/RealState24.jpeg",
+          "title": "Topaz Towers Charholi Pune",
+          "description": "Premium 2 & 3 BHK spacious homes with unique butterfly concept and premium amenities.",
+          "globalIndex": 17,
           "type": "image"
         },
         {
@@ -367,52 +416,59 @@
       "description": "Educational websites, admission campaigns, student-focused creatives, and promotional reels.",
       "images": [
         {
-          "src": "/creative_content/Educationcreative.jpeg",
-          "title": "Education Creative",
-          "description": "Engaging promotional creative for educational institutions and admission campaigns.",
+          "src": "/creative_content/Educational8.jpeg",
+          "title": "Ayush Vikas Foundation Admissions",
+          "description": "Admission open campaign for BNYS and BPT degrees with direct and online admission options.",
           "globalIndex": 10,
           "type": "image"
         },
         {
-          "src": "/creative_content/Education2creative.jpeg",
-          "title": "Education Creative 2",
-          "description": "Student-focused ad creative designed for enrollment and awareness campaigns.",
+          "src": "/creative_content/Educationcreative.jpeg",
+          "title": "Intraedu Smart Learning Panel",
+          "description": "Interactive AI-powered learning panel for schools and students.",
           "globalIndex": 11,
           "type": "image"
         },
         {
-          "src": "/creative_content/Education3creative.jpeg",
-          "title": "Education Creative 3",
-          "description": "Vibrant creative for school and college marketing campaigns.",
+          "src": "/creative_content/Education2creative.jpeg",
+          "title": "Adarsh Tuition Classes",
+          "description": "Foundation courses for 3rd to 12th standard State Board, CBSE, NEET & CET.",
           "globalIndex": 12,
           "type": "image"
         },
         {
-          "src": "/creative_content/Education4creative.jpeg",
-          "title": "Education Creative 4",
-          "description": "Academic program promotional visual for digital ad campaigns.",
+          "src": "/creative_content/Education3creative.jpeg",
+          "title": "Little Genius Playschool Admissions",
+          "description": "Admissions open for Play Group, Nursery, L.K.G. and U.K.G. programs.",
           "globalIndex": 13,
           "type": "image"
         },
         {
-          "src": "/creative_content/Education5creative.jpeg",
-          "title": "Education Creative 5",
-          "description": "Modern education branding creative for social media and paid ads.",
+          "src": "/creative_content/Education4creative.jpeg",
+          "title": "UPSC Decoded Foundation Courses",
+          "description": "Foundation program and competitive exam coaching for 11th & 12th students.",
           "globalIndex": 14,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/Education5creative.jpeg",
+          "title": "KodeWitz Remote Internship",
+          "description": "100% remote IT internship programs with expert mentorship and live projects.",
+          "globalIndex": 15,
           "type": "image"
         },
         {
           "src": "/creative_content/Creative3.jpeg",
           "title": "Global University Banner",
           "description": "Promotional visual for academic programs and admissions.",
-          "globalIndex": 15,
+          "globalIndex": 16,
           "type": "image"
         },
         {
           "src": "/creative_content/Creative4.jpeg",
           "title": "Online Learning Poster",
           "description": "E-learning platform advertisement graphic designed for campaigns.",
-          "globalIndex": 16,
+          "globalIndex": 17,
           "type": "image"
         },
         {
@@ -451,64 +507,64 @@
       "images": [
         {
           "src": "/creative_content/HealthcareCreative.jpeg",
-          "title": "Healthcare Creative",
-          "description": "Medical services and healthcare awareness promotional creative.",
+          "title": "Reliv Pain Clinic & Wellness Centre",
+          "description": "Advanced pain management and holistic care for lasting relief.",
           "globalIndex": 30,
           "type": "image"
         },
         {
           "src": "/creative_content/Healthcare2Creative.jpeg",
-          "title": "Healthcare Creative 2",
-          "description": "Doctor and clinic lead generation campaign creative.",
+          "title": "Dr. Rajguru Hair Care Clinic",
+          "description": "Expert trichologist consultation for hair fall, dandruff, and poor nutrition causes.",
           "globalIndex": 31,
           "type": "image"
         },
         {
           "src": "/creative_content/healthcare3Creative.jpeg",
-          "title": "Healthcare Creative 3",
-          "description": "Hospital and specialist services promotional banner creative.",
+          "title": "Apple Multispeciality Hospital",
+          "description": "Safe and affordable delivery packages with complete mother and baby care.",
           "globalIndex": 32,
           "type": "image"
         },
         {
           "src": "/creative_content/Healthcare4.jpeg",
-          "title": "Healthcare Creative 4",
-          "description": "Medical awareness and health services social media creative.",
+          "title": "Ayurmor Business Opportunity",
+          "description": "Start your own herbal business with Zeyora and Ayurmor's range of products.",
           "globalIndex": 33,
           "type": "image"
         },
         {
           "src": "/creative_content/Oldagehome.jpeg",
-          "title": "Old Age Home Creative",
-          "description": "Compassionate care services promotional creative for senior living facilities.",
+          "title": "Tejomay Senior Citizen Care",
+          "description": "Comfortable living arrangements for seniors with healthy meals and meditation sessions.",
           "globalIndex": 34,
           "type": "image"
         },
         {
           "src": "/creative_content/Oldagehome2.jpeg",
-          "title": "Old Age Home Creative 2",
-          "description": "Elder care and assisted living promotional campaign visual.",
+          "title": "Tejomay Vrudhashram",
+          "description": "Respectful and caring senior citizen home with spiritual support and medical care.",
           "globalIndex": 35,
           "type": "image"
         },
         {
           "src": "/creative_content/Oldagehome3.jpeg",
-          "title": "Old Age Home Creative 3",
-          "description": "Senior care and wellness services ad creative.",
+          "title": "Tejomay Old Age Home",
+          "description": "Joyful living for seniors with clean, ventilated rooms and a supportive community.",
           "globalIndex": 36,
           "type": "image"
         },
         {
           "src": "/creative_content/Opticalscreative.jpeg",
-          "title": "Opticals Creative",
-          "description": "Eyecare and optical services promotional creative for digital ads.",
+          "title": "Shri Renuka Optical Glasses",
+          "description": "Stylish frames and advanced lenses with free eye check-up offers.",
           "globalIndex": 37,
           "type": "image"
         },
         {
           "src": "/creative_content/Opticalscretive.jpeg",
-          "title": "Opticals Creative 2",
-          "description": "Vision care and spectacle store branding promotional visual.",
+          "title": "Shri Renuka Optical Sunglasses",
+          "description": "Premium eyewear and sunglasses with special discount offers.",
           "globalIndex": 38,
           "type": "image"
         },
@@ -547,52 +603,66 @@
       "description": "Finance dashboards, investment campaigns, branding creatives, and educational reels.",
       "images": [
         {
+          "src": "/creative_content/Financecreative9.jpeg",
+          "title": "LIC Agent Recruitment",
+          "description": "Career opportunity campaign for LIC agents highlighting flexibility and unlimited commission.",
+          "globalIndex": 19,
+          "type": "image"
+        },
+        {
           "src": "/creative_content/Financexreative.jpeg",
-          "title": "Finance Creative",
-          "description": "Premium finance branding and investment promotional creative.",
+          "title": "Loan Against Property",
+          "description": "Promotional banner for fast, hassle-free property loans with quick approval.",
           "globalIndex": 20,
           "type": "image"
         },
         {
           "src": "/creative_content/Financecreative2.jpeg",
-          "title": "Finance Creative 2",
-          "description": "Wealth management and financial services ad creative.",
+          "title": "Cashcow Finserve Loan Solutions",
+          "description": "Personal, business, property, and car loans from a trusted financial partner.",
           "globalIndex": 21,
           "type": "image"
         },
         {
           "src": "/creative_content/Financecreative3.jpeg",
-          "title": "Finance Creative 3",
-          "description": "Investment advisory and financial growth promotional visual.",
+          "title": "Cashcow Finserve Partnership",
+          "description": "Trusted financial partner offering fast and secure loan solutions.",
           "globalIndex": 22,
           "type": "image"
         },
         {
           "src": "/creative_content/Financecreative4.jpeg",
-          "title": "Finance Creative 4",
-          "description": "Finance sector branding creative for digital marketing campaigns.",
+          "title": "Taxclair ITR Services",
+          "description": "Fast, easy, and affordable Income Tax Return filing with expert support.",
           "globalIndex": 23,
           "type": "image"
         },
         {
           "src": "/creative_content/Financecreative5.jpeg",
-          "title": "Finance Creative 5",
-          "description": "Insurance and savings promotional creative for lead generation.",
+          "title": "Taxclair ITR Billboard",
+          "description": "Outdoor advertising creative for affordable ITR filing services starting at ₹499.",
           "globalIndex": 24,
           "type": "image"
         },
         {
           "src": "/creative_content/Financecreative6.jpeg",
-          "title": "Finance Creative 6",
-          "description": "Mutual fund and wealth planning social media ad creative.",
+          "title": "ClaimAtoZ Insurance Support",
+          "description": "Expert guidance and strong case support for rejected or mis-sold insurance claims.",
           "globalIndex": 25,
           "type": "image"
         },
         {
           "src": "/creative_content/Financecreative7.jpeg",
-          "title": "Finance Creative 7",
-          "description": "Corporate finance and business growth promotional banner.",
+          "title": "Shree HR PF & ESIC Services",
+          "description": "HR compliance services including PF & ESIC returns filing and salary management.",
           "globalIndex": 26,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/Finance5.jpeg",
+          "title": "Demat Account Opening Campaign",
+          "description": "Expert demat account management, trade suggestions, and complete portfolio handling.",
+          "globalIndex": 27,
           "type": "image"
         },
         {
@@ -600,20 +670,6 @@
           "title": "ITR Finance Creative",
           "description": "Tax filing and ITR services promotional creative for digital campaigns.",
           "globalIndex": 27,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative7.jpeg",
-          "title": "Investment Growth Ad",
-          "description": "Wealth management and finance growth promotional content.",
-          "globalIndex": 6,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative8.jpeg",
-          "title": "Crypto Platform Asset",
-          "description": "Digital currency trading platform banner design concept.",
-          "globalIndex": 7,
           "type": "image"
         },
         {
@@ -643,6 +699,13 @@
           "description": "Strategic marketing campaign focusing on wealth management, investment trust, and retirement planning.",
           "globalIndex": 302,
           "type": "campaign"
+        },
+        {
+          "src": "/creative_content/Educational9.jpeg",
+          "title": "Maruti Finance Home Loan",
+          "description": "Independence Day promotional creative for home loans with zero processing fees and up to 90% funding.",
+          "globalIndex": 112,
+          "type": "image"
         }
       ]
     },
@@ -652,36 +715,36 @@
       "images": [
         {
           "src": "/creative_content/HotelAndResort.jpeg",
-          "title": "Hotel & Resort Creative",
-          "description": "Premium hospitality branding creative for hotel and resort marketing.",
+          "title": "Canal Touch Resort Getaway",
+          "description": "Family-friendly weekend getaway with canal-side rooms and nature views.",
           "globalIndex": 50,
           "type": "image"
         },
         {
           "src": "/creative_content/HotelandResort2.jpeg",
-          "title": "Hotel & Resort Creative 2",
-          "description": "Luxury hotel and resort promotional visual for digital campaigns.",
+          "title": "Canal Touch Resort Rooms",
+          "description": "Experience nature's paradise with comfortable resort stays near Mumbai & Pune.",
           "globalIndex": 51,
           "type": "image"
         },
         {
           "src": "/creative_content/HotelAndResorts3.jpeg",
-          "title": "Hotel & Resort Creative 3",
-          "description": "Boutique hotel and resort services ad creative for lead generation.",
+          "title": "Hayum Hotel Management",
+          "description": "Free hotel management training with accommodation, meals, and real 5-star experience.",
           "globalIndex": 52,
           "type": "image"
         },
         {
           "src": "/creative_content/foodcreative1.jpeg",
-          "title": "Food Creative 1",
-          "description": "Restaurant and food brand social media promotional creative.",
+          "title": "Hayat Foods Frozen Meals",
+          "description": "High-quality frozen food supply for cafes, restaurants, and cloud kitchens.",
           "globalIndex": 53,
           "type": "image"
         },
         {
           "src": "/creative_content/foodcreative2.jpeg",
-          "title": "Food Creative 2",
-          "description": "Gourmet dining and food delivery promotional banner creative.",
+          "title": "Hayat Foods Special Meals",
+          "description": "Perfectly prepared quality frozen meals to make every bite lazeez.",
           "globalIndex": 54,
           "type": "image"
         },
@@ -721,29 +784,29 @@
       "images": [
         {
           "src": "/creative_content/Solar.jpeg",
-          "title": "Solar Energy Creative",
-          "description": "Clean energy and solar installation promotional creative for digital campaigns.",
+          "title": "Sun Astra Energy Solutions",
+          "description": "Avoid common mistakes with solar system sizing and get up to ₹78,000 subsidy.",
           "globalIndex": 60,
           "type": "image"
         },
         {
           "src": "/creative_content/Solarcreative2.jpeg",
-          "title": "Solar Creative 2",
-          "description": "Residential and commercial solar panel solutions ad creative.",
+          "title": "Sun Astra Solar Engineering",
+          "description": "Premium solar engineering with high ROI, fast installation, and free savings consultation.",
           "globalIndex": 61,
           "type": "image"
         },
         {
           "src": "/creative_content/SolarCreative3.jpeg",
-          "title": "Solar Creative 3",
-          "description": "Green energy awareness promotional banner for solar services.",
+          "title": "Sun Astra Engineering Solutions",
+          "description": "Turn sunlight into lifetime savings with premium components and expert installation.",
           "globalIndex": 62,
           "type": "image"
         },
         {
           "src": "/creative_content/Solarcreative4.jpeg",
-          "title": "Solar Creative 4",
-          "description": "Sustainable energy and solar rooftop solutions campaign creative.",
+          "title": "Sun Astra Zero Bill Solar",
+          "description": "Plug into sunlight and enjoy a zero electricity bill with premium solar systems.",
           "globalIndex": 63,
           "type": "image"
         },
@@ -769,23 +832,30 @@
       "images": [
         {
           "src": "/creative_content/Interiorcreative.jpeg",
-          "title": "Interior Design Creative",
-          "description": "Premium home interior and décor services promotional creative.",
+          "title": "Align Home Interior Nagpur",
+          "description": "Transform your dream home into reality with complete residential and commercial interior solutions.",
           "globalIndex": 70,
           "type": "image"
         },
         {
           "src": "/creative_content/interior2creative.jpeg",
-          "title": "Interior Design Creative 2",
-          "description": "Modern living space and interior styling ad creative.",
+          "title": "Honeywell Enterprises Interior",
+          "description": "Transforming spaces into experiences with modular furniture and turnkey solutions.",
           "globalIndex": 71,
           "type": "image"
         },
         {
           "src": "/creative_content/Interior3creative.jpeg",
-          "title": "Interior Design Creative 3",
-          "description": "Luxury interior design and home renovation promotional visual.",
+          "title": "Honeywell Space Transformation",
+          "description": "Expert space planning, interior design, and modular furniture with 25+ years experience.",
           "globalIndex": 72,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/Interior4creative.jpeg",
+          "title": "Arch Studio Interior Design",
+          "description": "Premium architecture and interior design services to craft spaces that reflect your lifestyle.",
+          "globalIndex": 73,
           "type": "image"
         },
         {
@@ -803,30 +873,30 @@
       "images": [
         {
           "src": "/creative_content/TechnologyCreative.jpeg",
-          "title": "Technology Creative",
-          "description": "Tech company and digital solutions promotional creative for branding campaigns.",
+          "title": "LockYourIdea AI Video Solutions",
+          "description": "AI video creation and marketing dashboard to save your marketing budget.",
           "globalIndex": 80,
           "type": "image"
         },
         {
+          "src": "/creative_content/TechnologyCreative2.jpeg",
+          "title": "Electra Dealer Aata Chakki",
+          "description": "Premium domestic flour mill with a copper winding motor, low noise, and high performance.",
+          "globalIndex": 83,
+          "type": "image"
+        },
+        {
           "src": "/creative_content/Applicationcreative.jpeg",
-          "title": "Application Creative",
-          "description": "Mobile and web application launch promotional creative.",
+          "title": "Macto AI Dashboard",
+          "description": "Smarter business dashboard powered by AI to launch, manage, and grow effortlessly.",
           "globalIndex": 81,
           "type": "image"
         },
         {
           "src": "/creative_content/Applicationcreative2.jpeg",
-          "title": "Application Creative 2",
-          "description": "SaaS and digital product ad creative for performance marketing.",
+          "title": "Adly App All-in-One Partner",
+          "description": "All-in-one business app with auto WhatsApp, bulk messaging, and dynamic websites.",
           "globalIndex": 82,
-          "type": "image"
-        },
-        {
-          "src": "/creative_content/Creative10.jpeg",
-          "title": "SaaS Launch Creative",
-          "description": "Software product launch promotional design visual.",
-          "globalIndex": 9,
           "type": "image"
         }
       ]
@@ -836,17 +906,24 @@
       "description": "Travel agencies, tourism campaigns, tour package creatives, and destination marketing.",
       "images": [
         {
-          "src": "/creative_content/ToursAndTravels.jpeg",
-          "title": "Tours & Travels Creative",
-          "description": "Travel agency and tour package promotional creative for digital campaigns.",
+          "src": "/creative_content/Tour&Travels3.jpeg",
+          "title": "Mountain Bliss Resort Girivan",
+          "description": "Your perfect escape in the lap of nature with a peaceful stay at Girivan, Mulshi.",
           "globalIndex": 90,
           "type": "image"
         },
         {
-          "src": "/creative_content/ToursAnd2TRavels.jpeg",
-          "title": "Tours & Travels Creative 2",
-          "description": "Destination tourism and holiday package promotional banner creative.",
+          "src": "/creative_content/ToursAndTravels.jpeg",
+          "title": "Swamini Tours Somnath Dwarka Girnar",
+          "description": "Organized spiritual tour package for Somnath, Dwarka, and Girnar.",
           "globalIndex": 91,
+          "type": "image"
+        },
+        {
+          "src": "/creative_content/ToursAnd2TRavels.jpeg",
+          "title": "Swamini Tours Spiritual Journey",
+          "description": "An unforgettable spiritual journey with comfortable travel, meals, and beautiful stays.",
+          "globalIndex": 92,
           "type": "image"
         },
         {
@@ -871,8 +948,8 @@
       "images": [
         {
           "src": "/creative_content/Sportscreative1.jpeg",
-          "title": "Sports Creative",
-          "description": "Sports brand and fitness promotional creative for social media campaigns.",
+          "title": "Timeer's Badminton Academy",
+          "description": "Professional badminton coaching for all age groups with 20+ years of excellence.",
           "globalIndex": 100,
           "type": "image"
         }
@@ -884,8 +961,8 @@
       "images": [
         {
           "src": "/creative_content/Othercreative.jpeg",
-          "title": "Other Brand Creative",
-          "description": "General branding and promotional creative for digital marketing campaigns.",
+          "title": "Janmbhumi Industries Fabrication",
+          "description": "Powering industrial growth with heavy fabrication and complete structural solutions.",
           "globalIndex": 110,
           "type": "image"
         },
@@ -949,6 +1026,19 @@
           "description": "Complete construction ERP and project management software website showcase. Feature-rich, optimized for lead generation and search engine visibility.",
           "globalIndex": 101,
           "type": "website"
+        }
+      ]
+    },
+    {
+      "industry": "E-Commerce",
+      "description": "High-converting e-commerce platforms, wellness product showcases, and retail marketing campaigns.",
+      "images": [
+        {
+          "src": "/creative_content/Ecommerce-products.jpeg",
+          "title": "Pureplush Herbal Products",
+          "description": "E-commerce product showcase for pure and natural herbal skincare and hair care products.",
+          "globalIndex": 101,
+          "type": "image"
         }
       ]
     }

@@ -1,22 +1,27 @@
 "use client";
-
 import { useEffect, useRef, useState, useMemo } from "react";
 import Image from "next/image";
-
 const creativeGroups = [
   {
     industry: "Real Estate",
     description: "Websites, campaigns, AI property promotions, creative branding, and real estate reels.",
     images: [
       { src: "https://anvreealty.com/", thumbnail: "/uploads/Anv_reality.jpg", title: "ANV Realty Website", description: "Premium real estate and preleased properties website showcase. High-performing landing portal with optimized lead acquisition flows.", globalIndex: 2, type: "website" },
-      { src: "/creative_content/RealState1.jpeg", title: "Modern Home Showcase", description: "Clean, high-impact marketing design for modern residential listings.", globalIndex: 3, type: "image" },
-      { src: "/creative_content/RealState2.jpeg", title: "Luxury Villa Feature", description: "Elegant flyer highlighting upscale property details and high-end aesthetics.", globalIndex: 4, type: "image" },
-      { src: "/creative_content/RealState3.jpeg", title: "Contemporary Property Promo", description: "Visual branding creative showcasing structural elegance and open floor plans.", globalIndex: 5, type: "image" },
-      { src: "/creative_content/RealState4.jpeg", title: "Premium Living Spaces", description: "Premium promotional content focusing on interior layout and design aesthetics.", globalIndex: 6, type: "image" },
-      { src: "/creative_content/RealState5.jpeg", title: "Exclusive Villa Spotlight", description: "High-quality campaign creative built to capture attention for premium listings.", globalIndex: 7, type: "image" },
-      { src: "/creative_content/RealState6.jpeg", title: "Modern Residential Flyer", description: "Polished design showcasing suburban homes with optimized call-to-action layout.", globalIndex: 8, type: "image" },
-      { src: "/creative_content/RealState7.jpeg", title: "Luxury Estate Presentation", description: "Aesthetic real estate advertising banner highlighting premium property features.", globalIndex: 9, type: "image" },
-      { src: "/creative_content/RealState8.jpeg", title: "Architectural Design Feature", description: "Campaign visual highlighting modern architecture and premium materials of top listings.", globalIndex: 10, type: "image" },
+      { src: "/creative_content/RealState9.jpeg", title: "Avasa Grassland Plots", description: "Premium plotted development by Naiknavare Developers in Chakan, Pune.", globalIndex: 3, type: "image" },
+      { src: "/creative_content/RealState10.jpeg", title: "Varistha Elite Residences", description: "Luxury 3 & 4 BHK homes with premium amenities and spacious residences.", globalIndex: 4, type: "image" },
+      { src: "/creative_content/RealState11.jpeg", title: "Swapna Bhumi Badlapur", description: "Ready possession 1 & 2 BHK homes in a prime location in City Badlapur.", globalIndex: 5, type: "image" },
+      { src: "/creative_content/RealState12.jpeg", title: "Premium Residences Hyderabad", description: "Iconic 3 & 4 BHK residences with 75% open spaces and world-class amenities.", globalIndex: 6, type: "image" },
+      { src: "/creative_content/RealState13.jpeg", title: "Varistha Icon Luxury Homes", description: "Ready to move premium 3 & 4 BHK luxury homes with a 5-star clubhouse.", globalIndex: 7, type: "image" },
+      { src: "/creative_content/RealState14.jpeg", title: "Swapna Bhumi Eid Promo", description: "Festive promotional campaign for 1 & 2 BHK ready to move homes in Badlapur.", globalIndex: 8, type: "image" },
+      { src: "/creative_content/RealState1.jpeg", title: "Modern Home Showcase", description: "Clean, high-impact marketing design for modern residential listings.", globalIndex: 9, type: "image" },
+      { src: "/creative_content/RealState2.jpeg", title: "Luxury Villa Feature", description: "Elegant flyer highlighting upscale property details and high-end aesthetics.", globalIndex: 10, type: "image" },
+      { src: "/creative_content/RealState3.jpeg", title: "Contemporary Property Promo", description: "Visual branding creative showcasing structural elegance and open floor plans.", globalIndex: 11, type: "image" },
+      { src: "/creative_content/RealState4.jpeg", title: "Premium Living Spaces", description: "Premium promotional content focusing on interior layout and design aesthetics.", globalIndex: 12, type: "image" },
+      { src: "/creative_content/RealState5.jpeg", title: "Exclusive Villa Spotlight", description: "High-quality campaign creative built to capture attention for premium listings.", globalIndex: 13, type: "image" },
+      { src: "/creative_content/RealState6.jpeg", title: "Modern Residential Flyer", description: "Polished design showcasing suburban homes with optimized call-to-action layout.", globalIndex: 14, type: "image" },
+      { src: "/creative_content/RealState7.jpeg", title: "Luxury Estate Presentation", description: "Aesthetic real estate advertising banner highlighting premium property features.", globalIndex: 15, type: "image" },
+      { src: "/creative_content/RealState8.jpeg", title: "Architectural Design Feature", description: "Campaign visual highlighting modern architecture and premium materials of top listings.", globalIndex: 16, type: "image" },
+      { src: "/creative_content/RealState24.jpeg", title: "Topaz Towers Charholi Pune", description: "Premium 2 & 3 BHK spacious homes with unique butterfly concept and premium amenities.", globalIndex: 17, type: "image" },
       { src: "https://youtube.com/shorts/CGmclmt0ibU?si=1Axb2IWBm_WGI-LB", title: "AI Luxury Villa Walkthrough", description: "An AI-enhanced premium walkthrough video showcasing high-end interior spaces and architecture of a luxury villa.", globalIndex: 250, type: "youtube" },
       { src: "https://youtu.be/uxlAeIZCY1w", title: "Modern Apartment Tour", description: "An engaging real estate reel showing aesthetic decor, layout, and lighting in a modern urban apartment.", globalIndex: 251, type: "reel" },
       { src: "https://youtube.com/shorts/pogRO6aMOes?si=AM5Q5hTy50oTqGRa", title: "Real Estate AI Video", description: "A dynamic AI-generated short-form property promo video highlighting premium real estate spaces.", globalIndex: 252, type: "youtube" },
@@ -27,13 +32,14 @@ const creativeGroups = [
     industry: "Education",
     description: "Educational websites, admission campaigns, student-focused creatives, and promotional reels.",
     images: [
-      { src: "/creative_content/Educationcreative.jpeg", title: "Education Creative", description: "Engaging promotional creative for educational institutions and admission campaigns.", globalIndex: 10, type: "image" },
-      { src: "/creative_content/Education2creative.jpeg", title: "Education Creative 2", description: "Student-focused ad creative designed for enrollment and awareness campaigns.", globalIndex: 11, type: "image" },
-      { src: "/creative_content/Education3creative.jpeg", title: "Education Creative 3", description: "Vibrant creative for school and college marketing campaigns.", globalIndex: 12, type: "image" },
-      { src: "/creative_content/Education4creative.jpeg", title: "Education Creative 4", description: "Academic program promotional visual for digital ad campaigns.", globalIndex: 13, type: "image" },
-      { src: "/creative_content/Education5creative.jpeg", title: "Education Creative 5", description: "Modern education branding creative for social media and paid ads.", globalIndex: 14, type: "image" },
-      { src: "/creative_content/Creative3.jpeg", title: "Global University Banner", description: "Promotional visual for academic programs and admissions.", globalIndex: 15, type: "image" },
-      { src: "/creative_content/Creative4.jpeg", title: "Online Learning Poster", description: "E-learning platform advertisement graphic designed for campaigns.", globalIndex: 16, type: "image" },
+      { src: "/creative_content/Educational8.jpeg", title: "Ayush Vikas Foundation Admissions", description: "Admission open campaign for BNYS and BPT degrees with direct and online admission options.", globalIndex: 10, type: "image" },
+      { src: "/creative_content/Educationcreative.jpeg", title: "Intraedu Smart Learning Panel", description: "Interactive AI-powered learning panel for schools and students.", globalIndex: 11, type: "image" },
+      { src: "/creative_content/Education2creative.jpeg", title: "Adarsh Tuition Classes", description: "Foundation courses for 3rd to 12th standard State Board, CBSE, NEET & CET.", globalIndex: 12, type: "image" },
+      { src: "/creative_content/Education3creative.jpeg", title: "Little Genius Playschool Admissions", description: "Admissions open for Play Group, Nursery, L.K.G. and U.K.G. programs.", globalIndex: 13, type: "image" },
+      { src: "/creative_content/Education4creative.jpeg", title: "UPSC Decoded Foundation Courses", description: "Foundation program and competitive exam coaching for 11th & 12th students.", globalIndex: 14, type: "image" },
+      { src: "/creative_content/Education5creative.jpeg", title: "KodeWitz Remote Internship", description: "100% remote IT internship programs with expert mentorship and live projects.", globalIndex: 15, type: "image" },
+      { src: "/creative_content/Creative3.jpeg", title: "Global University Banner", description: "Promotional visual for academic programs and admissions.", globalIndex: 16, type: "image" },
+      { src: "/creative_content/Creative4.jpeg", title: "Online Learning Poster", description: "E-learning platform advertisement graphic designed for campaigns.", globalIndex: 17, type: "image" },
       { src: "https://youtube.com/shorts/OjB222E1JFI?si=JQY90ZdxJdl7wLiY", title: "Educational AI Promo", description: "An interactive educational video highlighting learning concepts and academic excellence.", globalIndex: 198, type: "youtube" },
       { src: "https://youtube.com/shorts/CqpNv45IQBI", title: "UPSC DECODED", description: "An educational guide and course preview from UPSC DECODED, highlighting exam strategies and academic content.", globalIndex: 204, type: "youtube" },
       { src: "https://youtube.com/shorts/pd6kbpNsp5M", title: "Little Genius", description: "An engaging and fun promotional video highlighting early childhood learning, creative activities, and classes at Little Genius.", globalIndex: 207, type: "youtube" },
@@ -45,15 +51,15 @@ const creativeGroups = [
     industry: "Healthcare",
     description: "Healthcare websites, awareness campaigns, AI medical videos, and promotional content.",
     images: [
-      { src: "/creative_content/HealthcareCreative.jpeg", title: "Healthcare Creative", description: "Medical services and healthcare awareness promotional creative.", globalIndex: 30, type: "image" },
-      { src: "/creative_content/Healthcare2Creative.jpeg", title: "Healthcare Creative 2", description: "Doctor and clinic lead generation campaign creative.", globalIndex: 31, type: "image" },
-      { src: "/creative_content/healthcare3Creative.jpeg", title: "Healthcare Creative 3", description: "Hospital and specialist services promotional banner creative.", globalIndex: 32, type: "image" },
-      { src: "/creative_content/Healthcare4.jpeg", title: "Healthcare Creative 4", description: "Medical awareness and health services social media creative.", globalIndex: 33, type: "image" },
-      { src: "/creative_content/Oldagehome.jpeg", title: "Old Age Home Creative", description: "Compassionate care services promotional creative for senior living facilities.", globalIndex: 34, type: "image" },
-      { src: "/creative_content/Oldagehome2.jpeg", title: "Old Age Home Creative 2", description: "Elder care and assisted living promotional campaign visual.", globalIndex: 35, type: "image" },
-      { src: "/creative_content/Oldagehome3.jpeg", title: "Old Age Home Creative 3", description: "Senior care and wellness services ad creative.", globalIndex: 36, type: "image" },
-      { src: "/creative_content/Opticalscreative.jpeg", title: "Opticals Creative", description: "Eyecare and optical services promotional creative for digital ads.", globalIndex: 37, type: "image" },
-      { src: "/creative_content/Opticalscretive.jpeg", title: "Opticals Creative 2", description: "Vision care and spectacle store branding promotional visual.", globalIndex: 38, type: "image" },
+      { src: "/creative_content/HealthcareCreative.jpeg", title: "Reliv Pain Clinic & Wellness Centre", description: "Advanced pain management and holistic care for lasting relief.", globalIndex: 30, type: "image" },
+      { src: "/creative_content/Healthcare2Creative.jpeg", title: "Dr. Rajguru Hair Care Clinic", description: "Expert trichologist consultation for hair fall, dandruff, and poor nutrition causes.", globalIndex: 31, type: "image" },
+      { src: "/creative_content/healthcare3Creative.jpeg", title: "Apple Multispeciality Hospital", description: "Safe and affordable delivery packages with complete mother and baby care.", globalIndex: 32, type: "image" },
+      { src: "/creative_content/Healthcare4.jpeg", title: "Ayurmor Business Opportunity", description: "Start your own herbal business with Zeyora and Ayurmor's range of products.", globalIndex: 33, type: "image" },
+      { src: "/creative_content/Oldagehome.jpeg", title: "Tejomay Senior Citizen Care", description: "Comfortable living arrangements for seniors with healthy meals and meditation sessions.", globalIndex: 34, type: "image" },
+      { src: "/creative_content/Oldagehome2.jpeg", title: "Tejomay Vrudhashram", description: "Respectful and caring senior citizen home with spiritual support and medical care.", globalIndex: 35, type: "image" },
+      { src: "/creative_content/Oldagehome3.jpeg", title: "Tejomay Old Age Home", description: "Joyful living for seniors with clean, ventilated rooms and a supportive community.", globalIndex: 36, type: "image" },
+      { src: "/creative_content/Opticalscreative.jpeg", title: "Shri Renuka Optical Glasses", description: "Stylish frames and advanced lenses with free eye check-up offers.", globalIndex: 37, type: "image" },
+      { src: "/creative_content/Opticalscretive.jpeg", title: "Shri Renuka Optical Sunglasses", description: "Premium eyewear and sunglasses with special discount offers.", globalIndex: 38, type: "image" },
       { src: "/creative_content/Creative2.jpeg", title: "Healthcare Lead Campaign", description: "Digital marketing campaign designed to help doctors, clinics, and hospitals generate quality leads.", globalIndex: 39, type: "image" },
       { src: "/creative_content/Creative5.jpeg", title: "Healthcare Digital Marketing Campaign", description: "An ad creative and landing page concept designed for B2B lead generation targeting doctors and clinics.", globalIndex: 40, type: "image" },
       { src: "https://youtube.com/shorts/QIh7twZ3mV4", title: "Apple Multi Specialist Healthcare", description: "An AI-assisted promotional video highlighting hospital infrastructure, expert doctors, and advanced healthcare services at Apple Multi Specialist Healthcare.", globalIndex: 208, type: "youtube" },
@@ -66,19 +72,20 @@ const creativeGroups = [
     industry: "Finance",
     description: "Finance dashboards, investment campaigns, branding creatives, and educational reels.",
     images: [
-      { src: "/creative_content/Financexreative.jpeg", title: "Finance Creative", description: "Premium finance branding and investment promotional creative.", globalIndex: 20, type: "image" },
-      { src: "/creative_content/Financecreative2.jpeg", title: "Finance Creative 2", description: "Wealth management and financial services ad creative.", globalIndex: 21, type: "image" },
-      { src: "/creative_content/Financecreative3.jpeg", title: "Finance Creative 3", description: "Investment advisory and financial growth promotional visual.", globalIndex: 22, type: "image" },
-      { src: "/creative_content/Financecreative4.jpeg", title: "Finance Creative 4", description: "Finance sector branding creative for digital marketing campaigns.", globalIndex: 23, type: "image" },
-      { src: "/creative_content/Financecreative5.jpeg", title: "Finance Creative 5", description: "Insurance and savings promotional creative for lead generation.", globalIndex: 24, type: "image" },
-      { src: "/creative_content/Financecreative6.jpeg", title: "Finance Creative 6", description: "Mutual fund and wealth planning social media ad creative.", globalIndex: 25, type: "image" },
-      { src: "/creative_content/Financecreative7.jpeg", title: "Finance Creative 7", description: "Corporate finance and business growth promotional banner.", globalIndex: 26, type: "image" },
+      { src: "/creative_content/Financecreative9.jpeg", title: "LIC Agent Recruitment", description: "Career opportunity campaign for LIC agents highlighting flexibility and unlimited commission.", globalIndex: 19, type: "image" },
+      { src: "/creative_content/Financexreative.jpeg", title: "Loan Against Property", description: "Promotional banner for fast, hassle-free property loans with quick approval.", globalIndex: 20, type: "image" },
+      { src: "/creative_content/Financecreative2.jpeg", title: "Cashcow Finserve Loan Solutions", description: "Personal, business, property, and car loans from a trusted financial partner.", globalIndex: 21, type: "image" },
+      { src: "/creative_content/Financecreative3.jpeg", title: "Cashcow Finserve Partnership", description: "Trusted financial partner offering fast and secure loan solutions.", globalIndex: 22, type: "image" },
+      { src: "/creative_content/Financecreative4.jpeg", title: "Taxclair ITR Services", description: "Fast, easy, and affordable Income Tax Return filing with expert support.", globalIndex: 23, type: "image" },
+      { src: "/creative_content/Financecreative5.jpeg", title: "Taxclair ITR Billboard", description: "Outdoor advertising creative for affordable ITR filing services starting at ₹499.", globalIndex: 24, type: "image" },
+      { src: "/creative_content/Financecreative6.jpeg", title: "ClaimAtoZ Insurance Support", description: "Expert guidance and strong case support for rejected or mis-sold insurance claims.", globalIndex: 25, type: "image" },
+      { src: "/creative_content/Financecreative7.jpeg", title: "Shree HR PF & ESIC Services", description: "HR compliance services including PF & ESIC returns filing and salary management.", globalIndex: 26, type: "image" },
+      { src: "/creative_content/Finance5.jpeg", title: "Demat Account Opening Campaign", description: "Expert demat account management, trade suggestions, and complete portfolio handling.", globalIndex: 27, type: "image" },
       { src: "/creative_content/ITRFinance.jpeg", title: "ITR Finance Creative", description: "Tax filing and ITR services promotional creative for digital campaigns.", globalIndex: 27, type: "image" },
-      { src: "/creative_content/Creative7.jpeg", title: "Investment Growth Ad", description: "Wealth management and finance growth promotional content.", globalIndex: 6, type: "image" },
-      { src: "/creative_content/Creative8.jpeg", title: "Crypto Platform Asset", description: "Digital currency trading platform banner design concept.", globalIndex: 7, type: "image" },
       { src: "https://youtube.com/shorts/4K5K4USvQ-0", title: "Viyom Finance Services (Promo)", description: "A high-impact promotional video for Viyom Finance Services highlighting wealth growth, loans, and investment advisory.", globalIndex: 210, type: "youtube" },
       { src: "https://youtube.com/shorts/QheeYMmcdn4", title: "Quick Personal Loans", description: "An informative video guide on personal loans, instant approval options, and flexible repayment schemes.", globalIndex: 211, type: "youtube" },
       { src: "/Campaign/FinanceCampaign.jpeg", title: "Finance Advisory Campaign", description: "A lead generation and conversion-focused performance marketing campaign designed for financial service advisors.", globalIndex: 301, type: "campaign" },
+      { src: "/creative_content/Educational9.jpeg", title: "Maruti Finance Home Loan", description: "Independence Day promotional creative for home loans with zero processing fees and up to 90% funding.", globalIndex: 112, type: "image" },
       { src: "/Campaign/FinanceCampaign2.jpeg", title: "Finance Wealth Campaign", description: "Strategic marketing campaign focusing on wealth management, investment trust, and retirement planning.", globalIndex: 302, type: "campaign" }
     ]
   },
@@ -86,11 +93,11 @@ const creativeGroups = [
     industry: "Hospitality & Food",
     description: "Hotel booking platforms, restaurant campaigns, food brand creatives, and social media reels.",
     images: [
-      { src: "/creative_content/HotelAndResort.jpeg", title: "Hotel & Resort Creative", description: "Premium hospitality branding creative for hotel and resort marketing.", globalIndex: 50, type: "image" },
-      { src: "/creative_content/HotelandResort2.jpeg", title: "Hotel & Resort Creative 2", description: "Luxury hotel and resort promotional visual for digital campaigns.", globalIndex: 51, type: "image" },
-      { src: "/creative_content/HotelAndResorts3.jpeg", title: "Hotel & Resort Creative 3", description: "Boutique hotel and resort services ad creative for lead generation.", globalIndex: 52, type: "image" },
-      { src: "/creative_content/foodcreative1.jpeg", title: "Food Creative 1", description: "Restaurant and food brand social media promotional creative.", globalIndex: 53, type: "image" },
-      { src: "/creative_content/foodcreative2.jpeg", title: "Food Creative 2", description: "Gourmet dining and food delivery promotional banner creative.", globalIndex: 54, type: "image" },
+      { src: "/creative_content/HotelAndResort.jpeg", title: "Canal Touch Resort Getaway", description: "Family-friendly weekend getaway with canal-side rooms and nature views.", globalIndex: 50, type: "image" },
+      { src: "/creative_content/HotelandResort2.jpeg", title: "Canal Touch Resort Rooms", description: "Experience nature's paradise with comfortable resort stays near Mumbai & Pune.", globalIndex: 51, type: "image" },
+      { src: "/creative_content/HotelAndResorts3.jpeg", title: "Hayum Hotel Management", description: "Free hotel management training with accommodation, meals, and real 5-star experience.", globalIndex: 52, type: "image" },
+      { src: "/creative_content/foodcreative1.jpeg", title: "Hayat Foods Frozen Meals", description: "High-quality frozen food supply for cafes, restaurants, and cloud kitchens.", globalIndex: 53, type: "image" },
+      { src: "/creative_content/foodcreative2.jpeg", title: "Hayat Foods Special Meals", description: "Perfectly prepared quality frozen meals to make every bite lazeez.", globalIndex: 54, type: "image" },
       { src: "/creative_content/Creative6.jpeg", title: "Restaurant Brand Campaign", description: "High-quality lead generation and marketing flyer for dining brands.", globalIndex: 5, type: "image" },
       { src: "/creative_content/Creative9.jpeg", title: "Gourmet Bistro Banner", description: "Aesthetic culinary advertising graphic for restaurant promotions.", globalIndex: 8, type: "image" },
       { src: "https://youtube.com/shorts/eP3mbrEjEgA", title: "Hayat Food", description: "An appetizing preview showcasing Hayat Food's culinary items, gourmet dishes, and hospitality experiences.", globalIndex: 205, type: "youtube" },
@@ -103,10 +110,10 @@ const creativeGroups = [
     industry: "Solar",
     description: "Solar websites, green energy campaigns, AI solar videos, and promotional clean energy reels.",
     images: [
-      { src: "/creative_content/Solar.jpeg", title: "Solar Energy Creative", description: "Clean energy and solar installation promotional creative for digital campaigns.", globalIndex: 60, type: "image" },
-      { src: "/creative_content/Solarcreative2.jpeg", title: "Solar Creative 2", description: "Residential and commercial solar panel solutions ad creative.", globalIndex: 61, type: "image" },
-      { src: "/creative_content/SolarCreative3.jpeg", title: "Solar Creative 3", description: "Green energy awareness promotional banner for solar services.", globalIndex: 62, type: "image" },
-      { src: "/creative_content/Solarcreative4.jpeg", title: "Solar Creative 4", description: "Sustainable energy and solar rooftop solutions campaign creative.", globalIndex: 63, type: "image" },
+      { src: "/creative_content/Solar.jpeg", title: "Sun Astra Energy Solutions", description: "Avoid common mistakes with solar system sizing and get up to ₹78,000 subsidy.", globalIndex: 60, type: "image" },
+      { src: "/creative_content/Solarcreative2.jpeg", title: "Sun Astra Solar Engineering", description: "Premium solar engineering with high ROI, fast installation, and free savings consultation.", globalIndex: 61, type: "image" },
+      { src: "/creative_content/SolarCreative3.jpeg", title: "Sun Astra Engineering Solutions", description: "Turn sunlight into lifetime savings with premium components and expert installation.", globalIndex: 62, type: "image" },
+      { src: "/creative_content/Solarcreative4.jpeg", title: "Sun Astra Zero Bill Solar", description: "Plug into sunlight and enjoy a zero electricity bill with premium solar systems.", globalIndex: 63, type: "image" },
       { src: "https://youtube.com/shorts/ZPqqln6JGNA", title: "BITAPLUS Solar", description: "An informative overview of BITAPLUS Solar's solar energy solutions, rooftop panel installations, and clean energy benefits.", globalIndex: 206, type: "youtube" },
       { src: "/Campaign/SolarCampaign.jpeg", title: "Solar Energy Lead Campaign", description: "Performance marketing campaign designed for commercial and residential solar installation leads.", globalIndex: 306, type: "campaign" },
       { src: "https://youtube.com/shorts/D8Bq6DyepVs", title: "Bitaplus Solar", description: "Clean energy solutions and solar panel installation showcase.", globalIndex: 219, type: "reel" }
@@ -116,9 +123,10 @@ const creativeGroups = [
     industry: "Interior Design",
     description: "Interior design studios, home décor campaigns, and premium living space creatives.",
     images: [
-      { src: "/creative_content/Interiorcreative.jpeg", title: "Interior Design Creative", description: "Premium home interior and décor services promotional creative.", globalIndex: 70, type: "image" },
-      { src: "/creative_content/interior2creative.jpeg", title: "Interior Design Creative 2", description: "Modern living space and interior styling ad creative.", globalIndex: 71, type: "image" },
-      { src: "/creative_content/Interior3creative.jpeg", title: "Interior Design Creative 3", description: "Luxury interior design and home renovation promotional visual.", globalIndex: 72, type: "image" },
+      { src: "/creative_content/Interiorcreative.jpeg", title: "Align Home Interior Nagpur", description: "Transform your dream home into reality with complete residential and commercial interior solutions.", globalIndex: 70, type: "image" },
+      { src: "/creative_content/interior2creative.jpeg", title: "Honeywell Enterprises Interior", description: "Transforming spaces into experiences with modular furniture and turnkey solutions.", globalIndex: 71, type: "image" },
+      { src: "/creative_content/Interior3creative.jpeg", title: "Honeywell Space Transformation", description: "Expert space planning, interior design, and modular furniture with 25+ years experience.", globalIndex: 72, type: "image" },
+      { src: "/creative_content/Interior4creative.jpeg", title: "Arch Studio Interior Design", description: "Premium architecture and interior design services to craft spaces that reflect your lifestyle.", globalIndex: 73, type: "image" },
       { src: "https://youtube.com/shorts/jEOIOVnY_vI?si=8XAPXt0CxEe2YtTK", title: "Design Studio AI Video", description: "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", globalIndex: 201, type: "youtube" },
       { src: "https://youtube.com/shorts/c5EmfsVswZk", title: "Interior Reel", description: "Aesthetic interior design concepts and space styling.", globalIndex: 215, type: "reel" }
     ]
@@ -127,10 +135,10 @@ const creativeGroups = [
     industry: "Technology & Apps",
     description: "Technology companies, SaaS platforms, application launches, and digital services campaigns.",
     images: [
-      { src: "/creative_content/TechnologyCreative.jpeg", title: "Technology Creative", description: "Tech company and digital solutions promotional creative for branding campaigns.", globalIndex: 80, type: "image" },
-      { src: "/creative_content/Applicationcreative.jpeg", title: "Application Creative", description: "Mobile and web application launch promotional creative.", globalIndex: 81, type: "image" },
-      { src: "/creative_content/Applicationcreative2.jpeg", title: "Application Creative 2", description: "SaaS and digital product ad creative for performance marketing.", globalIndex: 82, type: "image" },
-      { src: "/creative_content/Creative10.jpeg", title: "SaaS Launch Creative", description: "Software product launch promotional design visual.", globalIndex: 9, type: "image" },
+      { src: "/creative_content/TechnologyCreative.jpeg", title: "LockYourIdea AI Video Solutions", description: "AI video creation and marketing dashboard to save your marketing budget.", globalIndex: 80, type: "image" },
+      { src: "/creative_content/TechnologyCreative2.jpeg", title: "Electra Dealer Aata Chakki", description: "Premium domestic flour mill with a copper winding motor, low noise, and high performance.", globalIndex: 83, type: "image" },
+      { src: "/creative_content/Applicationcreative.jpeg", title: "Macto AI Dashboard", description: "Smarter business dashboard powered by AI to launch, manage, and grow effortlessly.", globalIndex: 81, type: "image" },
+      { src: "/creative_content/Applicationcreative2.jpeg", title: "Adly App All-in-One Partner", description: "All-in-one business app with auto WhatsApp, bulk messaging, and dynamic websites.", globalIndex: 82, type: "image" },
       { src: "https://youtube.com/shorts/dv9gLumeu4c", title: "Adly – Brand Promotional Video", description: "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.", globalIndex: 202, type: "youtube" }
     ]
   },
@@ -138,8 +146,9 @@ const creativeGroups = [
     industry: "Tours & Travels",
     description: "Travel agencies, tourism campaigns, tour package creatives, and destination marketing.",
     images: [
-      { src: "/creative_content/ToursAndTravels.jpeg", title: "Tours & Travels Creative", description: "Travel agency and tour package promotional creative for digital campaigns.", globalIndex: 90, type: "image" },
-      { src: "/creative_content/ToursAnd2TRavels.jpeg", title: "Tours & Travels Creative 2", description: "Destination tourism and holiday package promotional banner creative.", globalIndex: 91, type: "image" },
+      { src: "/creative_content/Tour&Travels3.jpeg", title: "Mountain Bliss Resort Girivan", description: "Your perfect escape in the lap of nature with a peaceful stay at Girivan, Mulshi.", globalIndex: 90, type: "image" },
+      { src: "/creative_content/ToursAndTravels.jpeg", title: "Swamini Tours Somnath Dwarka Girnar", description: "Organized spiritual tour package for Somnath, Dwarka, and Girnar.", globalIndex: 91, type: "image" },
+      { src: "/creative_content/ToursAnd2TRavels.jpeg", title: "Swamini Tours Spiritual Journey", description: "An unforgettable spiritual journey with comfortable travel, meals, and beautiful stays.", globalIndex: 92, type: "image" },
       { src: "https://youtube.com/shorts/IBu2_EvKAH4", title: "Tourism Reel", description: "Explore beautiful destinations and holiday packages.", globalIndex: 217, type: "reel" },
       { src: "https://youtube.com/shorts/i62UuswIIBU?si=aM-xl-eHdip6offu", title: "SWAMINI TOURS AI Promo", description: "Swamini Tours travel and tour package AI promotional video.", globalIndex: 221, type: "youtube" },
       { src: "https://youtube.com/shorts/oicsQmkp5D4", title: "Tours & Travels Reel", description: "Promotional reel for tourism and travel packages.", globalIndex: 220, type: "reel" }
@@ -149,7 +158,7 @@ const creativeGroups = [
     industry: "Sports",
     description: "Sports brands, fitness campaigns, athletic event creatives, and sports marketing.",
     images: [
-      { src: "/creative_content/Sportscreative1.jpeg", title: "Sports Creative", description: "Sports brand and fitness promotional creative for social media campaigns.", globalIndex: 100, type: "image" },
+      { src: "/creative_content/Sportscreative1.jpeg", title: "Timeer's Badminton Academy", description: "Professional badminton coaching for all age groups with 20+ years of excellence.", globalIndex: 100, type: "image" },
       { src: "https://youtube.com/shorts/0BccV040p3o", title: "Sports Reel", description: "Dynamic sports and fitness promotional reel.", globalIndex: 216, type: "reel" }
     ]
   },
@@ -157,7 +166,7 @@ const creativeGroups = [
     industry: "Other Creative",
     description: "Additional marketing campaigns, custom integrations, branding assets, and creative content.",
     images: [
-      { src: "/creative_content/Othercreative.jpeg", title: "Other Brand Creative", description: "General branding and promotional creative for digital marketing campaigns.", globalIndex: 110, type: "image" },
+      { src: "/creative_content/Othercreative.jpeg", title: "Janmbhumi Industries Fabrication", description: "Powering industrial growth with heavy fabrication and complete structural solutions.", globalIndex: 110, type: "image" },
       { src: "/Campaign/FoundationCampaign.jpeg", title: "Foundation Brand Campaign", description: "Branding and donor awareness campaign designed for non-profit and charitable foundations.", globalIndex: 303, type: "campaign" },
       { src: "https://youtube.com/shorts/B1ZTysSbjnA", title: "Ayush Vikas Foundation Reel", description: "Ayush Vikas Foundation awareness and promotional reel.", globalIndex: 222, type: "reel" }
     ]
@@ -183,12 +192,12 @@ const creativeGroups = [
     industry: "E-Commerce",
     description: "High-converting e-commerce platforms, wellness product showcases, and retail marketing campaigns.",
     images: [
+      { src: "/creative_content/Ecommerce-products.jpeg", title: "Pureplush Herbal Products", description: "E-commerce product showcase for pure and natural herbal skincare and hair care products.", globalIndex: 101, type: "image" },
       { src: "https://ayurmor.com/", thumbnail: "/uploads/Ayurmor.jpg", title: "Ayurmor Ayurvedic Wellness", description: "An SEO-friendly e-commerce platform for Ayurvedic health supplements and instant herbal soups, built with optimized product schemas and category pages.", globalIndex: 102, type: "website" },
       { src: "https://pureplush.in/", thumbnail: "/uploads/Pureplush.jpg", title: "Pureplush E-Commerce", description: "A premium e-commerce platform designed for high conversions, featuring a seamless shopping experience and elegant product showcases.", globalIndex: 103, type: "website" }
     ]
   }
 ];
-
 const chunkArray = (array, size) => {
   const chunks = [];
   for (let i = 0; i < array.length; i += size) {
@@ -196,7 +205,6 @@ const chunkArray = (array, size) => {
   }
   return chunks;
 };
-
 const CATEGORIES = [
   {
     id: "website",
@@ -239,19 +247,15 @@ const CATEGORIES = [
     accent: "blue"
   }
 ];
-
 export default function CreativeGrid({ activeFilter = "All", setActiveFilter, searchQuery = "", setSearchQuery }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
   const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
   const [videoErrors, setVideoErrors] = useState({});
-
-
   const getMediaType = (type, src, category) => {
     if (category === "image" || category === "video" || category === "reel" || category === "website" || category === "campaign") {
       return category;
     }
-
     let resolvedType = type;
     if (!resolvedType && src) {
       const url = src.toLowerCase();
@@ -262,14 +266,12 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       else if (url.includes("/campaign/")) resolvedType = "campaign";
       else resolvedType = "image";
     }
-
     if (resolvedType === "youtube" || resolvedType === "iframe" || resolvedType === "video") return "video";
     if (resolvedType === "instagram" || resolvedType === "reel") return "reel";
     if (resolvedType === "website") return "website";
     if (resolvedType === "campaign") return "campaign";
     return "image";
   };
-
   const getCategoryProject = (group, catId) => {
     // 1. Find direct match in group.images
     const imgProj = group.images.find(img => {
@@ -277,7 +279,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       return type === catId;
     });
     if (imgProj) return imgProj;
-
     // 2. Fallback to hardcoded industry mapping
     const industryData = {
       "Real Estate": {
@@ -379,7 +380,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         reel: "E-Commerce Product Reel"
       }
     };
-
     const indName = group.industry;
     const mappedObj = industryData[indName];
     if (mappedObj && mappedObj[catId]) {
@@ -390,7 +390,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         isPlaceholder: true
       };
     }
-
     const defaults = {
       website: "Website Design",
       campaign: "Performance Marketing",
@@ -398,7 +397,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       image: "Creative Content",
       reel: "Instagram Reel"
     };
-    
     return {
       title: `${indName} ${defaults[catId]}`,
       src: "",
@@ -406,7 +404,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       isPlaceholder: true
     };
   };
-
   const getPlayerType = (src, type) => {
     if (type === "website") return "website";
     if (type === "campaign") return "image";
@@ -418,7 +415,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
     if (url.startsWith("http") && !url.match(/\.(jpeg|jpg|gif|png|webp|svg)/)) return "website";
     return "image";
   };
-
   const getYoutubeThumbnail = (src) => {
     let videoId = "";
     if (src.includes("youtu.be/")) {
@@ -432,7 +428,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
     }
     return videoId ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg` : null;
   };
-
   const getThumbnail = (src, type) => {
     const playerType = getPlayerType(src, type);
     if (playerType === "youtube") {
@@ -453,7 +448,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
     }
     return src;
   };
-
   const getEmbedUrl = (src) => {
     if (!src) return "";
     if (src.includes("youtube.com") || src.includes("youtu.be")) {
@@ -475,10 +469,8 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
     }
     return src;
   };
-
   const filteredGroups = useMemo(() => {
     const q = searchQuery.trim().toLowerCase();
-
     // Round-robin interleave: pick 1 website, 1 creative, 1 AI video, 1 reel per round
     const interleaveByType = (images) => {
       const sortByIndex = (arr) => [...arr].sort((a, b) => {
@@ -486,48 +478,37 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         const iB = b.globalIndex !== undefined && b.globalIndex !== null && b.globalIndex !== "" ? Number(b.globalIndex) : 999999;
         return iA - iB;
       });
-
       const websites  = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "website"));
       const creatives = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "image" || getMediaType(img.type, img.src, img.category) === "campaign"));
       const videos    = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "video"));
       const reels     = sortByIndex(images.filter(img => getMediaType(img.type, img.src, img.category) === "reel"));
-
       const maxRounds = Math.max(websites.length, creatives.length, videos.length, reels.length);
       const result = [];
-
       for (let i = 0; i < maxRounds; i++) {
         if (websites[i])  result.push(websites[i]);
         if (creatives[i]) result.push(creatives[i]);
         if (videos[i])    result.push(videos[i]);
         if (reels[i])     result.push(reels[i]);
       }
-
       return result;
     };
-
     return creativeGroupsState.map(group => {
       const filteredImages = group.images.filter(img => {
         const type = getMediaType(img.type, img.src, img.category);
-        
         let matchesCategory = true;
         if (activeFilter === "Creative Content") matchesCategory = type === "image";
         else if (activeFilter === "AI Videos") matchesCategory = type === "video";
         else if (activeFilter === "Reels") matchesCategory = type === "reel";
         else if (activeFilter === "Website & SEO") matchesCategory = type === "website";
         else if (activeFilter === "Campaigns") matchesCategory = type === "campaign";
-
         if (!matchesCategory) return false;
-
         if (!q) return true;
-
         const titleMatch = img.title?.toLowerCase().includes(q);
         const descMatch = img.description?.toLowerCase().includes(q);
         const typeMatch = img.type?.toLowerCase().includes(q) || type.toLowerCase().includes(q);
         const industryMatch = group.industry?.toLowerCase().includes(q);
-
         return titleMatch || descMatch || typeMatch || industryMatch;
       });
-
       let finalImages;
       if (activeFilter === "All" && !q) {
         // Interleave: 1 website → 1 creative → 1 AI video → 1 reel per slide
@@ -540,18 +521,15 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
           return indexA - indexB;
         });
       }
-
       return {
         ...group,
         images: finalImages
       };
     }).filter(group => group.images.length > 0);
   }, [activeFilter, searchQuery, creativeGroupsState]);
-
   const visibleItems = useMemo(() => {
     return filteredGroups.flatMap(group => group.images);
   }, [filteredGroups]);
-
   const handleScroll = (industry, direction) => {
     const container = scrollContainers.current[industry];
     if (container) {
@@ -562,10 +540,8 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       });
     }
   };
-
   useEffect(() => {
     if (selectedImageIndex === null) return;
-
     const handleKeyDown = (e) => {
       if (e.key === "Escape") {
         setSelectedImageIndex(null);
@@ -575,11 +551,9 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         setSelectedImageIndex((current) => (current - 1 + visibleItems.length) % visibleItems.length);
       }
     };
-
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [selectedImageIndex, visibleItems]);
-
   useEffect(() => {
     if (selectedImageIndex !== null) {
       document.body.style.overflow = "hidden";
@@ -590,9 +564,7 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       document.body.style.overflow = "";
     };
   }, [selectedImageIndex]);
-
   const activeImage = selectedImageIndex !== null ? visibleItems[selectedImageIndex] : null;
-
   if (filteredGroups.length === 0) {
     return (
       <div className="search-no-results">
@@ -615,7 +587,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       </div>
     );
   }
-
   return (
     <>
       {filteredGroups.map((group) => (
@@ -625,18 +596,15 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
             <h3>{group.industry}</h3>
             <p>{group.description}</p>
           </div>
-
           {activeFilter === "All" && !searchQuery.trim() ? (
             <div className="industry-boxes-grid">
               {CATEGORIES.map((cat, idx) => {
                 const proj = getCategoryProject(group, cat.id);
-                
                 const handleClick = (e) => {
                   if (setActiveFilter) {
                     setActiveFilter(cat.filterKey);
                   }
                 };
-
                 return (
                   <div
                     key={cat.id}
@@ -685,7 +653,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
                   <span className="material-symbols-outlined" style={{ fontSize: "22px" }}>arrow_back</span>
                 </button>
               )}
-
               {/* Scrollable card grid */}
               <div
                 className="creative-grid"
@@ -717,7 +684,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
                             {(() => {
                               const playerType = getPlayerType(img.src, img.type);
                               const isExternalUrl = img.src && (img.src.startsWith("http://") || img.src.startsWith("https://"));
-
                               if (playerType === "video") {
                                 if (videoErrors[img.src]) {
                                   return (
@@ -761,7 +727,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
                                   />
                                 );
                               }
-
                               if (playerType === "website") {
                                 const thumb = img.thumbnail || (isExternalUrl
                                   ? `https://image.thum.io/get/${img.src}`
@@ -776,7 +741,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
                                   />
                                 );
                               }
-
                               const thumb = getThumbnail(img.src, img.type) || "/placeholder.jpg";
                               return (
                                 <img
@@ -845,7 +809,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
                   </div>
                 ))}
               </div>
-
               {/* Right arrow */}
               {group.images.length > 2 && (
                 <button
@@ -879,7 +842,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
           )}
         </article>
       ))}
-
       {activeImage && (
         <div
           className="creative-lightbox"
@@ -899,7 +861,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
             >
               <span className="material-symbols-outlined">close</span>
             </button>
-
             <button
               type="button"
               className="lightbox-nav prev"
@@ -908,7 +869,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
             >
               <span className="material-symbols-outlined">chevron_left</span>
             </button>
-
             <div className="lightbox-image-wrapper" style={{ width: "100%", display: "flex", justifyContent: "center", alignItems: "center" }}>
               {(() => {
                 const playerType = getPlayerType(activeImage.src, activeImage.type);
@@ -1020,7 +980,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
                 }
               })()}
             </div>
-
             <button
               type="button"
               className="lightbox-nav next"
@@ -1029,7 +988,6 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
             >
               <span className="material-symbols-outlined">chevron_right</span>
             </button>
-
             <div className="lightbox-caption">
               <h3 id="lightbox-title">{activeImage.title}</h3>
               <p>{activeImage.description}</p>
