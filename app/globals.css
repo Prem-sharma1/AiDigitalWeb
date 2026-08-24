@@ -5975,9 +5975,17 @@ p {
 }
 
 /* Delays for staggered reveals */
-.delay-100 { animation-delay: 100ms; }
-.delay-200 { animation-delay: 200ms; }
-.delay-300 { animation-delay: 300ms; }
+.delay-100 {
+  animation-delay: 100ms;
+}
+
+.delay-200 {
+  animation-delay: 200ms;
+}
+
+.delay-300 {
+  animation-delay: 300ms;
+}
 
 /* 2. Gentle Floating Animation */
 .animate-float {
@@ -5985,9 +5993,17 @@ p {
 }
 
 @keyframes float {
-  0% { transform: translateY(0px); }
-  50% { transform: translateY(-15px); }
-  100% { transform: translateY(0px); }
+  0% {
+    transform: translateY(0px);
+  }
+
+  50% {
+    transform: translateY(-15px);
+  }
+
+  100% {
+    transform: translateY(0px);
+  }
 }
 
 /* 3. Glassmorphism Panel */
@@ -6027,7 +6043,8 @@ p {
 /* 1. Tilt Card Component */
 .tilt-card-container {
   position: relative;
-  transition: transform 0.1s ease-out; /* Super fast transition for mouse follow */
+  transition: transform 0.1s ease-out;
+  /* Super fast transition for mouse follow */
   transform-style: preserve-3d;
   will-change: transform;
 }
@@ -6064,10 +6081,21 @@ p {
 }
 
 /* Staggered Reveal Delays */
-.reveal.delay-100 { transition-delay: 100ms; }
-.reveal.delay-200 { transition-delay: 200ms; }
-.reveal.delay-300 { transition-delay: 300ms; }
-.reveal.delay-400 { transition-delay: 400ms; }
+.reveal.delay-100 {
+  transition-delay: 100ms;
+}
+
+.reveal.delay-200 {
+  transition-delay: 200ms;
+}
+
+.reveal.delay-300 {
+  transition-delay: 300ms;
+}
+
+.reveal.delay-400 {
+  transition-delay: 400ms;
+}
 
 /* ==========================================================================
    Massive 2026 Hero Sections
@@ -6075,7 +6103,8 @@ p {
 
 /* Full-screen breathing room */
 .hero-massive {
-  min-height: 60vh; /* Reduced from 85vh */
+  min-height: 60vh;
+  /* Reduced from 85vh */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -6083,7 +6112,8 @@ p {
   text-align: center;
   padding: 80px 20px;
   position: relative;
-  overflow: hidden; /* Fixes orbit/atom overflow */
+  overflow: hidden;
+  /* Fixes orbit/atom overflow */
   width: 100%;
 }
 
@@ -6093,7 +6123,8 @@ p {
   justify-content: space-between;
   align-items: center;
   text-align: left;
-  max-width: 1200px; /* Reduced from 1400px */
+  max-width: 1200px;
+  /* Reduced from 1400px */
   margin: 0 auto;
   gap: 40px;
 }
@@ -6118,7 +6149,8 @@ p {
 
 @media (min-width: 1024px) {
   .hero-headline {
-    font-size: 3.5rem; /* Reduced from 5rem to prevent overflow */
+    font-size: 3.5rem;
+    /* Reduced from 5rem to prevent overflow */
   }
 }
 
@@ -6160,5 +6192,3 @@ p {
 .hero-massive.hero-centered .hero-actions {
   justify-content: center;
 }
-
-

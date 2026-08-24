@@ -264,26 +264,16 @@ export default function FeaturedWork() {
           </div>
         )}
 
-        {showOthers && visibleOtherProjects.length > 0 && (
-          <article className="industry-section others-section">
-            <div className="industry-copy">
-              <span className="industry-label">General</span>
-              <h3>Other Projects</h3>
-              <p>Additional marketing campaigns, custom integrations, branding assets, and creative videos.</p>
-            </div>
-            <div className="featured-project-grid">
-              {visibleOtherProjects.map((project) => (
-                <div className="featured-project-card" key={project.title}>
-                  <span className="material-symbols-outlined" aria-hidden="true">
-                    {filterIcons[project.type] ?? "dashboard"}
-                  </span>
-                  <strong>{project.title}</strong>
-                  <small>{project.type}</small>
-                </div>
-              ))}
-            </div>
-          </article>
+        {showOthers && (
+          <CreativeGrid
+            activeFilter={activeFilter}
+            setActiveFilter={setActiveFilter}
+            searchQuery={searchQuery}
+            setSearchQuery={setSearchQuery}
+            onlyShowOtherCreative={true}
+          />
         )}
+
       </div>
     </section>
   );

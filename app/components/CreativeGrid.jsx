@@ -86,7 +86,15 @@ const creativeGroups = [
       { src: "https://youtube.com/shorts/QheeYMmcdn4", title: "Quick Personal Loans", description: "An informative video guide on personal loans, instant approval options, and flexible repayment schemes.", globalIndex: 211, type: "youtube" },
       { src: "/Campaign/FinanceCampaign.jpeg", title: "Finance Advisory Campaign", description: "A lead generation and conversion-focused performance marketing campaign designed for financial service advisors.", globalIndex: 301, type: "campaign" },
       { src: "/creative_content/Educational9.jpeg", title: "Maruti Finance Home Loan", description: "Independence Day promotional creative for home loans with zero processing fees and up to 90% funding.", globalIndex: 112, type: "image" },
-      { src: "/Campaign/FinanceCampaign2.jpeg", title: "Finance Wealth Campaign", description: "Strategic marketing campaign focusing on wealth management, investment trust, and retirement planning.", globalIndex: 302, type: "campaign" }
+      { src: "/Campaign/FinanceCampaign2.jpeg", title: "Finance Wealth Campaign", description: "Strategic marketing campaign focusing on wealth management, investment trust, and retirement planning.", globalIndex: 302, type: "campaign" },
+      { src: "https://youtu.be/HNj6t5O5jGc?si=8lClyV-k_gGSPPfi", title: "Siddhart Cars", description: "An engaging AI-assisted promotional video.", globalIndex: 255, type: "youtube" }
+    ]
+  },
+  {
+    industry: "Hotels and Resorts",
+    description: "Premium hotel and resort promo videos, hospitality campaigns, and vacation stays.",
+    images: [
+      { src: "https://youtu.be/t1ybgC0M8Nc?si=dYy17iJ2qNWQt-o4", title: "Hilltop Karjat", description: "An engaging AI-assisted promotional video highlighting the scenic beauty and hospitality of Hilltop Karjat.", globalIndex: 258, type: "youtube" }
     ]
   },
   {
@@ -128,7 +136,8 @@ const creativeGroups = [
       { src: "/creative_content/Interior3creative.jpeg", title: "Honeywell Space Transformation", description: "Expert space planning, interior design, and modular furniture with 25+ years experience.", globalIndex: 72, type: "image" },
       { src: "/creative_content/Interior4creative.jpeg", title: "Arch Studio Interior Design", description: "Premium architecture and interior design services to craft spaces that reflect your lifestyle.", globalIndex: 73, type: "image" },
       { src: "https://youtube.com/shorts/jEOIOVnY_vI?si=8XAPXt0CxEe2YtTK", title: "Design Studio AI Video", description: "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.", globalIndex: 201, type: "youtube" },
-      { src: "https://youtube.com/shorts/c5EmfsVswZk", title: "Interior Reel", description: "Aesthetic interior design concepts and space styling.", globalIndex: 215, type: "reel" }
+      { src: "https://youtube.com/shorts/c5EmfsVswZk", title: "Interior Reel", description: "Aesthetic interior design concepts and space styling.", globalIndex: 215, type: "reel" },
+      { src: "https://youtu.be/lzx89-Ds0UI?si=BYPUtEgbDHWWEiZk", title: "Livdecor Interior", description: "An immersive AI-assisted interior design promo video showcasing realistic modern space transformations.", globalIndex: 254, type: "youtube" }
     ]
   },
   {
@@ -139,7 +148,8 @@ const creativeGroups = [
       { src: "/creative_content/TechnologyCreative2.jpeg", title: "Electra Dealer Aata Chakki", description: "Premium domestic flour mill with a copper winding motor, low noise, and high performance.", globalIndex: 83, type: "image" },
       { src: "/creative_content/Applicationcreative.jpeg", title: "Macto AI Dashboard", description: "Smarter business dashboard powered by AI to launch, manage, and grow effortlessly.", globalIndex: 81, type: "image" },
       { src: "/creative_content/Applicationcreative2.jpeg", title: "Adly App All-in-One Partner", description: "All-in-one business app with auto WhatsApp, bulk messaging, and dynamic websites.", globalIndex: 82, type: "image" },
-      { src: "https://youtube.com/shorts/dv9gLumeu4c", title: "Adly – Brand Promotional Video", description: "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.", globalIndex: 202, type: "youtube" }
+      { src: "https://youtube.com/shorts/dv9gLumeu4c", title: "Adly – Brand Promotional Video", description: "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.", globalIndex: 202, type: "youtube" },
+      { src: "https://youtu.be/f77Cbh2ol9Q?si=ntu4dSlpoxU87ctt", title: "Garments Software", description: "An engaging AI-assisted promotional video for technology and digital solutions.", globalIndex: 257, type: "youtube" }
     ]
   },
   {
@@ -163,12 +173,10 @@ const creativeGroups = [
     ]
   },
   {
-    industry: "Other Creative",
-    description: "Additional marketing campaigns, custom integrations, branding assets, and creative content.",
+    industry: "Car Dealership",
+    description: "Promotional videos, marketing campaigns, and creative content for car dealerships.",
     images: [
-      { src: "/creative_content/Othercreative.jpeg", title: "Janmbhumi Industries Fabrication", description: "Powering industrial growth with heavy fabrication and complete structural solutions.", globalIndex: 110, type: "image" },
-      { src: "/Campaign/FoundationCampaign.jpeg", title: "Foundation Brand Campaign", description: "Branding and donor awareness campaign designed for non-profit and charitable foundations.", globalIndex: 303, type: "campaign" },
-      { src: "https://youtube.com/shorts/B1ZTysSbjnA", title: "Ayush Vikas Foundation Reel", description: "Ayush Vikas Foundation awareness and promotional reel.", globalIndex: 222, type: "reel" }
+      { src: "https://youtu.be/bvKjWoaAOQY?si=LnPMbHrhTanH2I_V", title: "Sharan360", description: "An engaging promotional video for Sharan360 car dealership, highlighting premium vehicles and automotive services.", globalIndex: 256, type: "youtube" }
     ]
   },
   {
@@ -247,7 +255,7 @@ const CATEGORIES = [
     accent: "blue"
   }
 ];
-export default function CreativeGrid({ activeFilter = "All", setActiveFilter, searchQuery = "", setSearchQuery }) {
+export default function CreativeGrid({ activeFilter = "All", setActiveFilter, searchQuery = "", setSearchQuery, onlyShowOtherCreative = false }) {
   const [selectedImageIndex, setSelectedImageIndex] = useState(null);
   const scrollContainers = useRef({});
   const [creativeGroupsState, setCreativeGroupsState] = useState(creativeGroups);
@@ -492,7 +500,10 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
       }
       return result;
     };
-    return creativeGroupsState.map(group => {
+    return creativeGroupsState.filter(group => {
+      if (onlyShowOtherCreative) return group.industry === "Car Dealership";
+      return group.industry !== "Car Dealership";
+    }).map(group => {
       const filteredImages = group.images.filter(img => {
         const type = getMediaType(img.type, img.src, img.category);
         let matchesCategory = true;
@@ -526,7 +537,7 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         images: finalImages
       };
     }).filter(group => group.images.length > 0);
-  }, [activeFilter, searchQuery, creativeGroupsState]);
+  }, [activeFilter, searchQuery, creativeGroupsState, onlyShowOtherCreative]);
   const visibleItems = useMemo(() => {
     return filteredGroups.flatMap(group => group.images);
   }, [filteredGroups]);

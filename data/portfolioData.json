@@ -706,6 +706,26 @@
           "description": "Independence Day promotional creative for home loans with zero processing fees and up to 90% funding.",
           "globalIndex": 112,
           "type": "image"
+        },
+        {
+          "src": "https://youtu.be/HNj6t5O5jGc?si=8lClyV-k_gGSPPfi",
+          "title": "Siddhart Cars",
+          "description": "An engaging AI-assisted promotional video.",
+          "globalIndex": 255,
+          "type": "youtube"
+        }
+      ]
+    },
+    {
+      "industry": "Hotels and Resorts",
+      "description": "Premium hotel and resort promo videos, hospitality campaigns, and vacation stays.",
+      "images": [
+        {
+          "src": "https://youtu.be/t1ybgC0M8Nc?si=dYy17iJ2qNWQt-o4",
+          "title": "Hilltop Karjat",
+          "description": "An engaging AI-assisted promotional video highlighting the scenic beauty and hospitality of Hilltop Karjat.",
+          "globalIndex": 258,
+          "type": "youtube"
         }
       ]
     },
@@ -864,6 +884,13 @@
           "description": "A stunning showcase of Aditya Modular Design Studio's premium modular furniture, custom interiors, and space transformation expertise.",
           "globalIndex": 201,
           "type": "youtube"
+        },
+        {
+          "src": "https://youtu.be/lzx89-Ds0UI?si=BYPUtEgbDHWWEiZk",
+          "title": "Livdecor Interior",
+          "description": "An immersive AI-assisted interior design promo video showcasing realistic modern space transformations.",
+          "globalIndex": 254,
+          "type": "youtube"
         }
       ]
     },
@@ -898,6 +925,20 @@
           "description": "All-in-one business app with auto WhatsApp, bulk messaging, and dynamic websites.",
           "globalIndex": 82,
           "type": "image"
+        },
+        {
+          "src": "https://youtube.com/shorts/dv9gLumeu4c",
+          "title": "Adly – Brand Promotional Video",
+          "description": "A high-impact AI-assisted promotional video for Adly, showcasing brand identity, product highlights, and digital marketing reach.",
+          "globalIndex": 202,
+          "type": "youtube"
+        },
+        {
+          "src": "https://youtu.be/f77Cbh2ol9Q?si=ntu4dSlpoxU87ctt",
+          "title": "Garments Software",
+          "description": "An engaging AI-assisted promotional video for technology and digital solutions.",
+          "globalIndex": 257,
+          "type": "youtube"
         }
       ]
     },
@@ -956,29 +997,15 @@
       ]
     },
     {
-      "industry": "Other Creative",
-      "description": "Additional marketing campaigns, custom integrations, branding assets, and creative content.",
+      "industry": "Car Dealership",
+      "description": "Promotional videos, marketing campaigns, and creative content for car dealerships.",
       "images": [
         {
-          "src": "/creative_content/Othercreative.jpeg",
-          "title": "Janmbhumi Industries Fabrication",
-          "description": "Powering industrial growth with heavy fabrication and complete structural solutions.",
-          "globalIndex": 110,
-          "type": "image"
-        },
-        {
-          "src": "/Campaign/FoundationCampaign.jpeg",
-          "title": "Foundation Brand Campaign",
-          "description": "Branding and donor awareness campaign designed for non-profit and charitable foundations.",
-          "globalIndex": 303,
-          "type": "campaign"
-        },
-        {
-          "src": "https://youtube.com/shorts/B1ZTysSbjnA",
-          "title": "Ayush Vikas Foundation Reel",
-          "description": "Ayush Vikas Foundation awareness and promotional reel.",
-          "globalIndex": 222,
-          "type": "reel"
+          "src": "https://youtu.be/bvKjWoaAOQY?si=LnPMbHrhTanH2I_V",
+          "title": "Sharan360",
+          "description": "An engaging promotional video for Sharan360 car dealership, highlighting premium vehicles and automotive services.",
+          "globalIndex": 256,
+          "type": "youtube"
         }
       ]
     },
