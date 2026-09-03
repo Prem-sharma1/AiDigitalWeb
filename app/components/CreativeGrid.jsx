@@ -165,6 +165,18 @@ const creativeGroups = [
     ]
   },
   {
+    industry: "Agriculture",
+    description: "Agricultural products, cattle nutrition, organic manure, crop protection, and farming solution creatives.",
+    images: [
+      { src: "/creative_content/AgricultureCreative.jpeg", title: "Suday Healthcare Cattle Nutrition", description: "Scientific cattle nutrition & milk production booster with Daymin Gold AD3 and Sudacal Gold AD3.", globalIndex: 110, type: "image" },
+      { src: "/creative_content/AgricultureCreative1.jpeg", title: "Suday Healthcare Daymin Gold AD3", description: "Metho-Chelated mineral and vitamin powder supplement for cattle productivity, immunity, and health.", globalIndex: 111, type: "image" },
+      { src: "/creative_content/AgricultureCreative2.jpeg", title: "Mack Agro Mack 007 Organic Manure", description: "Organic manure for greener fields, improved soil fertility, healthy roots, and higher crop yields.", globalIndex: 112, type: "image" },
+      { src: "/creative_content/AgricultureCreative3.jpeg", title: "Mack Agro Farming Revolution", description: "High quality fish meal & oil cake organic fertilizer boosting soil fertility and accelerating crop growth.", globalIndex: 113, type: "image" },
+      { src: "/creative_content/AgricultureCreative4.jpeg", title: "Agrifield Magic Flower Drop Control", description: "Advanced agricultural formula to prevent flower drop, enhance fruit setting, and boost crop productivity.", globalIndex: 114, type: "image" },
+      { src: "/creative_content/AgricultureCreative5.jpeg", title: "Agrifield Magic Crop Protection", description: "Effective flower drop control and crop protection booster for maximum yield during flowering stage.", globalIndex: 115, type: "image" }
+    ]
+  },
+  {
     industry: "Sports",
     description: "Sports brands, fitness campaigns, athletic event creatives, and sports marketing.",
     images: [
@@ -358,6 +370,13 @@ export default function CreativeGrid({ activeFilter = "All", setActiveFilter, se
         video: "Dynamic Fitness Promo",
         image: "Sports Creative",
         reel: "Sports Reel"
+      },
+      "Agriculture": {
+        website: "Agricultural Landing Page",
+        campaign: "Sustainable Farm Campaign",
+        video: "Mack Agro Promo",
+        image: "Suday Healthcare Cattle Nutrition",
+        reel: "Agriculture Promotion Reel"
       },
       "Other Creative": {
         website: "Custom Web Integration",

@@ -87,8 +87,14 @@ const industries = [
   {
     name: "Agriculture",
     description:
-      "Agricultural websites, farming campaigns, AI agro videos, and promotional sustainable agriculture reels.",
+      "Agricultural products, cattle nutrition, organic manure, crop protection, and farming solution creatives.",
     projects: [
+      { title: "Suday Healthcare Cattle Nutrition", type: "Creative Content" },
+      { title: "Suday Healthcare Daymin Gold AD3", type: "Creative Content" },
+      { title: "Mack Agro Mack 007 Organic Manure", type: "Creative Content" },
+      { title: "Mack Agro Farming Revolution", type: "Creative Content" },
+      { title: "Agrifield Magic Flower Drop Control", type: "Creative Content" },
+      { title: "Agrifield Magic Crop Protection", type: "Creative Content" },
       { title: "Agricultural Landing Page", type: "Website & SEO" },
       { title: "Sustainable Farm Campaign", type: "Campaigns" },
       { title: "Mack Agro Promo", type: "AI Videos" }

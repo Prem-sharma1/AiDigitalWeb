@@ -19,6 +19,7 @@ const industryMap = {
   "tours-travels": "Tours & Travels",
   "travels": "Tours & Travels",
   "sports": "Sports",
+  "agriculture": "Agriculture",
   "other-creative": "Other Creative",
   "digital-marketing": "Digital Marketing",
   "construction": "Construction"
