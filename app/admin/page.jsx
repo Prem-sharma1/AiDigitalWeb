@@ -11,6 +11,46 @@ function Icon({ name, className = "" }) {
   );
 }
 
+function getCountryFlag(countryCode) {
+  if (!countryCode || countryCode === "UN" || countryCode.length !== 2) return "🌐";
+  try {
+    const codePoints = countryCode
+      .toUpperCase()
+      .split("")
+      .map((char) => 127397 + char.charCodeAt(0));
+    return String.fromCodePoint(...codePoints);
+  } catch (e) {
+    return "🌐";
+  }
+}
+
+function formatDuration(seconds) {
+  if (!seconds || seconds <= 0) return "< 5s";
+  if (seconds < 60) return `${seconds}s`;
+  const mins = Math.floor(seconds / 60);
+  const remSecs = seconds % 60;
+  return `${mins}m ${remSecs}s`;
+}
+
+function formatTimeAgo(dateString) {
+  if (!dateString) return "—";
+  try {
+    const date = new Date(dateString);
+    const now = new Date();
+    const diffSec = Math.floor((now - date) / 1000);
+    if (diffSec < 15) return "just now";
+    if (diffSec < 60) return `${diffSec}s ago`;
+    const diffMin = Math.floor(diffSec / 60);
+    if (diffMin < 60) return `${diffMin}m ago`;
+    const diffHour = Math.floor(diffMin / 60);
+    if (diffHour < 24) return `${diffHour}h ago`;
+    const diffDay = Math.floor(diffHour / 24);
+    return `${diffDay}d ago`;
+  } catch (e) {
+    return "—";
+  }
+}
+
 export default function AdminPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -74,6 +114,20 @@ export default function AdminPage() {
     description: "",
     is_active: true
   });
+
+  // Website Visitors & Traffic State
+  const [visitorsData, setVisitorsData] = useState({
+    liveOnline: 0,
+    summary: { totalPageviews: 0, uniqueVisitors: 0, totalSessions: 0, newVisitors: 0, avgDurationSeconds: 0 },
+    charts: { trend: [], devices: [], browsers: [], topPages: [], topSources: [], topCountries: [] },
+    logs: [],
+    pagination: { page: 1, limit: 50, total: 0, totalPages: 1 }
+  });
+  const [visitorRange, setVisitorRange] = useState("today");
+  const [visitorSearch, setVisitorSearch] = useState("");
+  const [visitorPage, setVisitorPage] = useState(1);
+  const [visitorAutoRefresh, setVisitorAutoRefresh] = useState("30");
+  const [isLoadingVisitors, setIsLoadingVisitors] = useState(false);
 
   const loadPromoData = async () => {
     try {
@@ -144,6 +198,116 @@ export default function AdminPage() {
       showToast("Network error deleting promo code", "error");
     }
   };
+
+  const loadVisitorsData = async (range = visitorRange, search = visitorSearch, page = visitorPage) => {
+    try {
+      setIsLoadingVisitors(true);
+      const query = new URLSearchParams({
+        range,
+        search,
+        page: page.toString(),
+        limit: "50",
+        t: Date.now().toString(),
+      });
+      const res = await fetch(`/api/admin/visitors?${query.toString()}`, { cache: "no-store" });
+      if (res.ok) {
+        const data = await res.json();
+        setVisitorsData(data);
+      }
+    } catch (err) {
+      console.warn("Failed to load visitors data:", err);
+    } finally {
+      setIsLoadingVisitors(false);
+    }
+  };
+
+  const handleDeleteVisitorLog = async (id) => {
+    if (!confirm("Are you sure you want to delete this visitor record?")) return;
+    try {
+      const res = await fetch(`/api/admin/visitors?id=${id}`, { method: "DELETE" });
+      if (res.ok) {
+        showToast("Visitor record deleted!");
+        loadVisitorsData(visitorRange, visitorSearch, visitorPage);
+        loadStats();
+      } else {
+        showToast("Failed to delete record", "error");
+      }
+    } catch (err) {
+      showToast("Network error deleting record", "error");
+    }
+  };
+
+  const handleClearVisitorLogs = async (action) => {
+    const promptMsg = action === "clear_all"
+      ? "Are you sure you want to PERMANENTLY CLEAR ALL visitor tracking logs? This cannot be undone."
+      : "Clean visitor logs older than 60 days?";
+    if (!confirm(promptMsg)) return;
+
+    try {
+      const res = await fetch(`/api/admin/visitors?action=${action}`, { method: "DELETE" });
+      if (res.ok) {
+        const data = await res.json();
+        showToast(data.message || "Visitor logs cleaned successfully!");
+        setVisitorPage(1);
+        loadVisitorsData(visitorRange, visitorSearch, 1);
+        loadStats();
+      } else {
+        showToast("Failed to clean logs", "error");
+      }
+    } catch (err) {
+      showToast("Network error cleaning logs", "error");
+    }
+  };
+
+  const handleExportVisitorsCSV = () => {
+    if (!visitorsData.logs || visitorsData.logs.length === 0) {
+      showToast("No visitor logs to export", "error");
+      return;
+    }
+    const headers = ["ID", "Timestamp", "IP Address", "Country", "City", "Device", "Browser", "OS", "Page Path", "Page Title", "Referrer", "UTM Source", "UTM Campaign", "Duration (sec)", "Is Online"];
+    const csvRows = [headers.join(",")];
+    for (const log of visitorsData.logs) {
+      const row = [
+        log.id,
+        `"${log.created_at || ""}"`,
+        `"${log.ip_address || ""}"`,
+        `"${log.country || ""}"`,
+        `"${log.city || ""}"`,
+        `"${log.device_type || ""}"`,
+        `"${log.browser || ""}"`,
+        `"${log.os || ""}"`,
+        `"${(log.page_path || "").replace(/"/g, '""')}"`,
+        `"${(log.page_title || "").replace(/"/g, '""')}"`,
+        `"${(log.referrer || "").replace(/"/g, '""')}"`,
+        `"${(log.utm_source || "").replace(/"/g, '""')}"`,
+        `"${(log.utm_campaign || "").replace(/"/g, '""')}"`,
+        log.duration_seconds || 0,
+        log.is_online ? "Yes" : "No"
+      ];
+      csvRows.push(row.join(","));
+    }
+    const blob = new Blob([csvRows.join("\n")], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `aidigital_visitors_${visitorRange}_${new Date().toISOString().slice(0, 10)}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    URL.revokeObjectURL(url);
+    showToast("Visitor data exported to CSV!");
+  };
+
+  // Real-time auto-refresh interval for visitors tab
+  useEffect(() => {
+    if (activeTab !== "visitors" || visitorAutoRefresh === "off") return;
+    const intervalSec = parseInt(visitorAutoRefresh, 10) || 30;
+    const timer = setInterval(() => {
+      loadVisitorsData(visitorRange, visitorSearch, visitorPage);
+      loadStats();
+    }, intervalSec * 1000);
+    return () => clearInterval(timer);
+  }, [activeTab, visitorAutoRefresh, visitorRange, visitorSearch, visitorPage]);
 
   // Auth checking on mount disabled to force manual login
   useEffect(() => {
@@ -307,6 +471,7 @@ export default function AdminPage() {
       loadOnboardingData();
       loadRemindersData();
       loadPromoData();
+      loadVisitorsData();
     } catch (err) {
       showToast("Failed to load configuration data", "error");
     }
@@ -1032,6 +1197,34 @@ export default function AdminPage() {
           </button>
 
           <button
+            onClick={() => { setActiveTab("visitors"); setEditingBlog(null); loadVisitorsData(); }}
+            style={{ ...styles.sidebarBtn, ...(activeTab === "visitors" ? styles.sidebarBtnActive : {}) }}
+          >
+            <Icon name="group" /> Live Visitors & Traffic
+            {stats.counts?.live_online > 0 ? (
+              <span style={{
+                marginLeft: "auto",
+                backgroundColor: "#10B981",
+                color: "#000",
+                fontSize: "10px",
+                fontWeight: "800",
+                padding: "2px 7px",
+                borderRadius: "10px",
+                display: "inline-flex",
+                alignItems: "center",
+                gap: "3px"
+              }}>
+                <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#000", display: "inline-block" }}></span>
+                {stats.counts.live_online} LIVE
+              </span>
+            ) : (
+              <span style={{ marginLeft: "auto", color: "#64748b", fontSize: "11px" }}>
+                {stats.counts?.visitors_today || 0} today
+              </span>
+            )}
+          </button>
+
+          <button
             onClick={() => { setActiveTab("portfolio"); setEditingBlog(null); }}
             style={{ ...styles.sidebarBtn, ...(activeTab === "portfolio" ? styles.sidebarBtnActive : {}) }}
           >
@@ -1124,6 +1317,37 @@ export default function AdminPage() {
 
                 {/* Stats Summary Cards */}
                 <div style={styles.statsSummaryGrid}>
+                  <div 
+                    style={{ ...styles.miniCard, cursor: "pointer", border: "1px solid rgba(16, 185, 129, 0.3)", backgroundColor: "rgba(16, 185, 129, 0.05)" }}
+                    onClick={() => { setActiveTab("visitors"); setEditingBlog(null); loadVisitorsData(); }}
+                    title="Click to view full Live Visitors & Traffic analytics"
+                  >
+                    <div style={styles.miniCardHeader}>
+                      <Icon name="group" style={{ color: "#10B981" }} />
+                      <h4 style={{ margin: 0, color: "#10B981" }}>Website Visitors</h4>
+                      {stats.counts?.live_online > 0 && (
+                        <span style={{
+                          marginLeft: "auto",
+                          backgroundColor: "#10B981",
+                          color: "#000",
+                          fontSize: "10px",
+                          fontWeight: "800",
+                          padding: "2px 7px",
+                          borderRadius: "10px"
+                        }}>
+                          {stats.counts.live_online} ONLINE NOW
+                        </span>
+                      )}
+                    </div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: "10px" }}>
+                      <p style={styles.statNumber}>{stats.counts?.visitors_today || 0}</p>
+                      <span style={{ color: "#94a3b8", fontSize: "13px" }}>today ({stats.counts?.total_visitors || 0} all-time)</span>
+                    </div>
+                    <span style={{ fontSize: "12px", color: "#10B981", fontWeight: "600", display: "flex", alignItems: "center", gap: "4px" }}>
+                      View Live Traffic Analytics →
+                    </span>
+                  </div>
+
                   <div style={styles.miniCard}>
                     <div style={styles.miniCardHeader}>
                       <Icon name="payments" style={{ color: "#FD7E14" }} />
@@ -2908,6 +3132,741 @@ export default function AdminPage() {
                     <span style={{ fontWeight: "600", color: "#10B981" }}>15% OFF → Min ₹15,000</span>
                   </div>
                 </div>
+              </div>
+            </div>
+          )}
+
+          {/* ===== LIVE VISITORS & TRAFFIC ANALYTICS TAB ===== */}
+          {activeTab === "visitors" && (
+            <div>
+              {/* Header */}
+              <div style={styles.contentHeader}>
+                <div>
+                  <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                    <h2 style={{ fontSize: "24px", fontWeight: "800", margin: 0 }}>Live Visitors & Traffic</h2>
+                    {visitorsData.liveOnline > 0 && (
+                      <span style={{
+                        backgroundColor: "rgba(16, 185, 129, 0.2)",
+                        color: "#10B981",
+                        border: "1px solid rgba(16, 185, 129, 0.4)",
+                        fontSize: "12px",
+                        fontWeight: "700",
+                        padding: "3px 10px",
+                        borderRadius: "20px",
+                        display: "inline-flex",
+                        alignItems: "center",
+                        gap: "6px"
+                      }}>
+                        <span style={{
+                          width: "8px",
+                          height: "8px",
+                          borderRadius: "50%",
+                          backgroundColor: "#10B981",
+                          boxShadow: "0 0 8px #10B981",
+                          display: "inline-block"
+                        }}></span>
+                        {visitorsData.liveOnline} Online Right Now
+                      </span>
+                    )}
+                  </div>
+                  <p style={{ color: "#94a3b8", fontSize: "14px", marginTop: "4px" }}>
+                    Automated real-time visitor tracking, analytics, and traffic logs for https://www.aidigital.biz/
+                  </p>
+                </div>
+
+                <div style={{ display: "flex", alignItems: "center", gap: "10px", flexWrap: "wrap" }}>
+                  {/* Auto-refresh selector */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "6px", backgroundColor: "rgba(255,255,255,0.05)", padding: "4px 10px", borderRadius: "8px", border: "1px solid rgba(255,255,255,0.1)" }}>
+                    <Icon name="sync" style={{ fontSize: "16px", color: "#94a3b8" }} />
+                    <span style={{ fontSize: "12px", color: "#94a3b8" }}>Auto-refresh:</span>
+                    <select
+                      value={visitorAutoRefresh}
+                      onChange={(e) => setVisitorAutoRefresh(e.target.value)}
+                      style={{
+                        background: "transparent",
+                        border: "none",
+                        color: "#10B981",
+                        fontWeight: "700",
+                        fontSize: "12px",
+                        cursor: "pointer",
+                        outline: "none"
+                      }}
+                    >
+                      <option value="10" style={{ background: "#1e293b", color: "#fff" }}>Every 10s</option>
+                      <option value="30" style={{ background: "#1e293b", color: "#fff" }}>Every 30s</option>
+                      <option value="off" style={{ background: "#1e293b", color: "#fff" }}>Off (Manual)</option>
+                    </select>
+                  </div>
+
+                  <button
+                    onClick={() => loadVisitorsData(visitorRange, visitorSearch, visitorPage)}
+                    style={styles.refreshBtn}
+                    disabled={isLoadingVisitors}
+                    title="Refresh Live Visitor Data"
+                  >
+                    <Icon name={isLoadingVisitors ? "hourglass_empty" : "refresh"} /> {isLoadingVisitors ? "Refreshing..." : "Refresh"}
+                  </button>
+
+                  <button
+                    onClick={handleExportVisitorsCSV}
+                    style={{
+                      ...styles.refreshBtn,
+                      backgroundColor: "rgba(59, 130, 246, 0.15)",
+                      borderColor: "rgba(59, 130, 246, 0.3)",
+                      color: "#60a5fa"
+                    }}
+                    title="Export Current Filtered Visitors to CSV"
+                  >
+                    <Icon name="download" /> Export CSV
+                  </button>
+
+                  <button
+                    onClick={() => handleClearVisitorLogs("clean_old")}
+                    style={{
+                      ...styles.refreshBtn,
+                      backgroundColor: "rgba(239, 68, 68, 0.1)",
+                      borderColor: "rgba(239, 68, 68, 0.25)",
+                      color: "#f87171"
+                    }}
+                    title="Clean old visitor logs older than 60 days"
+                  >
+                    <Icon name="cleaning_services" /> Clean 60d+
+                  </button>
+                </div>
+              </div>
+
+              {/* Time Range Selector */}
+              <div style={{ display: "flex", gap: "8px", margin: "16px 0", flexWrap: "wrap", alignItems: "center" }}>
+                <span style={{ fontSize: "13px", color: "#94a3b8", marginRight: "4px", fontWeight: "600" }}>Timeframe:</span>
+                {[
+                  { id: "today", label: "Today" },
+                  { id: "yesterday", label: "Yesterday" },
+                  { id: "7d", label: "Last 7 Days" },
+                  { id: "30d", label: "Last 30 Days" },
+                  { id: "all", label: "All Time" },
+                ].map((item) => (
+                  <button
+                    key={item.id}
+                    onClick={() => {
+                      setVisitorRange(item.id);
+                      setVisitorPage(1);
+                      loadVisitorsData(item.id, visitorSearch, 1);
+                    }}
+                    style={{
+                      padding: "7px 16px",
+                      borderRadius: "8px",
+                      fontSize: "13px",
+                      fontWeight: "700",
+                      cursor: "pointer",
+                      border: visitorRange === item.id ? "1px solid #10B981" : "1px solid rgba(255,255,255,0.08)",
+                      backgroundColor: visitorRange === item.id ? "rgba(16, 185, 129, 0.15)" : "rgba(255,255,255,0.02)",
+                      color: visitorRange === item.id ? "#10B981" : "#cbd5e1",
+                      transition: "all 0.2s"
+                    }}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </div>
+
+              {/* KPI Metrics Cards Grid */}
+              <div style={{
+                display: "grid",
+                gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))",
+                gap: "16px",
+                marginBottom: "24px"
+              }}>
+                {/* 1. Live Online Now */}
+                <div style={{
+                  ...styles.miniCard,
+                  backgroundColor: "rgba(16, 185, 129, 0.06)",
+                  border: "1px solid rgba(16, 185, 129, 0.25)"
+                }}>
+                  <div style={styles.miniCardHeader}>
+                    <Icon name="sensors" style={{ color: "#10B981" }} />
+                    <h4 style={{ margin: 0, color: "#10B981" }}>Live Online Now</h4>
+                  </div>
+                  <p style={{ ...styles.statNumber, color: "#10B981" }}>{visitorsData.liveOnline || 0}</p>
+                  <span style={styles.statLabel}>Active in last 3 minutes</span>
+                </div>
+
+                {/* 2. Total Pageviews */}
+                <div style={styles.miniCard}>
+                  <div style={styles.miniCardHeader}>
+                    <Icon name="visibility" style={{ color: "#3B82F6" }} />
+                    <h4 style={{ margin: 0 }}>Total Pageviews</h4>
+                  </div>
+                  <p style={styles.statNumber}>{(visitorsData.summary?.totalPageviews || 0).toLocaleString()}</p>
+                  <span style={styles.statLabel}>
+                    {(visitorsData.summary?.totalSessions || 0).toLocaleString()} browsing sessions
+                  </span>
+                </div>
+
+                {/* 3. Unique Visitors */}
+                <div style={styles.miniCard}>
+                  <div style={styles.miniCardHeader}>
+                    <Icon name="person" style={{ color: "#8B5CF6" }} />
+                    <h4 style={{ margin: 0 }}>Unique Visitors</h4>
+                  </div>
+                  <p style={styles.statNumber}>{(visitorsData.summary?.uniqueVisitors || 0).toLocaleString()}</p>
+                  <span style={styles.statLabel}>
+                    {visitorsData.summary?.newVisitors || 0} first-time visitors
+                  </span>
+                </div>
+
+                {/* 4. Avg Session Duration */}
+                <div style={styles.miniCard}>
+                  <div style={styles.miniCardHeader}>
+                    <Icon name="timer" style={{ color: "#F59E0B" }} />
+                    <h4 style={{ margin: 0 }}>Avg Time on Site</h4>
+                  </div>
+                  <p style={styles.statNumber}>{formatDuration(visitorsData.summary?.avgDurationSeconds || 0)}</p>
+                  <span style={styles.statLabel}>Average duration per visit</span>
+                </div>
+
+                {/* 5. Top Location */}
+                <div style={styles.miniCard}>
+                  <div style={styles.miniCardHeader}>
+                    <Icon name="public" style={{ color: "#EC4899" }} />
+                    <h4 style={{ margin: 0 }}>Top Country</h4>
+                  </div>
+                  <p style={{ ...styles.statNumber, fontSize: "20px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                    {visitorsData.charts?.topCountries?.[0]
+                      ? `${getCountryFlag(visitorsData.charts.topCountries[0].country_code)} ${visitorsData.charts.topCountries[0].country}`
+                      : "—"}
+                  </p>
+                  <span style={styles.statLabel}>
+                    {visitorsData.charts?.topCountries?.[0]?.count || 0} visits from this region
+                  </span>
+                </div>
+
+                {/* 6. Top Traffic Source */}
+                <div style={styles.miniCard}>
+                  <div style={styles.miniCardHeader}>
+                    <Icon name="campaign" style={{ color: "#06B6D4" }} />
+                    <h4 style={{ margin: 0 }}>Top Source</h4>
+                  </div>
+                  <p style={{ ...styles.statNumber, fontSize: "18px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", color: "#06B6D4" }}>
+                    {visitorsData.charts?.topSources?.[0]?.source_name || "Direct"}
+                  </p>
+                  <span style={styles.statLabel}>
+                    {visitorsData.charts?.topSources?.[0]?.count || 0} visits • Bounce: {visitorsData.summary?.bounceRate || 0}%
+                  </span>
+                </div>
+              </div>
+
+              {/* Visual Breakdown Grid */}
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "20px", marginBottom: "24px" }}>
+                {/* Traffic Trend Visualizer */}
+                <div style={styles.statusCard}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={{ margin: 0, fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <Icon name="show_chart" style={{ color: "#3B82F6" }} /> Traffic Activity ({visitorRange.toUpperCase()})
+                    </h3>
+                  </div>
+                  {visitorsData.charts?.trend && visitorsData.charts.trend.length > 0 ? (
+                    <div style={{ marginTop: "14px" }}>
+                      <div style={{ display: "flex", alignItems: "flex-end", gap: "6px", height: "130px", padding: "10px 0 0 0", borderBottom: "1px solid rgba(255,255,255,0.1)" }}>
+                        {(() => {
+                          const maxViews = Math.max(...visitorsData.charts.trend.map(t => Number(t.views) || 1), 1);
+                          return visitorsData.charts.trend.map((t, idx) => {
+                            const heightPct = Math.max(12, Math.round(((Number(t.views) || 0) / maxViews) * 100));
+                            return (
+                              <div
+                                key={idx}
+                                style={{
+                                  flex: 1,
+                                  display: "flex",
+                                  flexDirection: "column",
+                                  alignItems: "center",
+                                  gap: "4px",
+                                  height: "100%",
+                                  justifyContent: "flex-end"
+                                }}
+                                title={`${t.label}: ${t.views} views (${t.visitors} unique visitors)`}
+                              >
+                                <span style={{ fontSize: "10px", color: "#94a3b8", fontWeight: "600" }}>{t.views}</span>
+                                <div
+                                  style={{
+                                    width: "100%",
+                                    minWidth: "12px",
+                                    maxWidth: "28px",
+                                    height: `${heightPct}%`,
+                                    background: "linear-gradient(180deg, #3B82F6 0%, #1D4ED8 100%)",
+                                    borderRadius: "4px 4px 0 0",
+                                    transition: "all 0.3s"
+                                  }}
+                                />
+                                <span style={{ fontSize: "10px", color: "#64748b", whiteSpace: "nowrap" }}>{t.label}</span>
+                              </div>
+                            );
+                          });
+                        })()}
+                      </div>
+                    </div>
+                  ) : (
+                    <p style={{ color: "#94a3b8", fontSize: "13px", padding: "20px 0", textAlign: "center" }}>
+                      No activity recorded for this timeframe yet.
+                    </p>
+                  )}
+                </div>
+
+                {/* Device, OS & Browser Breakdown */}
+                <div style={styles.statusCard}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={{ margin: 0, fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <Icon name="devices" style={{ color: "#10B981" }} /> Devices, OS & Browsers
+                    </h3>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "12px", marginTop: "14px" }}>
+                    {/* Device distribution bar */}
+                    <div>
+                      <div style={{ display: "flex", justifyContent: "space-between", fontSize: "12px", marginBottom: "4px" }}>
+                        <span style={{ color: "#94a3b8" }}>Device Types</span>
+                        <span style={{ fontWeight: "600", color: "#fff" }}>
+                          {visitorsData.charts?.devices?.map(d => `${d.device}: ${d.count}`).join(" • ") || "—"}
+                        </span>
+                      </div>
+                      <div style={{ height: "7px", width: "100%", backgroundColor: "rgba(255,255,255,0.06)", borderRadius: "4px", overflow: "hidden", display: "flex" }}>
+                        {(() => {
+                          const totalDev = visitorsData.charts?.devices?.reduce((acc, d) => acc + Number(d.count), 0) || 1;
+                          const colors = ["#3B82F6", "#10B981", "#F59E0B", "#8B5CF6"];
+                          return visitorsData.charts?.devices?.map((d, i) => (
+                            <div
+                              key={i}
+                              style={{
+                                width: `${(Number(d.count) / totalDev) * 100}%`,
+                                backgroundColor: colors[i % colors.length]
+                              }}
+                              title={`${d.device}: ${d.count}`}
+                            />
+                          ));
+                        })()}
+                      </div>
+                    </div>
+
+                    {/* OS Badges */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                      {visitorsData.charts?.os?.map((o, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            padding: "3px 8px",
+                            borderRadius: "5px",
+                            fontSize: "11px",
+                            backgroundColor: "rgba(255,255,255,0.04)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                            color: "#cbd5e1"
+                          }}
+                        >
+                          💻 {o.os}: <strong>{o.count}</strong>
+                        </span>
+                      ))}
+                    </div>
+
+                    {/* Browser list */}
+                    <div style={{ display: "flex", flexWrap: "wrap", gap: "6px" }}>
+                      {visitorsData.charts?.browsers?.map((b, i) => (
+                        <span
+                          key={i}
+                          style={{
+                            padding: "3px 8px",
+                            borderRadius: "5px",
+                            fontSize: "11px",
+                            backgroundColor: "rgba(255,255,255,0.04)",
+                            border: "1px solid rgba(255,255,255,0.08)",
+                            color: "#94a3b8"
+                          }}
+                        >
+                          🌐 {b.browser}: <strong>{b.count}</strong>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Top Visited Pages */}
+                <div style={styles.statusCard}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={{ margin: 0, fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <Icon name="link" style={{ color: "#F59E0B" }} /> Most Visited Pages
+                    </h3>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
+                    {visitorsData.charts?.topPages && visitorsData.charts.topPages.length > 0 ? (
+                      visitorsData.charts.topPages.slice(0, 5).map((p, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            fontSize: "13px",
+                            padding: "6px 8px",
+                            borderRadius: "6px",
+                            backgroundColor: "rgba(255,255,255,0.02)",
+                            border: "1px solid rgba(255,255,255,0.05)"
+                          }}
+                        >
+                          <div style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap", maxWidth: "200px" }}>
+                            <span style={{ fontWeight: "700", color: "#60a5fa" }}>{p.page_path}</span>
+                            {p.page_title && <span style={{ color: "#64748b", marginLeft: "6px", fontSize: "11px" }}>({p.page_title})</span>}
+                          </div>
+                          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                            <span style={{ color: "#10B981", fontWeight: "700" }}>{p.views} views</span>
+                            <span style={{ color: "#94a3b8", fontSize: "11px" }}>({formatDuration(Math.round(p.avg_time))})</span>
+                          </div>
+                        </div>
+                      ))
+                    ) : (
+                      <p style={{ color: "#94a3b8", fontSize: "13px", textAlign: "center", margin: 0 }}>No pageviews yet.</p>
+                    )}
+                  </div>
+                </div>
+
+                {/* Traffic Sources & Locations */}
+                <div style={styles.statusCard}>
+                  <div style={styles.cardHeader}>
+                    <h3 style={{ margin: 0, fontSize: "16px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <Icon name="campaign" style={{ color: "#EC4899" }} /> Sources & Top Locations
+                    </h3>
+                  </div>
+                  <div style={{ display: "flex", flexDirection: "column", gap: "8px", marginTop: "12px" }}>
+                    {visitorsData.charts?.topSources && visitorsData.charts.topSources.length > 0 ? (
+                      visitorsData.charts.topSources.slice(0, 3).map((s, idx) => (
+                        <div
+                          key={idx}
+                          style={{
+                            display: "flex",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            fontSize: "12px",
+                            padding: "5px 8px",
+                            borderRadius: "6px",
+                            backgroundColor: "rgba(255,255,255,0.02)",
+                            border: "1px solid rgba(255,255,255,0.05)"
+                          }}
+                        >
+                          <span style={{ fontWeight: "600", color: "#e2e8f0" }}>{s.source_name}</span>
+                          <span style={{ fontWeight: "700", color: "#EC4899" }}>{s.count} visits</span>
+                        </div>
+                      ))
+                    ) : (
+                      <p style={{ color: "#94a3b8", fontSize: "12px", textAlign: "center", margin: 0 }}>No referral sources recorded.</p>
+                    )}
+
+                    {/* Top Cities */}
+                    {visitorsData.charts?.topCities && visitorsData.charts.topCities.length > 0 && (
+                      <div style={{ display: "flex", flexWrap: "wrap", gap: "6px", marginTop: "4px", paddingTop: "8px", borderTop: "1px solid rgba(255,255,255,0.06)" }}>
+                        {visitorsData.charts.topCities.slice(0, 4).map((c, idx) => (
+                          <span
+                            key={idx}
+                            style={{
+                              fontSize: "11px",
+                              padding: "2px 7px",
+                              borderRadius: "4px",
+                              backgroundColor: "rgba(236, 72, 153, 0.1)",
+                              color: "#f472b6",
+                              border: "1px solid rgba(236, 72, 153, 0.2)"
+                            }}
+                          >
+                            📍 {c.city}: {c.count}
+                          </span>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Granular Real-time Visitor Stream Table */}
+              <div style={{ ...styles.statusCard, marginTop: "24px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "12px" }}>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: "18px", display: "flex", alignItems: "center", gap: "8px" }}>
+                      <Icon name="list_alt" style={{ color: "#3B82F6" }} /> Real-time Visitor Activity Log
+                    </h3>
+                    <p style={{ margin: "4px 0 0 0", color: "#94a3b8", fontSize: "13px" }}>
+                      Showing {visitorsData.logs?.length || 0} of {visitorsData.pagination?.total || 0} recorded visitor sessions
+                    </p>
+                  </div>
+
+                  {/* Search filter input */}
+                  <div style={{ display: "flex", alignItems: "center", gap: "8px", width: "100%", maxWidth: "360px" }}>
+                    <div style={{ position: "relative", width: "100%" }}>
+                      <input
+                        type="text"
+                        placeholder="Search IP, Country, Page, Referrer, UTM..."
+                        value={visitorSearch}
+                        onChange={(e) => {
+                          setVisitorSearch(e.target.value);
+                          setVisitorPage(1);
+                          loadVisitorsData(visitorRange, e.target.value, 1);
+                        }}
+                        style={{
+                          width: "100%",
+                          padding: "8px 12px 8px 34px",
+                          borderRadius: "8px",
+                          border: "1px solid rgba(255,255,255,0.15)",
+                          backgroundColor: "rgba(255,255,255,0.04)",
+                          color: "#fff",
+                          fontSize: "13px",
+                          outline: "none"
+                        }}
+                      />
+                      <Icon
+                        name="search"
+                        style={{
+                          position: "absolute",
+                          left: "10px",
+                          top: "50%",
+                          transform: "translateY(-50%)",
+                          color: "#94a3b8",
+                          fontSize: "16px"
+                        }}
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Table */}
+                <div style={{ overflowX: "auto", marginTop: "16px" }}>
+                  <table style={{ width: "100%", borderCollapse: "collapse", fontSize: "13px" }}>
+                    <thead>
+                      <tr style={{ borderBottom: "1px solid rgba(255,255,255,0.1)", textAlign: "left", color: "#94a3b8" }}>
+                        <th style={{ padding: "12px 8px" }}>Status</th>
+                        <th style={{ padding: "12px 8px" }}>Location & IP</th>
+                        <th style={{ padding: "12px 8px" }}>Device / OS / Browser</th>
+                        <th style={{ padding: "12px 8px" }}>Page Visited</th>
+                        <th style={{ padding: "12px 8px" }}>Traffic Source</th>
+                        <th style={{ padding: "12px 8px" }}>Time Spent</th>
+                        <th style={{ padding: "12px 8px" }}>Visited At</th>
+                        <th style={{ padding: "12px 8px" }}>Action</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {visitorsData.logs && visitorsData.logs.length > 0 ? (
+                        visitorsData.logs.map((log) => (
+                          <tr
+                            key={log.id}
+                            style={{
+                              borderBottom: "1px solid rgba(255,255,255,0.05)",
+                              backgroundColor: log.is_online ? "rgba(16, 185, 129, 0.05)" : "transparent"
+                            }}
+                          >
+                            {/* Status */}
+                            <td style={{ padding: "12px 8px", whiteSpace: "nowrap" }}>
+                              {log.is_online ? (
+                                <span style={{
+                                  display: "inline-flex",
+                                  alignItems: "center",
+                                  gap: "5px",
+                                  backgroundColor: "rgba(16, 185, 129, 0.2)",
+                                  color: "#10B981",
+                                  fontSize: "11px",
+                                  fontWeight: "800",
+                                  padding: "3px 8px",
+                                  borderRadius: "12px"
+                                }}>
+                                  <span style={{ width: "6px", height: "6px", borderRadius: "50%", backgroundColor: "#10B981" }}></span>
+                                  ONLINE NOW
+                                </span>
+                              ) : (
+                                <span style={{ color: "#64748b", fontSize: "12px" }}>
+                                  {formatTimeAgo(log.created_at)}
+                                </span>
+                              )}
+                            </td>
+
+                            {/* Location & IP */}
+                            <td style={{ padding: "12px 8px" }}>
+                              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                                <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                  <span style={{ fontSize: "16px" }}>{getCountryFlag(log.country_code)}</span>
+                                  <span style={{ fontWeight: "700", color: "#fff" }}>
+                                    {log.city && log.city !== "Unknown" ? `${log.city}, ` : ""}
+                                    {log.country || "Unknown"}
+                                  </span>
+                                </div>
+                                <span style={{
+                                  fontSize: "11px",
+                                  color: "#94a3b8",
+                                  fontFamily: "monospace",
+                                  backgroundColor: "rgba(255,255,255,0.04)",
+                                  padding: "1px 6px",
+                                  borderRadius: "4px",
+                                  display: "inline-block",
+                                  width: "fit-content"
+                                }}>
+                                  {log.ip_address || "127.0.0.1"}
+                                </span>
+                              </div>
+                            </td>
+
+                            {/* Device / OS / Browser */}
+                            <td style={{ padding: "12px 8px" }}>
+                              <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <Icon
+                                  name={log.device_type === "Mobile" ? "smartphone" : log.device_type === "Tablet" ? "tablet" : "desktop_windows"}
+                                  style={{ fontSize: "16px", color: log.device_type === "Mobile" ? "#38bdf8" : "#a78bfa" }}
+                                />
+                                <div style={{ display: "flex", flexDirection: "column" }}>
+                                  <span style={{ color: "#e2e8f0", fontWeight: "600" }}>{log.browser} on {log.os}</span>
+                                  {log.screen_resolution && (
+                                    <span style={{ color: "#64748b", fontSize: "11px" }}>{log.screen_resolution}</span>
+                                  )}
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Page Visited */}
+                            <td style={{ padding: "12px 8px", maxWidth: "220px" }}>
+                              <div style={{ display: "flex", flexDirection: "column" }}>
+                                <a
+                                  href={log.page_url || log.page_path}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  style={{ color: "#60a5fa", fontWeight: "700", textDecoration: "none", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}
+                                  title={log.page_url}
+                                >
+                                  {log.page_path}
+                                </a>
+                                {log.page_title && (
+                                  <span style={{ color: "#64748b", fontSize: "11px", overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
+                                    {log.page_title}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* Traffic Source */}
+                            <td style={{ padding: "12px 8px", maxWidth: "160px" }}>
+                              <div style={{ display: "flex", flexDirection: "column", gap: "2px" }}>
+                                <span style={{
+                                  fontSize: "11px",
+                                  fontWeight: "700",
+                                  color: log.referrer?.includes("google") ? "#34a853" : log.referrer?.includes("instagram") || log.referrer?.includes("facebook") ? "#e1306c" : "#cbd5e1"
+                                }}>
+                                  {log.referrer === "Direct" || !log.referrer ? "Direct Click" : log.referrer}
+                                </span>
+                                {log.utm_source && (
+                                  <span style={{
+                                    fontSize: "10px",
+                                    color: "#f59e0b",
+                                    backgroundColor: "rgba(245, 158, 11, 0.1)",
+                                    padding: "1px 4px",
+                                    borderRadius: "3px",
+                                    width: "fit-content"
+                                  }}>
+                                    UTM: {log.utm_source}
+                                  </span>
+                                )}
+                              </div>
+                            </td>
+
+                            {/* Time Spent */}
+                            <td style={{ padding: "12px 8px", whiteSpace: "nowrap" }}>
+                              <span style={{
+                                fontWeight: "700",
+                                color: (log.duration_seconds || 0) > 30 ? "#10B981" : "#94a3b8",
+                                fontSize: "12px"
+                              }}>
+                                ⏱️ {formatDuration(log.duration_seconds)}
+                              </span>
+                            </td>
+
+                            {/* Visited At */}
+                            <td style={{ padding: "12px 8px", whiteSpace: "nowrap" }}>
+                              <div style={{ display: "flex", flexDirection: "column" }}>
+                                <span style={{ color: "#fff", fontWeight: "600", fontSize: "12px" }}>
+                                  {log.created_at ? new Date(log.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : "—"}
+                                </span>
+                                <span style={{ color: "#64748b", fontSize: "11px" }}>
+                                  {log.created_at ? new Date(log.created_at).toLocaleDateString() : ""}
+                                </span>
+                              </div>
+                            </td>
+
+                            {/* Action */}
+                            <td style={{ padding: "12px 8px" }}>
+                              <button
+                                onClick={() => handleDeleteVisitorLog(log.id)}
+                                style={styles.deleteBtnIconOnly}
+                                title="Delete Visitor Record"
+                              >
+                                <Icon name="delete" />
+                              </button>
+                            </td>
+                          </tr>
+                        ))
+                      ) : (
+                        <tr>
+                          <td colSpan={8} style={{ padding: "40px 8px", textAlign: "center", color: "#94a3b8" }}>
+                            <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "8px" }}>
+                              <Icon name="radar" style={{ fontSize: "36px", color: "#64748b" }} />
+                              <p style={{ margin: 0, fontWeight: "600", fontSize: "14px", color: "#cbd5e1" }}>No visitor logs recorded yet</p>
+                              <span style={{ fontSize: "12px", color: "#64748b" }}>
+                                New visitors who browse or click links on https://www.aidigital.biz/ will automatically show up here in real-time!
+                              </span>
+                            </div>
+                          </td>
+                        </tr>
+                      )}
+                    </tbody>
+                  </table>
+                </div>
+
+                {/* Pagination Controls */}
+                {visitorsData.pagination && visitorsData.pagination.totalPages > 1 && (
+                  <div style={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: "16px",
+                    paddingTop: "14px",
+                    borderTop: "1px solid rgba(255,255,255,0.06)",
+                    fontSize: "13px",
+                    color: "#94a3b8"
+                  }}>
+                    <span>
+                      Page {visitorsData.pagination.page} of {visitorsData.pagination.totalPages} ({visitorsData.pagination.total} total visits)
+                    </span>
+                    <div style={{ display: "flex", gap: "8px" }}>
+                      <button
+                        onClick={() => {
+                          const prevPage = Math.max(1, visitorPage - 1);
+                          setVisitorPage(prevPage);
+                          loadVisitorsData(visitorRange, visitorSearch, prevPage);
+                        }}
+                        disabled={visitorPage <= 1}
+                        style={{
+                          ...styles.refreshBtn,
+                          padding: "6px 14px",
+                          opacity: visitorPage <= 1 ? 0.4 : 1,
+                          cursor: visitorPage <= 1 ? "not-allowed" : "pointer"
+                        }}
+                      >
+                        ← Previous
+                      </button>
+                      <button
+                        onClick={() => {
+                          const nextPage = Math.min(visitorsData.pagination.totalPages, visitorPage + 1);
+                          setVisitorPage(nextPage);
+                          loadVisitorsData(visitorRange, visitorSearch, nextPage);
+                        }}
+                        disabled={visitorPage >= visitorsData.pagination.totalPages}
+                        style={{
+                          ...styles.refreshBtn,
+                          padding: "6px 14px",
+                          opacity: visitorPage >= visitorsData.pagination.totalPages ? 0.4 : 1,
+                          cursor: visitorPage >= visitorsData.pagination.totalPages ? "not-allowed" : "pointer"
+                        }}
+                      >
+                        Next →
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           )}

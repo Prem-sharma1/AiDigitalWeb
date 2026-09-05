@@ -17,7 +17,10 @@ export async function GET(req) {
     portfolio_items: 0,
     blogs: 0,
     whatsapp_logs: 0,
-    payment_reminders: 0
+    payment_reminders: 0,
+    total_visitors: 0,
+    visitors_today: 0,
+    live_online: 0,
   };
 
   try {
@@ -42,6 +45,19 @@ export async function GET(req) {
       counts.payment_reminders = remRows[0].count;
     } catch (e) {
       console.warn("Could not fetch payment_reminders count:", e.message);
+    }
+
+    try {
+      const [visitorTotalRows] = await pool.query("SELECT COUNT(*) as count FROM website_visitors");
+      counts.total_visitors = visitorTotalRows[0].count;
+
+      const [visitorTodayRows] = await pool.query("SELECT COUNT(DISTINCT visitor_id) as count FROM website_visitors WHERE DATE(created_at) = CURDATE()");
+      counts.visitors_today = visitorTodayRows[0].count;
+
+      const [liveRows] = await pool.query("SELECT COUNT(DISTINCT visitor_id) as count FROM website_visitors WHERE last_active_at >= DATE_SUB(NOW(), INTERVAL 3 MINUTE)");
+      counts.live_online = liveRows[0].count;
+    } catch (e) {
+      console.warn("Could not fetch website_visitors count:", e.message);
     }
   } catch (error) {
     console.error("Database status check error:", error);
